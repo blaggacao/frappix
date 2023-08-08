@@ -1,0 +1,8 @@
+#! /usr/bin/env bash
+
+# optional, if you have a branded package
+export OWNER=blaggacao
+export REPO=frappix
+export PACKAGE=frappix
+
+bash <(curl -L https://raw.githubusercontent.com/paisano-nix/onboarding/main/install)

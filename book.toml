@@ -1,0 +1,15 @@
+[book]
+language = "en"
+multilingual = false
+src = "docs"
+title = "Frappix Documentation"
+
+[build]
+build-dir = "docs/build"
+
+[output]
+[output.html]
+
+[output.linkcheck]
+
+[preprocessor]

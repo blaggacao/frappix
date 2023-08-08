@@ -1,0 +1,251 @@
+From e72d2e7def296771dd5f1fa86c1a9c0e7f423667 Mon Sep 17 00:00:00 2001
+From: David Arnold <david.arnold@iohk.io>
+Date: Tue, 25 Jul 2023 21:15:50 -0500
+Subject: [PATCH 1/6] feat(db): boostrap only option if resource management is
+ exogenous
+
+The database resource management including privileges granting can be
+done by external secops. It can be undesirable to grant the grant option
+to the framework user.
+
+This commit implements the possibility to remove user resource
+management from frappe entirely and only boostrap the database with its
+target user.
+---
+ frappe/commands/site.py              |  7 +++++++
+ frappe/database/__init__.py          | 23 +++++++++++++++------
+ frappe/database/mariadb/setup_db.py  |  5 ++---
+ frappe/database/postgres/setup_db.py |  5 +++--
+ frappe/installer.py                  | 31 ++++++++++++++++++----------
+ 5 files changed, 49 insertions(+), 22 deletions(-)
+
+diff --git a/frappe/commands/site.py b/frappe/commands/site.py
+index c81f55e0b0..f00efed775 100644
+--- a/frappe/commands/site.py
++++ b/frappe/commands/site.py
+@@ -48,6 +48,11 @@ from frappe.exceptions import SiteNotSpecifiedError
+ @click.option(
+ 	"--set-default", is_flag=True, default=False, help="Set the new site as default site"
+ )
++@click.option(
++	"--setup-db/--no-setup-db",
++	default=True,
++	help="Create user and database in mariadb/postgres; only boostrap if false",
++)
+ def new_site(
+ 	site,
+ 	db_root_username=None,
+@@ -64,6 +69,7 @@ def new_site(
+ 	db_host=None,
+ 	db_port=None,
+ 	set_default=False,
++	setup_db=True,
+ ):
+ 	"Create a new site"
+ 	from frappe.installer import _new_site, extract_sql_from_archive
+@@ -88,6 +94,7 @@ def new_site(
+ 		db_socket=db_socket,
+ 		db_host=db_host,
+ 		db_port=db_port,
++		setup_db=setup_db,
+ 	)
+ 
+ 	if set_default:
+diff --git a/frappe/database/__init__.py b/frappe/database/__init__.py
+index eb041af91c..119625248f 100644
+--- a/frappe/database/__init__.py
++++ b/frappe/database/__init__.py
+@@ -10,7 +10,7 @@ from frappe.database.database import savepoint
+ 
+ 
+ def setup_database(
+-	force, source_sql=None, verbose=None, socket=None, host=None, port=None, user=None, password=None
++	force, verbose=None, socket=None, host=None, port=None, user=None, password=None
+ ):
+ 	import frappe
+ 
+@@ -18,16 +18,29 @@ def setup_database(
+ 		import frappe.database.postgres.setup_db
+ 
+ 		return frappe.database.postgres.setup_db.setup_database(
+-			force, source_sql, verbose, socket, host, port, user, password
++			force, verbose, socket, host, port, user, password
+ 		)
+ 	else:
+ 		import frappe.database.mariadb.setup_db
+ 
+ 		return frappe.database.mariadb.setup_db.setup_database(
+-			force, source_sql, verbose, socket, host, port, user, password
++			force, verbose, socket, host, port, user, password
+ 		)
+ 
+ 
++def bootstrap_database(db_name, verbose=None, source_sql=None):
++	import frappe
++
++	if frappe.conf.db_type == "postgres":
++		import frappe.database.postgres.setup_db
++
++		return frappe.database.postgres.setup_db.bootstrap_database(db_name, verbose, source_sql)
++	else:
++		import frappe.database.mariadb.setup_db
++
++		return frappe.database.mariadb.setup_db.bootstrap_database(db_name, verbose, source_sql)
++
++
+ def drop_user_and_database(db_name, socket=None, host=None, port=None, user=None, password=None):
+ 	import frappe
+ 
+@@ -102,9 +115,7 @@ def get_command(
+ 		user = frappe.utils.esc(user, "$ ")
+ 		db_name = frappe.utils.esc(db_name, "$ ")
+ 
+-		command = [
+-			f"--user={user}"
+-		]
++		command = [f"--user={user}"]
+ 		if socket:
+ 			socket = frappe.utils.esc(socket, "$ ")
+ 			command.append(f"--socket={socket}")
+diff --git a/frappe/database/mariadb/setup_db.py b/frappe/database/mariadb/setup_db.py
+index 9e85598312..f272d199a8 100644
+--- a/frappe/database/mariadb/setup_db.py
++++ b/frappe/database/mariadb/setup_db.py
+@@ -23,7 +23,7 @@ def get_mariadb_version(version_string: str = ""):
+ 	return version.rsplit(".", 1)
+ 
+ 
+-def setup_database(force, source_sql, verbose, socket, host, port, user, password):
++def setup_database(force, verbose, socket, host, port, user, password):
+ 	frappe.local.session = frappe._dict({"user": "Administrator"})
+ 
+ 	db_name = frappe.local.conf.db_name
+@@ -52,8 +52,6 @@ def setup_database(force, source_sql, verbose, socket, host, port, user, passwor
+ 	# close root connection
+ 	root_conn.close()
+ 
+-	bootstrap_database(db_name, verbose, source_sql)
+-
+ 
+ def drop_user_and_database(db_name, socket, host, port, user, password):
+ 	frappe.local.db = get_root_connection(socket, host, port, user, password)
+@@ -152,6 +150,7 @@ def check_compatible_versions():
+ def get_root_connection(socket, host, port, user, password):
+ 	if not frappe.local.flags.root_connection:
+ 		from getpass import getpass, getuser
++
+ 		if not user:
+ 			user = frappe.conf.get("root_login") or getuser()
+ 
+diff --git a/frappe/database/postgres/setup_db.py b/frappe/database/postgres/setup_db.py
+index 6afcd7f852..b1333919ad 100644
+--- a/frappe/database/postgres/setup_db.py
++++ b/frappe/database/postgres/setup_db.py
+@@ -3,7 +3,7 @@ import os
+ import frappe
+ 
+ 
+-def setup_database(force, source_sql, verbose, socket, host, port, user, password):
++def setup_database(force, verbose, socket, host, port, user, password):
+ 	root_conn = get_root_connection(socket, host, port, user, password)
+ 	root_conn.commit()
+ 	root_conn.sql("end")
+@@ -15,7 +15,6 @@ def setup_database(force, source_sql, verbose, socket, host, port, user, passwor
+ 	root_conn.close()
+ 
+ 	bootstrap_database(frappe.conf.db_name, verbose, source_sql=source_sql)
+-	frappe.connect()
+ 
+ 
+ def bootstrap_database(db_name, verbose, source_sql=None):
+@@ -35,6 +34,7 @@ def bootstrap_database(db_name, verbose, source_sql=None):
+ 			fg="red",
+ 		)
+ 		sys.exit(1)
++	frappe.connect()
+ 
+ 
+ def import_db_from_sql(source_sql=None, verbose=False):
+@@ -78,6 +78,7 @@ def import_db_from_sql(source_sql=None, verbose=False):
+ def get_root_connection(socket, host, port, user, password):
+ 	if not frappe.local.flags.root_connection:
+ 		from getpass import getpass, getuser
++
+ 		if not user:
+ 			user = frappe.conf.get("root_login") or getuser()
+ 
+diff --git a/frappe/installer.py b/frappe/installer.py
+index 55851a13be..7d04e5247d 100644
+--- a/frappe/installer.py
++++ b/frappe/installer.py
+@@ -48,6 +48,7 @@ def _new_site(
+ 	db_socket=None,
+ 	db_host=None,
+ 	db_port=None,
++	setup_db=True,
+ ):
+ 	"""Install a new Frappe site"""
+ 
+@@ -87,6 +88,7 @@ def _new_site(
+ 			db_socket=db_socket,
+ 			db_host=db_host,
+ 			db_port=db_port,
++			setup=setup_db,
+ 		)
+ 
+ 		apps_to_install = (
+@@ -124,9 +126,10 @@ def install_db(
+ 	db_socket=None,
+ 	db_host=None,
+ 	db_port=None,
++	setup=True,
+ ):
+ 	import frappe.database
+-	from frappe.database import setup_database
++	from frappe.database import bootstrap_database, setup_database
+ 
+ 	if not db_type:
+ 		db_type = frappe.conf.db_type
+@@ -142,15 +145,21 @@ def install_db(
+ 	)
+ 	frappe.flags.in_install_db = True
+ 
+-	setup_database(
+-		force,
+-		source_sql,
+-		verbose,
+-		socket=db_socket,
+-		host=db_host,
+-		port=db_port,
+-		user=root_login,
+-		password=root_password,
++	if setup:
++		setup_database(
++			force,
++			verbose,
++			socket=db_socket,
++			host=db_host,
++			port=db_port,
++			user=root_login,
++			password=root_password,
++		)
++
++	bootstrap_database(
++		db_name=frappe.conf.db_name,
++		verbose=verbose,
++		source_sql=source_sql,
+ 	)
+ 
+ 	frappe.conf.admin_password = frappe.conf.admin_password or admin_password
+@@ -532,7 +541,7 @@ def make_conf(
+ 		db_type=db_type,
+ 		db_socket=db_socket,
+ 		db_host=db_host,
+-		db_port=db_port
++		db_port=db_port,
+ 	)
+ 	sites_path = frappe.local.sites_path
+ 	frappe.destroy()
+-- 
+2.38.4
+
