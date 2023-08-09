@@ -27,7 +27,7 @@
       ];
     }
     {
-      packages = std.harvest self ["src" "pkgs" "frappix"];
+      packages = std.winnow (n: _: n == "frappix") self ["src" "pkgs"];
     };
 
   # stick with master for a while until more dependencies are stabilized
