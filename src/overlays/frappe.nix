@@ -1,24 +1,18 @@
 {
-  src,
-  benchSrc,
+  frappe,
+  bench,
   lib,
   buildPythonPackage,
   pythonRelaxDepsHook,
   pythonOlder,
   flit-core,
   pythonPackages,
-  # bin tools
-  mysql, # mysqldump
-  restic, # backups
-  wkhtmltopdf-bin, # pdf, old style
-  which, # discover binaries
-  gzip, # backups
-  bash, # execute_in_shell
-  nodejs-18_x,
+  pkgs,
   mkYarnApp,
   mkYarnOfflineCache,
   fetchYarnDeps,
   substituteAll,
+  applyPatches,
   extractFrappeMeta,
 }:
 buildPythonPackage rec {
@@ -29,7 +23,16 @@ buildPythonPackage rec {
     format
     ;
 
-  inherit src;
+  src = applyPatches {
+    inherit (frappe) src;
+    # this patch is needs to be present in all source trees,
+    # such as the one used for the frontend below
+    patches = [
+      # Add missing unix domain socket support
+      ./frappe-uds.patch
+    ];
+  };
+
   patches = [
     # make the relative path to the generator script absolute
     (substituteAll {
@@ -44,23 +47,21 @@ buildPythonPackage rec {
   ];
 
   passthru = rec {
-    packages = [
+    packages = with pkgs; [
       mysql
       restic
       wkhtmltopdf-bin
       which # pdfkit detects wkhtmltopdf this way
       gzip # for manual backups from the frappe ui
       bash
+      nodejs-18_x
+      redis
     ];
     test-dependencies = with pythonPackages; [
       faker
       hypothesis
       responses
     ];
-    node = nodejs-18_x;
-    mariadb = mysql;
-    # clone url to setup local dev environment
-    url = "https://github.com/frappe/frappe.git";
     websocket = frontend + /share/apps/frappe/socketio.js;
     frontend = let
       yarnLock = "${src}/yarn.lock";
@@ -147,6 +148,9 @@ buildPythonPackage rec {
       whoosh
       xlrd
       zxcvbn
+      gitpython
+      sentry-sdk
+      setproctitle
     ]
     ++ passthru.packages;
 
@@ -174,6 +178,12 @@ buildPythonPackage rec {
     "rauth" #                    ask: 0.7.3   is: 0.7.2
     "phonenumbers" #             ask: 8.13.13 is: ?????
     "PyYAML"
+    "GitPython"
+    "Click"
+    "Babel"
+    "sentry-sdk"
+    "setproctitle"
+    "RestrictedPython"
   ];
 
   pythonRemoveDeps = [
@@ -183,8 +193,8 @@ buildPythonPackage rec {
 
   postInstall = ''
     mkdir -p $out/share
-    install -m 0666 ${benchSrc}/bench/config/templates/502.html  $out/share
-    install -m 0666 ${benchSrc}/bench/patches/patches.txt        $out/share
+    install -m 0666 ${bench.src}/bench/config/templates/502.html  $out/share
+    install -m 0666 ${bench.src}/bench/patches/patches.txt        $out/share
   '';
 
   # has no tests

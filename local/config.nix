@@ -35,9 +35,6 @@ A: (1) dotfile proliferation
       inputs.nixpkgs.nodePackages.prettier-plugin-toml
       inputs.nixpkgs.shfmt
     ];
-    devshell.startup.prettier-plugin-toml = inputs.nixpkgs.lib.stringsWithDeps.noDepEntry ''
-      export NODE_PATH=${inputs.nixpkgs.nodePackages.prettier-plugin-toml}/lib/node_modules:''${NODE_PATH-}
-    '';
     data = {
       formatter = {
         nix = {
@@ -46,7 +43,11 @@ A: (1) dotfile proliferation
         };
         prettier = {
           command = "prettier";
-          options = ["--plugin" "prettier-plugin-toml" "--write"];
+          options = [
+            "--plugin"
+            "${inputs.nixpkgs.nodePackages.prettier-plugin-toml}/lib/node_modules/prettier-plugin-toml/lib/api.js"
+            "--write"
+          ];
           includes = [
             "*.json"
             "*.md"
@@ -54,6 +55,7 @@ A: (1) dotfile proliferation
             "*.yaml"
             "*.toml"
           ];
+          exclused = ["apps/_sources/generated.json"];
         };
         shell = {
           command = "shfmt";

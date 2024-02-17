@@ -104,10 +104,7 @@ let
       };
   in {
     # loads custom `pkgs`
-    imports = [
-      cell.nixos.frappe
-      inputs.cells.oficina.nixosProfiles.matrix
-    ];
+    imports = [cell.nixos.frappe];
     _file = ./tests.nix;
     config = {
       users.mutableUsers = false;
@@ -116,25 +113,12 @@ let
         "127.0.0.1" = [
           site
           "erp.${site}"
-          "erp2.${site}"
-          "chat.${site}"
-          "matrix.${site}"
         ];
       };
       networking.domain = site;
       # setup a complete bench environment at the system level
       environment = {
         etc."${project}/admin-password".text = "admin";
-        systemPackages = [
-          # use versions defined by frappe passthru
-          cfg.package.mariadb
-          # used as (`node` from `PATH`) in:
-          #   frappe.website.doctype.web_template.test_web_template.TestWebTemplate
-          #   frappe.website.doctype.website_theme.test_website_theme.TestWebsiteTheme
-          cfg.package.node
-          # /usr/bin/env python (+ the python env) resolution for our mini bench
-          penv-test
-        ];
         extraInit = ''
           # when the testing backdoor service enters the environment, the frappe systemd services
           # havn't emplaced this folders yet so we create it manually for the linking below
@@ -170,12 +154,7 @@ let
       };
       security.pki.certificateFiles = [ca];
       systemd.tmpfiles.rules = ["d ${sslPath} 744 ${config.services.nginx.user} ${config.services.nginx.group}"];
-      services.nginx.virtualHosts = builtins.listToAttrs (map setCert ["matrix" "chat" "erp" "erp2" null]);
-      services.matrix-synapse.settings = {
-        enable_registration = true;
-        enable_registration_without_verification = true;
-        # tls_certificate_path = ca;
-      };
+      services.nginx.virtualHosts = builtins.listToAttrs (map setCert ["erp" null]);
       systemd.services."create-wildcard.${site}-cert" = {
         description = "Create a wildcard certificate for *.${site}";
         script = ''
@@ -206,8 +185,9 @@ let
         enable = true;
         adminPassword = "/etc/${project}/admin-password";
         gunicorn_workers = 1;
+        penv = lib.mkForce penv-test;
         apps = [
-          # # combining tests fails some frappe tests
+          # combining tests fails some frappe tests
           cell.pkgs.python310Packages.erpnext
           # cell.pkgs.python310Packages.insight
           # cell.pkgs.python310Packages.gameplan
@@ -215,10 +195,6 @@ let
         sites = {
           "erp.${site}" = {
             domains = ["erp.${site}"];
-            apps = ["frappe" "erpnext"];
-          };
-          "erp2.${site}" = {
-            domains = ["erp2.${site}"];
             apps = ["frappe" "erpnext"];
           };
         };
@@ -231,51 +207,50 @@ let
   };
   inherit (inputs.nixpkgs) lib;
 in {
-  frappe = nixos-lib.runTest {
-    name = "frappe-test";
-    _file = ./tests.nix;
-    skipLint = true;
-    defaults = test-vm;
-    hostPkgs = inputs.nixpkgs;
-    # test against stable nixos system packages
-    # NOTE: frappixPkgs remains pinned to its own nixpkgs
-    #       to avoid breakages until the depdencenty package
-    #       builds can be stabilized and / or upstreamed
-    node.pkgs = inputs.nixos.legacyPackages;
-    nodes = {
-      runnerA = {};
-      # runnerB = {};
-      # runnerC = {};
-      # runnerD = {};
+  tests =
+    (nixos-lib.runTest {
+      name = "frappe-test";
+      _file = ./tests.nix;
+      skipLint = true;
+      defaults = test-vm;
+      hostPkgs = inputs.nixpkgs;
+      nodes = {
+        runnerA = {};
+        # runnerB = {};
+        # runnerC = {};
+        # runnerD = {};
+      };
+      testScript =
+        # python
+        ''
+          def parallel(*fns):
+              from threading import Thread
+              threads = [ Thread(target=fn) for fn in fns ]
+              for t in threads: t.start()
+              for t in threads: t.join()
+
+          start_all()
+          total_builds = len(machines)
+
+          runnerA.wait_for_unit("${project}.target")
+
+          with subtest("Wait for site to become reachable"):
+              for idx, m in enumerate(machines):
+                  print("Check ", m)
+                  m.wait_until_succeeds('test $(curl -L -s -o /dev/null -w %{http_code} ${site}) = 200', timeout=10)
+
+          with subtest("Run the unit test suite"):
+              for idx, m in enumerate(machines):
+                  print("bench run-parallel-tests for ", m)
+                  stdout = m.succeed(f"bench run-parallel-tests --build-number {idx+1} --total-builds {total_builds}")
+                  print(stdout)
+              # parallel([
+              #     m.succeed(f"bench run-parallel-tests --build-number {idx+1} --total-builds {total_builds}")
+              #     for idx, m in enumerate(machines)
+              # ])
+        '';
+    })
+    // {
+      meta.description = "The test frappix vm-based test suite";
     };
-    testScript =
-      # python
-      ''
-        def parallel(*fns):
-            from threading import Thread
-            threads = [ Thread(target=fn) for fn in fns ]
-            for t in threads: t.start()
-            for t in threads: t.join()
-
-        start_all()
-        total_builds = len(machines)
-
-        runnerA.wait_for_unit("${project}.target")
-
-        with subtest("Wait for site to become reachable"):
-            for idx, m in enumerate(machines):
-                print("Check ", m)
-                m.wait_until_succeeds('test $(curl -L -s -o /dev/null -w %{http_code} ${site}) = 200', timeout=10)
-
-        with subtest("Run the unit test suite"):
-            for idx, m in enumerate(machines):
-                print("bench run-parallel-tests for ", m)
-                stdout = m.succeed(f"bench run-parallel-tests --build-number {idx+1} --total-builds {total_builds}")
-                print(stdout)
-            # parallel([
-            #     m.succeed(f"bench run-parallel-tests --build-number {idx+1} --total-builds {total_builds}")
-            #     for idx, m in enumerate(machines)
-            # ])
-      '';
-  };
 }

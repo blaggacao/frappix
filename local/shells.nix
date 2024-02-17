@@ -9,24 +9,29 @@ let
   inherit (inputs) nixpkgs;
 in {
   # Tool Homepage: https://numtide.github.io/devshell/
-  default = dev.mkShell {
-    name = "Frappix Shell";
+  default =
+    (dev.mkShell {
+      name = "Frappix Shell";
 
-    # Tool Homepage: https://nix-community.github.io/nixago/
-    # This is Standard's devshell integration.
-    # It runs the startup hook when entering the shell.
-    nixago = [
-      (dev.mkNixago cfg.conform)
-      ((dev.mkNixago cfg.treefmt) cell.config.treefmt)
-      ((dev.mkNixago cfg.editorconfig) cell.config.editorconfig)
-      ((dev.mkNixago cfg.lefthook) cell.config.lefthook)
-      ((dev.mkNixago cfg.mdbook) cell.config.mdbook)
-    ];
+      # Tool Homepage: https://nix-community.github.io/nixago/
+      # This is Standard's devshell integration.
+      # It runs the startup hook when entering the shell.
+      nixago = [
+        (dev.mkNixago cfg.conform)
+        ((dev.mkNixago cfg.treefmt) cell.config.treefmt)
+        ((dev.mkNixago cfg.editorconfig) cell.config.editorconfig)
+        ((dev.mkNixago cfg.lefthook) cell.config.lefthook)
+        ((dev.mkNixago cfg.mdbook) cell.config.mdbook)
+      ];
 
-    commands = [
-      {
-        package = inputs.std.std.cli.std;
-      }
-    ];
-  };
+      commands = [
+        {
+          package = inputs.std.std.cli.std;
+        }
+        {
+          package = nixpkgs.nvfetcher;
+        }
+      ];
+    })
+    // {meta.description = "Development environment for this repository";};
 }

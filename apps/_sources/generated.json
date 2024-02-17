@@ -1,0 +1,142 @@
+{
+  "bench": {
+    "cargoLocks": null,
+    "date": null,
+    "extract": null,
+    "name": "bench",
+    "passthru": null,
+    "pinned": false,
+    "src": {
+      "deepClone": false,
+      "fetchSubmodules": false,
+      "leaveDotGit": false,
+      "name": null,
+      "owner": "frappe",
+      "repo": "bench",
+      "rev": "v5.22.0",
+      "sha256": "sha256-GjFtuvGz6hLLXN1Zsssq+415qltO+TxmydH7qtsOhYE=",
+      "type": "github"
+    },
+    "version": "v5.22.0"
+  },
+  "ecommerce-integrations": {
+    "cargoLocks": null,
+    "date": null,
+    "extract": null,
+    "name": "ecommerce-integrations",
+    "passthru": null,
+    "pinned": false,
+    "src": {
+      "deepClone": false,
+      "fetchSubmodules": false,
+      "leaveDotGit": false,
+      "name": null,
+      "owner": "frappe",
+      "repo": "ecommerce_integrations",
+      "rev": "v1.20.0",
+      "sha256": "sha256-ydJn38hOQ2kfFIp8ZmIGT7Jn/D2H5Op5OkI6NGBgOdk=",
+      "type": "github"
+    },
+    "version": "v1.20.0"
+  },
+  "erpnext": {
+    "cargoLocks": null,
+    "date": "2024-02-16",
+    "extract": null,
+    "name": "erpnext",
+    "passthru": null,
+    "pinned": false,
+    "src": {
+      "deepClone": false,
+      "fetchSubmodules": false,
+      "leaveDotGit": false,
+      "name": null,
+      "owner": "frappe",
+      "repo": "erpnext",
+      "rev": "028d31a6f91427821e2a491ab49b59579fce0098",
+      "sha256": "sha256-bc032WkAdKW+Lq3L9nxnQbXB9TyRxLY+nZ8WXmH9BVQ=",
+      "type": "github"
+    },
+    "version": "028d31a6f91427821e2a491ab49b59579fce0098"
+  },
+  "frappe": {
+    "cargoLocks": null,
+    "date": "2024-02-17",
+    "extract": null,
+    "name": "frappe",
+    "passthru": null,
+    "pinned": false,
+    "src": {
+      "deepClone": false,
+      "fetchSubmodules": false,
+      "leaveDotGit": false,
+      "name": null,
+      "owner": "frappe",
+      "repo": "frappe",
+      "rev": "526359b20c41cdfe71d7d07bf2e54b82d3871744",
+      "sha256": "sha256-06kTHBCNLuQztxTrnEaYgPueI9Q3j7jMS1wXBivxjtw=",
+      "type": "github"
+    },
+    "version": "526359b20c41cdfe71d7d07bf2e54b82d3871744"
+  },
+  "gameplan": {
+    "cargoLocks": null,
+    "date": "2024-02-06",
+    "extract": null,
+    "name": "gameplan",
+    "passthru": null,
+    "pinned": false,
+    "src": {
+      "deepClone": false,
+      "fetchSubmodules": false,
+      "leaveDotGit": false,
+      "name": null,
+      "owner": "frappe",
+      "repo": "gameplan",
+      "rev": "9f9332cf29496afe5e912e4f1734fbf1142cb18c",
+      "sha256": "sha256-LhSoUr+sqtwGSnfu4aux8/NE09EzX+uNibiBgwXKJAA=",
+      "type": "github"
+    },
+    "version": "9f9332cf29496afe5e912e4f1734fbf1142cb18c"
+  },
+  "insights": {
+    "cargoLocks": null,
+    "date": null,
+    "extract": null,
+    "name": "insights",
+    "passthru": null,
+    "pinned": false,
+    "src": {
+      "deepClone": false,
+      "fetchSubmodules": false,
+      "leaveDotGit": false,
+      "name": null,
+      "owner": "frappe",
+      "repo": "insights",
+      "rev": "v2.1.0",
+      "sha256": "sha256-dR/CwwQA7SXzfxYuGXnIgc2Hu0F9fXsIGOfNvxP90TE=",
+      "type": "github"
+    },
+    "version": "v2.1.0"
+  },
+  "payments": {
+    "cargoLocks": null,
+    "date": "2024-01-23",
+    "extract": null,
+    "name": "payments",
+    "passthru": null,
+    "pinned": false,
+    "src": {
+      "deepClone": false,
+      "fetchSubmodules": false,
+      "leaveDotGit": false,
+      "name": null,
+      "owner": "frappe",
+      "repo": "payments",
+      "rev": "54cc513fa9420a7fda48251099b1b158f3f9be6b",
+      "sha256": "sha256-y+yXbieiDMkYTyL6Fc95EQCnuRtqAD0WMBTU4xF3zxo=",
+      "type": "github"
+    },
+    "version": "54cc513fa9420a7fda48251099b1b158f3f9be6b"
+  }
+}

@@ -16,10 +16,13 @@ The `overlays` block, together with the `pkgs` block, provides all necessary ext
 These are python dependencies, binaries or helpers that are not yet available in Nixpkgs.
 
 It also contains packaging for:
+
 - `frappe`
 - `erpnext`
 - `insight`
 - `gameplan`
+- `ecommerce-integrations`
+- `payments`
 
 See the [overlays readme](./overlays/Readme.md) for tips on how to package Frappe apps for Frappix.
 

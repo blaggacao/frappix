@@ -1,5 +1,5 @@
 {
-  src,
+  erpnext,
   lib,
   buildPythonPackage,
   pythonRelaxDepsHook,
@@ -16,12 +16,6 @@
   rapidfuzz,
   tweepy,
   unidecode,
-  vrp-cli,
-  shapely,
-  pyproj,
-  numpy,
-  scipy,
-  geojson,
   pythonOlder,
   pythonPackages,
   mkYarnApp,
@@ -37,7 +31,11 @@ buildPythonPackage rec {
     format
     ;
 
-  inherit src;
+  inherit (erpnext) src;
+
+  patches = [
+    ./erpnext-plaid-bump.patch
+  ];
 
   nativeBuildInputs = [
     pythonRelaxDepsHook
@@ -45,10 +43,6 @@ buildPythonPackage rec {
   ];
 
   passthru = {
-    # clone url to setup local dev environment
-    url = "https://github.com/frappe/erpnext.git";
-    test-dependencies = with pythonPackages; [
-    ];
     frontend = let
       yarnLock = "${src}/yarn.lock";
       # # w/o IFD

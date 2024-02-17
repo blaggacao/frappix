@@ -7,7 +7,8 @@
   description,
 }: let
   version = "5"; # lib.fileContents (inputs.self + /VERSION);
-in buildGoModule rec {
+in
+  buildGoModule rec {
     inherit version;
     pname = "frp";
     meta = {
@@ -18,7 +19,7 @@ in buildGoModule rec {
 
     src = paisano-tui + /src;
 
-    vendorHash = "sha256-ja0nFWdWqieq8m6cSKAhE1ibeN0fODDCC837jw0eCnE=";
+    vendorHash = "sha256-S1oPselqHRIPcqDSsvdIkCwu1siQGRDHOkxWtYwa+g4=";
 
     nativeBuildInputs = [installShellFiles];
 
@@ -41,4 +42,3 @@ in buildGoModule rec {
       "-X env.dotdir=.std"
     ];
   }
-

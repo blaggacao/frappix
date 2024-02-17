@@ -1,5 +1,5 @@
 {
-  src,
+  payments,
   lib,
   buildPythonPackage,
   flit-core,
@@ -24,33 +24,12 @@ buildPythonPackage rec {
     format
     ;
 
-  inherit src;
+  inherit (payments) src;
 
   nativeBuildInputs = [
     pythonRelaxDepsHook
     flit-core
   ];
-
-  passthru = {
-    # clone url to setup local dev environment
-    url = "https://github.com/frappe/payments.git";
-    # ---
-    # no front-end component at the time of packaging
-    # ---
-    # test-dependencies = with pythonPackages; [
-    # ];
-    # frontend = let
-    #   yarnLock = "${src}/yarn.lock";
-    #   # # w/o IFD
-    #   # offlineCache = fetchYarnDeps {
-    #   #   inherit yarnLock;
-    #   #   hash = "";
-    #   # };
-    #   # w/  IFD
-    #   offlineCache = mkYarnOfflineCache {inherit yarnLock;};
-    # in
-    #   mkYarnApp pname src offlineCache;
-  };
 
   propagatedBuildInputs = [
     braintree

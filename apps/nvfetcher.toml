@@ -1,0 +1,37 @@
+[bench] # only used for some static outputs
+src.github = "frappe/bench"
+fetch.github = "frappe/bench"
+
+[frappe]
+# src.github= "frappe/frappe" -- 2024-02-17 - patch doesn't apply to latest release: https://github.com/frappe/frappe/pull/22548
+# git.leaveDotGit = true
+src.git = "https://github.com/frappe/frappe"
+fetch.github = "frappe/frappe"
+
+[erpnext]
+# src.github= "frappe/erpnext" -- 2024-02-17 - frappe patch doesn't apply and frappe 16 is not compatible with erpnext 15
+# git.leaveDotGit = true
+src.git = "https://github.com/frappe/erpnext"
+fetch.github = "frappe/erpnext"
+
+[insights]
+# git.leaveDotGit = true
+src.github = "frappe/insights"
+fetch.github = "frappe/insights"
+
+[gameplan]
+# src.github = "frappe/gameplan" -- no release yet
+# git.leaveDotGit = true
+src.git = "https://github.com/frappe/gameplan"
+fetch.github = "frappe/gameplan"
+
+[ecommerce-integrations]
+# git.leaveDotGit = true
+src.github = "frappe/ecommerce_integrations"
+fetch.github = "frappe/ecommerce_integrations"
+
+[payments]
+# src.github= "frappe/payments" -- no release yet
+src.git = "https://github.com/frappe/payments"
+fetch.github = "frappe/payments"
+# git.leaveDotGit = true

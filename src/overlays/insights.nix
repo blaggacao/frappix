@@ -1,5 +1,5 @@
 {
-  src,
+  insights,
   lib,
   buildPythonPackage,
   pythonRelaxDepsHook,
@@ -20,14 +20,7 @@ buildPythonPackage rec {
     format
     ;
 
-  inherit src;
-
-  passthru = {
-    # clone url to setup local dev environment
-    url = "https://github.com/frappe/insights.git";
-    test-dependencies = with pythonPackages; [
-    ];
-  };
+  inherit (insights) src;
 
   nativeBuildInputs = [
     pythonRelaxDepsHook

@@ -49,14 +49,8 @@ with builtins; let
     cfg.packages
     ++ [
       pkgs.coreutils
-      # use versions defined by frappe passthru
-      cfg.package.mariadb
-      # used to compile custom website assets
-      cfg.package.node
       # our custom ultra-slim bench command
       frappixPkgs.bench
-      # invalidate assets_json cache on startup
-      pkgs.redis
       # /usr/bin/env python resolution for out mini bench
       cfg.penv
     ];
@@ -133,9 +127,8 @@ in {
           description = "Frappe web server (${toString cfg.gunicorn_workers} workers) for project: ${cfg.project}";
         };
         "${cfg.project}-socketio" = {
+          path = defaultPath;
           inherit (cfg) environment;
-          # use versions defined by frappe passthru
-          path = [cfg.package.node];
           script = "node ${cfg.package.websocket}";
           unitConfig =
             defaultUnitConfig

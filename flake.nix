@@ -8,7 +8,7 @@
   } @ inputs:
     std.growOn {
       inherit inputs;
-      cellsFrom = std.incl ./. ["src" "local"];
+      cellsFrom = std.incl ./. ["src" "local" "apps"];
       cellBlocks = with std.blockTypes; [
         # lib
 
@@ -16,13 +16,16 @@
         (functions "overlays")
         (pkgs "pkgs")
 
+        # App Sources
+        (anything "sources")
+
         # Modules
         (anything "nixos")
         (anything "shell")
-        (anything "tests")
+        (nixostests "tests")
 
         # local
-        (nixago "config")
+        (anything "config" // {cli = false;})
         (devshells "shells")
       ];
     }
@@ -31,11 +34,10 @@
     };
 
   # stick with master for a while until more dependencies are stabilized
-  inputs.nixpkgs.url = "github:nixos/nixpkgs";
-  inputs.nixos.url = "github:nixos/nixpkgs/release-23.05";
+  inputs.nixpkgs.url = "github:nixos/nixpkgs/release-23.11";
 
   inputs = {
-    std.url = "github:divnix/std/main";
+    std.url = "github:divnix/std/v0.30.0";
     devshell.url = "github:numtide/devshell";
     devshell.inputs.nixpkgs.follows = "nixpkgs";
     nixago.url = "github:nix-community/nixago";

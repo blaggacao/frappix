@@ -1,5 +1,5 @@
 {
-  src,
+  ecommerce-integrations,
   lib,
   buildPythonPackage,
   pythonRelaxDepsHook,
@@ -19,17 +19,12 @@ buildPythonPackage rec {
     format
     ;
 
-  inherit src;
+  inherit (ecommerce-integrations) src;
 
   nativeBuildInputs = [
     pythonRelaxDepsHook
     flit-core
   ];
-
-  passthru = {
-    # clone url to setup local dev environment
-    url = "https://github.com/frappe/ecommerce_integrations.git";
-  };
 
   propagatedBuildInputs = [
     shopify-python-api

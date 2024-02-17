@@ -1,5 +1,5 @@
 {
-  src,
+  gameplan,
   lib,
   buildPythonPackage,
   pythonRelaxDepsHook,
@@ -18,14 +18,7 @@ buildPythonPackage rec {
     format
     ;
 
-  inherit src;
-
-  passthru = {
-    # clone url to setup local dev environment
-    url = "https://github.com/frappe/gameplan.git";
-    test-dependencies = with pythonPackages; [
-    ];
-  };
+  inherit (gameplan) src;
 
   nativeBuildInputs = [
     pythonRelaxDepsHook

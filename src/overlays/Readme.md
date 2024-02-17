@@ -37,23 +37,24 @@ In order to account for some of the pecularities of the frappe framework, the fo
 - `frontend`
 
 They are for example consumed by the nixos, shell or testing modules.
+
 ```nix
     passthru = rec {
-      # made available to the runtime environment
+      # made available to the development and runtime environment
       packages = [
         mysql
         restic
         wkhtmltopdf-bin
       ];
-      # installed into the test environment
+      # installed into the test environment (vm)
       test-dependencies = with pythonPackages; [
         faker
         hypothesis
         responses
       ];
-      # clone url to setup local dev environment
+      # clone url to setup initial local development environment
       url = "https://github.com/frappe/frappe.git";
-      # used to package assets
+      # used to combined frontend assets of apps
       frontend = let
         yarnLock = "${src}/yarn.lock";
         # # w/o IFD
