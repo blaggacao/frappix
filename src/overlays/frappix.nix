@@ -7,8 +7,7 @@
   description,
 }: let
   version = "5"; # lib.fileContents (inputs.self + /VERSION);
-in
-  buildGoModule rec {
+in buildGoModule rec {
     inherit version;
     pname = "frp";
     meta = {
@@ -42,3 +41,4 @@ in
       "-X env.dotdir=.std"
     ];
   }
+

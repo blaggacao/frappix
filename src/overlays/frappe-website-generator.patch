@@ -1,0 +1,13 @@
+diff --git a/frappe/website/doctype/website_theme/website_theme.py b/frappe/website/doctype/website_theme/website_theme.py
+index 3af2eb26c5..5a28d975e1 100644
+--- a/frappe/website/doctype/website_theme/website_theme.py
++++ b/frappe/website/doctype/website_theme/website_theme.py
+@@ -111,7 +111,7 @@ class WebsiteTheme(Document):
+ 		content = content.replace("\n", "\\n")
+ 		command = ["node", "generate_bootstrap_theme.js", output_path, content]
+ 
+-		process = Popen(command, cwd=frappe.get_app_source_path("frappe"), stdout=PIPE, stderr=PIPE)
++		process = Popen(command, cwd="@frappe@", stdout=PIPE, stderr=PIPE)
+ 
+ 		stderr = process.communicate()[1]
+ 

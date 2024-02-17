@@ -16,7 +16,6 @@ in {
     hook.mode = "copy";
     data = {
       mysql = "start-mariadb-for-frappe";
-
       redis_cache = "envsubst < $PRJ_CONFIG_HOME/redis_cache.conf | redis-server -";
       redis_queue = "envsubst < $PRJ_CONFIG_HOME/redis_queue.conf | redis-server -";
 
@@ -39,7 +38,7 @@ in {
       dir = "$PRJ_DATA_HOME";
       pidfile = "$PRJ_RUNTIME_DIR/redis_queue.pid";
       bind = "127.0.0.1";
-      port = "11000";
+      port = "11311";
     };
     engine = redisEngine;
   };
@@ -52,7 +51,7 @@ in {
       dir = "$PRJ_DATA_HOME";
       pidfile = "$PRJ_RUNTIME_DIR/redis_cache.pid";
       bind = "127.0.0.1";
-      port = "13000";
+      port = "13311";
 
       maxmemory = "794mb";
       maxmemory-policy = "allkeys-lru";

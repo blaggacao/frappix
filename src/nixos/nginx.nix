@@ -10,9 +10,12 @@ with lib; let
   cfg = config.services.frappe;
   nginxOpts = options.services.nginx;
 
-  FrappeWebUpstream = "${cfg.project}-frappe-web";
-  NodeSocketIOUpstream = "${cfg.project}-node-socketio";
+  FrappeWebUpstream = "${cfg.project}-web";
+  NodeSocketIOUpstream = "${cfg.project}-socketio";
 in {
+  config.users = mkIf cfg.enable {
+    users.${config.services.nginx.user}.extraGroups = [cfg.project];
+  };
   config.services = mkIf cfg.enable {
     nginx =
       (
@@ -69,12 +72,12 @@ in {
           '';
         in {
           kTLS = true;
-          # forceSSL = true;
           http3 = true;
+          forceSSL = true;
           serverName = head site.domains;
           serverAliases = tail site.domains;
           extraConfig = ''
-            rewrite ^(.+)/$ $1 permanent;
+            rewrite ^((?!/socket\.io/).+)/$ $1 permanent;
             rewrite ^(.+)/index\.html$ $1 permanent;
             rewrite ^(.+)\.html$ $1 permanent;
 
@@ -88,6 +91,10 @@ in {
           '';
 
           locations = {
+            "= /.well-known/openid-configuration".extraConfig = ''
+              return 301 /api/method/frappe.integrations.oauth2.openid_configuration;
+            '';
+
             # '^~' means: stop here if matched
             "^~ /assets" = {
               root = "${cfg.combinedAssets}/share/sites/";
@@ -95,7 +102,7 @@ in {
             };
 
             # '^~' means: stop here if matched
-            "^~ /socket.io" = {
+            "^~ /socket.io/" = {
               proxyWebsockets = true; # we have enable http2 server in socket IO
               proxyPass = "http://${NodeSocketIOUpstream}";
               # TODO: validate purpose, seems shady config

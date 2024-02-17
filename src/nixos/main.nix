@@ -77,8 +77,6 @@ in {
         description = mdDoc ''
           Domain to site mapping.
         '';
-        # sanitize our future database names
-        apply = mapAttrs' (site: nameValuePair (replaceStrings ["."] ["_"] site));
       };
 
       adminPassword = mkOption {
@@ -139,6 +137,7 @@ in {
       combinedAssets = mkInternal;
       penv = mkInternal;
       packages = mkInternal;
+      environment = mkInternal;
     };
   };
 
@@ -165,7 +164,20 @@ in {
       };
     };
 
-    networking.firewall.allowedTCPPorts = [80];
+    networking.firewall.allowedTCPPorts = [80 443];
+
+    # so that we can interact from the host with bench for maintenance
+    environment = {
+      variables = cfg.environment;
+      systemPackages =
+        cfg.packages
+        ++ [
+          # our custom ultra-slim bench command
+          frappixPkgs.bench
+          # /usr/bin/env python resolution for out mini bench
+          cfg.penv
+        ];
+    };
 
     services = {
       # module builtin values
@@ -184,6 +196,17 @@ in {
       frappe.combinedAssets = frappixPkgs.mkFrappeAssets (catAttrs "frontend" cfg.apps);
       frappe.penv = cfg.package.pythonModule.buildEnv.override {extraLibs = cfg.apps;};
       frappe.packages = flatten (catAttrs "packages" cfg.apps);
+      frappe.environment = {
+        FRAPPE_STREAM_LOGGING = "1";
+        FRAPPE_REDIS_CACHE = "unix://${cfg.redisCacheSocket}";
+        FRAPPE_REDIS_QUEUE = "unix://${cfg.redisQueueSocket}";
+        FRAPPE_SOCKETIO_UDS = cfg.socketIOSocket;
+        FRAPPE_DB_SOCKET = cfg.mariadbSocket;
+        FRAPPE_SITES_ROOT = "${cfg.benchDirectory}/sites";
+        FRAPPE_BENCH_ROOT = "${cfg.benchDirectory}";
+        NODE_PATH = concatMapStringsSep ":" (app: "${cfg.combinedAssets}/share/apps/" + app.pname + "/node_modules") cfg.apps;
+        PYTHON_PATH = "${cfg.penv}/${cfg.package.pythonModule.sitePackages}";
+      };
 
       # setup redis service
       redis = {
@@ -207,17 +230,20 @@ in {
       };
 
       # setup mysql service + project user, site databases & site users
-      mysql = {
+      mysql = let
+        # is correspondingly sanitized in the systemd setup script
+        site_dbs = map (replaceStrings ["."] ["_"]) (attrNames cfg.sites);
+      in {
         enable = true;
         package = pkgs.mariadb;
-        ensureDatabases = attrNames cfg.sites;
+        ensureDatabases = site_dbs;
         ensureUsers =
           [
             # Root connection for this project
             {
               name = cfg.project;
               ensurePermissions =
-                mapAttrs' (site: _: nameValuePair "${site}.*" "ALL PRIVILEGES") cfg.sites
+                builtins.listToAttrs (map (site: (nameValuePair "${site}.*" "ALL PRIVILEGES")) site_dbs)
                 // {
                   # the root connection needs to manage the databases and user
                   "*.*" = "CREATE USER, RELOAD";
@@ -226,11 +252,11 @@ in {
           ]
           # create database users and grant them priviliges with socket auth
           # they must be manually switched to password auth in oneshot setup service
-          ++ (mapAttrsToList (site: _: {
+          ++ (map (site: {
               name = site;
               ensurePermissions = {"${site}.*" = "ALL PRIVILEGES";};
             })
-            cfg.sites);
+            site_dbs);
       };
     };
   };

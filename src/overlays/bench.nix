@@ -22,10 +22,10 @@ lib.lazyDerivation {
       import frappe
       import frappe.utils.bench_helper
 
-      site_root = os.getenv('FRAPPE_SITE_ROOT')
+      site_root = os.getenv('FRAPPE_SITES_ROOT')
 
       if not site_root:
-        raise Exception('FRAPPE_SITE_ROOT env variable must be set!')
+        raise Exception('FRAPPE_SITES_ROOT env variable must be set!')
 
       os.chdir(site_root)
 

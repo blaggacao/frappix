@@ -42,7 +42,6 @@ in {
       name = lib.mkDefault "Frappix Shell";
       nixago = [
         (dev.mkNixago cell.config.procfile)
-        (dev.mkNixago cell.config.redis_socketio)
         (dev.mkNixago cell.config.redis_queue)
         (dev.mkNixago cell.config.redis_cache)
       ];
@@ -54,7 +53,7 @@ in {
           text = let
             penv = cfg.package.pythonModule.buildEnv.override {extraLibs = cfg.apps;};
           in ''
-            echo "${penv}/${cfg.package.pythonModule.sitePackages}" > "$FRAPPE_BENCH_ROOT/env/${pkgs.python3.sitePackages}/shell-python-env.pth"
+            echo "${penv}/${cfg.package.pythonModule.sitePackages}" > "$FRAPPE_BENCH_ROOT/env/${pkgs.python3.sitePackages}/zzz-shell-python-env.pth"
             source "$FRAPPE_BENCH_ROOT/env/bin/activate"
           '';
           deps = ["init-bench"];
@@ -84,6 +83,12 @@ in {
                 echo "Installing $FRAPPE_BENCH_ROOT/apps/$app into virtual env ..." && \
                 "$FRAPPE_BENCH_ROOT/env/bin/python" -m pip install --quiet --upgrade --editable \
                   "$FRAPPE_BENCH_ROOT/apps/$app" --no-cache-dir --no-dependencies
+              echo "Upgrading $FRAPPE_BENCH_ROOT/apps/$app into virtual env ..." && \
+                "$FRAPPE_BENCH_ROOT/env/bin/python" -m pip install --quiet --upgrade --editable \
+                  "$FRAPPE_BENCH_ROOT/apps/$app" --no-cache-dir --no-dependencies
+              if [[ ! -f "$FRAPPE_BENCH_ROOT/apps/$app/.git/hooks/pre-commit" ]] && [[ -f "$FRAPPE_BENCH_ROOT/apps/$app/.pre-commit-config.yaml" ]]; then
+                (cd $FRAPPE_BENCH_ROOT/apps/$app; pre-commit install --install-hooks;)
+              fi
             done
           '';
           deps = [];
@@ -99,7 +104,7 @@ in {
           "$PRJ_RUNTIME_DIR/mysql.sock")
         (setEnv "FRAPPE_BENCH_ROOT"
           "$PRJ_ROOT/bench")
-        (setEnv "FRAPPE_SITE_ROOT"
+        (setEnv "FRAPPE_SITES_ROOT"
           "$FRAPPE_BENCH_ROOT/sites")
         (setEnv "FRAPPE_APPS_ROOT"
           "$FRAPPE_BENCH_ROOT/apps")
@@ -128,9 +133,12 @@ in {
           inherit package;
         };
       in [
+        (devPackage pkgs.pre-commit)
         (devPackage pkgs.overmind)
+        (devPackage pkgs.nodePackages.localtunnel)
         (devPackage frappixPkgs.frappix)
         (devPackage frappixPkgs.bench)
+        (devPackage frappixPkgs.apps)
         (devPackage frappixPkgs.fsjd)
         (devPackage frappixPkgs.start-mariadb-for-frappe)
       ];

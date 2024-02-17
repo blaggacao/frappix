@@ -15,7 +15,7 @@ with builtins; let
     # so that it can authenticate with mariadb
     User = cfg.project;
 
-    # so that it can read the bench project tree
+    # so that it can read the bench project tree and nginx can access
     Group = cfg.project;
 
     # Expands to /var/lib/${cfg.project}/{site,archived}, see: 'man 5 systemd.exec'
@@ -35,8 +35,7 @@ with builtins; let
       "${apps}:${cfg.benchDirectory}/sites/apps.txt"
       "${cfg.package}/share/patches.txt:${cfg.benchDirectory}/patches.txt"
       "${cfg.combinedAssets}/share/sites/assets:${cfg.benchDirectory}/sites/assets" # because lazy loading via `frappe.client.get_js`
-      # "${cfg.combinedAssets}/share/sites/assets/assets.json:${cfg.benchDirectory}/sites/assets/assets.json"
-      # "${cfg.combinedAssets}/share/sites/assets/assets-rtl.json:${cfg.benchDirectory}/sites/assets/assets-rtl.json"
+      "${cfg.combinedAssets}/share/apps:${cfg.benchDirectory}/apps" # because dynamic website theme generator
     ];
   };
 
@@ -46,22 +45,14 @@ with builtins; let
     After = ["${cfg.project}-setup.target"];
   };
 
-  defaultEnvironment = {
-    FRAPPE_STREAM_LOGGING = "1";
-    FRAPPE_REDIS_CACHE = "unix://${cfg.redisCacheSocket}";
-    FRAPPE_REDIS_QUEUE = "unix://${cfg.redisQueueSocket}";
-    FRAPPE_DB_SOCKET = cfg.mariadbSocket;
-    FRAPPE_SITE_ROOT = "${cfg.benchDirectory}/sites";
-    FRAPPE_BENCH_ROOT = "${cfg.benchDirectory}";
-    PYTHON_PATH = "${cfg.penv}/${cfg.package.pythonModule.sitePackages}";
-  };
-
   defaultPath =
     cfg.packages
     ++ [
       pkgs.coreutils
       # use versions defined by frappe passthru
       cfg.package.mariadb
+      # used to compile custom website assets
+      cfg.package.node
       # our custom ultra-slim bench command
       frappixPkgs.bench
       # invalidate assets_json cache on startup
@@ -74,7 +65,14 @@ with builtins; let
     concatMapStringsSep "\n" (app: app.pname) cfg.apps
   );
   sites = let
-    encode = name: {apps, ...}: "${name}:${concatStringsSep '','' apps}";
+    encode = name: {
+      apps,
+      domains,
+    }: "${name}:${concatStringsSep '','' apps}:${head domains}:${
+      if config.services.nginx.virtualHosts.${name}.forceSSL
+      then "https"
+      else "http"
+    }";
   in
     toFile "sites" (
       concatStringsSep "\n" (mapAttrsToList encode cfg.sites)
@@ -86,9 +84,9 @@ in {
   config.systemd = mkIf (cfg.enable) {
     services = let
       mkWorker = queue: {
-        "${cfg.project}-frappe-${queue}-worker" = {
+        "${cfg.project}-worker-${queue}" = {
           path = defaultPath;
-          environment = defaultEnvironment;
+          inherit (cfg) environment;
           script = "bench frappe worker --queue ${queue}";
           unitConfig = defaultUnitConfig;
           serviceConfig = defaultServiceConfig;
@@ -97,17 +95,17 @@ in {
       };
     in
       {
-        "${cfg.project}-frappe-schedule" = {
+        "${cfg.project}-schedule" = {
           path = defaultPath;
-          environment = defaultEnvironment;
+          inherit (cfg) environment;
           script = "bench frappe schedule";
           unitConfig = defaultUnitConfig;
           serviceConfig = defaultServiceConfig;
           description = "Frappe scheduler for project: ${cfg.project}";
         };
-        "${cfg.project}-frappe-web" = {
+        "${cfg.project}-web" = {
           path = defaultPath;
-          environment = defaultEnvironment;
+          inherit (cfg) environment;
           script = concatStringsSep " " [
             "python -m gunicorn"
             "--bind unix:${cfg.webSocket}"
@@ -123,9 +121,10 @@ in {
           serviceConfig =
             defaultServiceConfig
             // {
-              RestrictAddressFamilies = ["AF_UNIX"];
+              RestrictAddressFamilies = ["AF_UNIX" "AF_INET"];
               RuntimeDirectory = removePrefix "/run/" (dirOf cfg.webSocket);
-              RuntimeDirectoryMode = 0775;
+              RuntimeDirectoryMode = 0770;
+              UMask = 002;
               PIDFile = "${dirOf cfg.webSocket}/gunicorn.pid";
               ExecReload = "kill -s HUP $MAINPID";
               ExecStop = "kill -s TERM $MAINPID";
@@ -133,11 +132,8 @@ in {
             };
           description = "Frappe web server (${toString cfg.gunicorn_workers} workers) for project: ${cfg.project}";
         };
-        "${cfg.project}-node-socketio" = {
-          environment = {
-            FRAPPE_SOCKETIO_UDS = cfg.socketIOSocket;
-            FRAPPE_REDIS_QUEUE = "unix://${cfg.redisQueueSocket}";
-          };
+        "${cfg.project}-socketio" = {
+          inherit (cfg) environment;
           # use versions defined by frappe passthru
           path = [cfg.package.node];
           script = "node ${cfg.package.websocket}";
@@ -147,12 +143,12 @@ in {
               After =
                 defaultUnitConfig.After
                 ++ [
-                  "${cfg.project}-frappe-web.service"
+                  "${cfg.project}-web.service"
                 ];
               Requires =
                 defaultUnitConfig.Requires
                 ++ [
-                  "${cfg.project}-frappe-web.service"
+                  "${cfg.project}-web.service"
                 ];
             };
           serviceConfig =
@@ -160,13 +156,14 @@ in {
             // {
               RestrictAddressFamilies = ["AF_UNIX"];
               RuntimeDirectory = removePrefix "/run/" (dirOf cfg.socketIOSocket);
-              RuntimeDirectoryMode = 0775;
+              RuntimeDirectoryMode = 0770;
+              UMask = 002;
             };
           description = "Frappe websocket for project: ${cfg.project}";
         };
         "${cfg.project}-setup" = {
           path = defaultPath;
-          environment = defaultEnvironment;
+          inherit (cfg) environment;
           serviceConfig =
             defaultServiceConfig
             // {
@@ -194,12 +191,12 @@ in {
 
             redis-cli -s "${cfg.redisCacheSocket}" del assets_json
 
-            while IFS=: read -r site apps; do
+            while IFS=: read -r site apps domain scheme; do
               IFS=",";  _apps=($apps); IFS=" ";
               adminPassword="$(cat $CREDENTIALS_DIRECTORY/adminPassword)"
 
               if [[ -d "./$site" ]]; then
-                echo "Updating up $site with $apps..."
+                echo "Updating $site with $apps..."
                 bench frappe --site "$site" set-admin-password --logout-all-sessions "$adminPassword"
                 bench frappe --site "$site" migrate
                 set -x
@@ -209,25 +206,31 @@ in {
                 IFS=" ";
                 [[ ! ''${#apps_to_install[@]} -eq 0 ]] && bench frappe --site "$site" install-app ''${apps_to_install[@]}
                 set +x
-                echo Reached beyond new app install
               else
                 echo "Setting up $site with $apps..."
                 pwd="$(head -c 80 /dev/urandom | tr -cd 'a-zA-Z0-9' | head -c 16)"
 
-                # Change unix socket auth to password auth
+                echo "Changing nixos default mysql socket auth to password auth for user '$site'..."
+                site_db=''${site//[.]/_}
                 (
-                  echo "ALTER USER '$site'@'localhost' IDENTIFIED BY '$pwd';"
+                  echo "ALTER USER '$site_db'@'localhost' IDENTIFIED BY '$pwd';"
                   echo "FLUSH PRIVILEGES;"
-                ) | mysql -N
+                ) | mysql -N -S "${cfg.mariadbSocket}"
 
+                echo "Creating new site ('$site') with bench..."
                 bench frappe new-site "$site" \
-                  --db-name "$site" \
+                  --db-name "$site_db" \
                   --db-password "$pwd" \
                   --db-socket "${cfg.mariadbSocket}" \
                   --admin-password "$adminPassword" \
+                  --verbose \
                   --no-setup-db
+
+                echo "Installing $apps on $site..."
                 bench frappe --site "$site" install-app ''${_apps[@]}
               fi
+              # inform workers about the domain associated with this site
+              bench frappe --site "$site" set-config host_name "$scheme://$domain"
             done <<<$(cat ${sites})
           '';
           description = "Frappe setup for project: ${cfg.project}";
@@ -243,22 +246,22 @@ in {
           [
             "network.target"
             "${cfg.project}-setup.target"
-            "${cfg.project}-frappe-web.service"
-            "${cfg.project}-node-socketio.service"
-            "${cfg.project}-frappe-schedule.service"
+            "${cfg.project}-web.service"
+            "${cfg.project}-socketio.service"
+            "${cfg.project}-schedule.service"
           ]
           ++ (
-            map (scope: "${cfg.project}-frappe-${scope}-worker.service") cfg.workerQueues
+            map (scope: "${cfg.project}-worker-${scope}.service") cfg.workerQueues
           );
         requires =
           [
             "${cfg.project}-setup.target"
-            "${cfg.project}-frappe-web.service"
-            "${cfg.project}-node-socketio.service"
-            "${cfg.project}-frappe-schedule.service"
+            "${cfg.project}-web.service"
+            "${cfg.project}-socketio.service"
+            "${cfg.project}-schedule.service"
           ]
           ++ (
-            map (scope: "${cfg.project}-frappe-${scope}-worker.service") cfg.workerQueues
+            map (scope: "${cfg.project}-worker-${scope}.service") cfg.workerQueues
           );
         unitConfig = {
           # TODO: add notification service

@@ -1,19 +1,19 @@
-{
-  lib,
-  brotlipy,
-  buildPythonPackage,
-  decorator,
-  fetchpatch,
-  fetchPypi,
-  flask,
-  flask-limiter,
-  itsdangerous,
-  markupsafe,
-  raven,
-  six,
-  pytestCheckHook,
-  werkzeug,
+{ lib
+, brotlipy
+, buildPythonPackage
+, decorator
+, fetchpatch
+, fetchPypi
+, flask
+, flask-limiter
+, itsdangerous
+, markupsafe
+, raven
+, six
+, pytestCheckHook
+, werkzeug
 }:
+
 buildPythonPackage rec {
   pname = "httpbin";
   version = "0.7.0";
@@ -33,19 +33,17 @@ buildPythonPackage rec {
     })
   ];
 
-  propagatedBuildInputs =
-    [
-      brotlipy
-      decorator
-      flask
-      flask-limiter
-      itsdangerous
-      markupsafe
-      raven
-      six
-      werkzeug
-    ]
-    ++ raven.optional-dependencies.flask;
+  propagatedBuildInputs = [
+    brotlipy
+    decorator
+    flask
+    flask-limiter
+    itsdangerous
+    markupsafe
+    raven
+    six
+    werkzeug
+  ] ++ raven.optional-dependencies.flask;
 
   nativeCheckInputs = [
     pytestCheckHook
@@ -78,6 +76,7 @@ buildPythonPackage rec {
     description = "HTTP Request and Response Service";
     homepage = "https://github.com/kennethreitz/httpbin";
     license = licenses.mit;
-    maintainers = with maintainers; [];
+    maintainers = with maintainers; [ ];
   };
 }
+

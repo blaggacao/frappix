@@ -1,11 +1,13 @@
 {
   runCommand,
+  symlinkJoin,
   yarn,
   lib,
 }: apps: let
   apps' = lib.concatMapStringsSep "\n" (f: "${f.pname}:${f.outPath}") apps;
-in
-  runCommand "frappe-apps-frontend-assets" {buildInputs = [yarn];} ''
+  appsTxt = builtins.toFile "apps.txt" (lib.concatMapStringsSep "\n" (app: app.pname) apps);
+
+  assets = runCommand "frappe-apps-frontend-assets" {buildInputs = [yarn];} ''
 
     mkdir -p sites/assets apps
 
@@ -57,5 +59,13 @@ in
     popd
 
     mkdir -p $out/share/sites
-    mv sites/assets $out/share/sites/assets
-  ''
+    mv sites/assets   $out/share/sites/assets
+    ln -sf ${appsTxt} $out/share/sites/apps.txt
+  '';
+in
+  symlinkJoin {
+    name = "frappe-apps";
+    paths =
+      apps # app sources are still required for dynamic building of website themes
+      ++ [assets];
+  }
