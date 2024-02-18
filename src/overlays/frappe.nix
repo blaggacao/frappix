@@ -61,6 +61,7 @@ buildPythonPackage rec {
       faker
       hypothesis
       responses
+      freezegun
     ];
     websocket = frontend + /share/apps/frappe/socketio.js;
     frontend = let

@@ -137,7 +137,7 @@ in {
       combinedAssets = mkInternal;
       penv = mkInternal;
       packages = mkInternal;
-      environment = mkInternal;
+      environment = mkInternal // {type = types.attrs;};
     };
   };
 

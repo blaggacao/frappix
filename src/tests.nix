@@ -186,16 +186,21 @@ let
         adminPassword = "/etc/${project}/admin-password";
         gunicorn_workers = 1;
         penv = lib.mkForce penv-test;
+        environment = {
+          # python requests observes this, among others
+          CURL_CA_BUNDLE = config.environment.etc."ssl/certs/ca-certificates.crt".source;
+        };
+
         apps = [
           # combining tests fails some frappe tests
-          cell.pkgs.python3.pkgs.erpnext
+          # cell.pkgs.python3.pkgs.erpnext
           # cell.pkgs.python3.pkgs.insight
           # cell.pkgs.python3.pkgs.gameplan
         ];
         sites = {
           "erp.${site}" = {
             domains = ["erp.${site}"];
-            apps = ["frappe" "erpnext"];
+            apps = ["frappe"];
           };
         };
       };

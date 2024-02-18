@@ -37,8 +37,6 @@ with inputs.std.yants "frappix"; {
 
           # indirect dependencies
           # pydantic v2
-          annotated-types = pyFinal.callPackage ./annotated-types.nix {};
-          typing-extensions = pyFinal.callPackage ./typing-extensions.nix {};
           pydantic-core = pyFinal.callPackage ./pydantic-core {};
 
           # erpnext dependencies
