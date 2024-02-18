@@ -17,7 +17,7 @@
         (pkgs "pkgs")
 
         # App Sources
-        (anything "sources")
+        (nvfetcher "sources")
 
         # Modules
         (anything "nixos")
@@ -37,7 +37,7 @@
   inputs.nixpkgs.url = "github:nixos/nixpkgs/release-23.11";
 
   inputs = {
-    std.url = "github:divnix/std/v0.30.1";
+    std.url = "github:divnix/std/v0.31.0";
     devshell.url = "github:numtide/devshell";
     devshell.inputs.nixpkgs.follows = "nixpkgs";
     nixago.url = "github:nix-community/nixago";

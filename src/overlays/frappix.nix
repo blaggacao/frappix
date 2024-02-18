@@ -6,7 +6,7 @@
   paisano-tui,
   description,
 }: let
-  version = "5"; # lib.fileContents (inputs.self + /VERSION);
+  version = lib.fileContents (inputs.self + /VERSION);
 in
   buildGoModule rec {
     inherit version;

@@ -41,17 +41,17 @@
   };
   frappe = {
     pname = "frappe";
-    version = "526359b20c41cdfe71d7d07bf2e54b82d3871744";
+    version = "59f8e361a575e6bd883512f883f5e953ca5afbfa";
     src = fetchFromGitHub {
       owner = "frappe";
       repo = "frappe";
-      rev = "526359b20c41cdfe71d7d07bf2e54b82d3871744";
+      rev = "59f8e361a575e6bd883512f883f5e953ca5afbfa";
       fetchSubmodules = false;
       deepClone = false;
       leaveDotGit = true;
-      sha256 = "sha256-fJ2rEKrkfvWOjB8ikH5vAB0K27/mPkxTTBl8VK09Edo=";
+      sha256 = "sha256-hA6XWTPJtAkVCnd1jBzZpwFfyAtzAPtZiPTLiI63FbA=";
     };
-    date = "2024-02-17";
+    date = "2024-02-18";
   };
   gameplan = {
     pname = "gameplan";

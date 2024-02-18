@@ -3,5 +3,5 @@ let
   inherit (inputs.nixpkgs) callPackage;
 in (mapAttrs (
     n: s: (s // {meta.description = "Source for ${n} (${s.version})";})
-  ) (removeAttrs (callPackage ./_sources/generated.nix {})
+  ) (removeAttrs (callPackage ./sources/generated.nix {})
     ["override" "overrideDerivation"]))

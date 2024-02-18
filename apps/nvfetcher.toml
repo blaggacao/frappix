@@ -3,7 +3,7 @@ src.github = "frappe/bench"
 fetch.github = "frappe/bench"
 
 [frappe]
-# src.github= "frappe/frappe" -- 2024-02-17 - patch doesn't apply to latest release: https://github.com/frappe/frappe/pull/22548
+# src.github = "frappe/frappe" #-- 2024-02-17 - patch doesn't apply to latest release: https://github.com/frappe/frappe/pull/22548
 git.leaveDotGit = true
 src.git = "https://github.com/frappe/frappe"
 fetch.github = "frappe/frappe"

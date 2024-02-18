@@ -40,7 +40,7 @@ A: (1) dotfile proliferation
         nix = {
           command = "alejandra";
           includes = ["*.nix"];
-          excludes = ["apps/_sources/generated.nix"];
+          excludes = ["apps/sources/generated.nix"];
         };
         prettier = {
           command = "prettier";
@@ -56,7 +56,7 @@ A: (1) dotfile proliferation
             "*.yaml"
             "*.toml"
           ];
-          excludes = ["apps/_sources/generated.json"];
+          excludes = ["apps/sources/generated.json"];
         };
         shell = {
           command = "shfmt";
