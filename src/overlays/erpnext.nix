@@ -5,19 +5,8 @@
   pythonRelaxDepsHook,
   fetchFromGitHub,
   flit-core,
-  barcodenumber,
-  gocardless-pro,
-  googlemaps,
-  holidays,
-  plaid-python,
-  pycountry,
-  pypng,
-  python-youtube,
-  rapidfuzz,
-  tweepy,
-  unidecode,
   pythonOlder,
-  pythonPackages,
+  python,
   mkYarnApp,
   mkYarnOfflineCache,
   fetchYarnDeps,
@@ -56,7 +45,7 @@ buildPythonPackage rec {
       mkYarnApp pname src offlineCache;
   };
 
-  propagatedBuildInputs = [
+  propagatedBuildInputs = with python.pkgs; [
     barcodenumber
     gocardless-pro
     googlemaps

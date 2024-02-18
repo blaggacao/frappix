@@ -47,7 +47,7 @@ They are for example consumed by the nixos, shell or testing modules.
         wkhtmltopdf-bin
       ];
       # installed into the test environment (vm)
-      test-dependencies = with pythonPackages; [
+      test-dependencies = with python.pkgs; [
         faker
         hypothesis
         responses

@@ -8,8 +8,7 @@ with inputs.std.yants "frappix"; {
         frontend = option drv;
       };
     in {
-      python310Packages = final.python310.pkgs; # without this line, overlay is not fully specified
-      python310 = prev.python310.override {
+      python311 = prev.python311.override {
         packageOverrides = pyFinal: pyPrev: {
           frappe = final.python3.pkgs.callPackage ./frappe.nix {
             inherit (inputs.cells.apps.sources) frappe bench;
@@ -31,16 +30,9 @@ with inputs.std.yants "frappix"; {
           };
 
           # frappe dependencies
-          # maxminddb-geolite2 = pyFinal.callPackage ./python/maxminddb-geolite2.nix {};
-          # psycopg2-binary = pyFinal.callPackage ./python/psycopg2-binary.nix {};
           barcodenumber = pyFinal.callPackage ./barcodenumber.nix {};
           email-reply-parser = pyFinal.callPackage ./email-reply-parser.nix {};
-          git-url-parse = pyFinal.callPackage ./git-url-parse.nix {};
-          posthog = pyFinal.callPackage ./posthog.nix {};
           pydantic_2 = pyFinal.callPackage ./pydantic {};
-          pymatting = pyFinal.callPackage ./pymatting {};
-          pypika = pyFinal.callPackage ./pypika.nix {};
-          rauth = pyFinal.callPackage ./rauth.nix {};
           traceback-with-variables = pyFinal.callPackage ./traceback-with-variables {};
 
           # indirect dependencies
@@ -48,13 +40,9 @@ with inputs.std.yants "frappix"; {
           annotated-types = pyFinal.callPackage ./annotated-types.nix {};
           typing-extensions = pyFinal.callPackage ./typing-extensions.nix {};
           pydantic-core = pyFinal.callPackage ./pydantic-core {};
-          pytest-examples = pyFinal.callPackage ./pytest-examples.nix {};
-          # python-youtube
-          typing-inspect = pyFinal.callPackage ./typing-inspect.nix {};
 
           # erpnext dependencies
           gocardless-pro = pyFinal.callPackage ./gocardless-pro.nix {};
-          python-youtube = pyFinal.callPackage ./python-youtube.nix {};
 
           # payments dependencies
           razorpay = pyFinal.callPackage ./razorpay.nix {};
@@ -66,11 +54,6 @@ with inputs.std.yants "frappix"; {
 
           # fjsd dependency
           json-source-map = pyFinal.callPackage ./json-source-map.nix {};
-
-          # fixes
-          # # https://github.com/pallets/werkzeug/issues/2603
-          werkzeug = pyFinal.callPackage ./werkzeug.nix {};
-          httpbin = pyFinal.callPackage ./httpbin.nix {}; # test fail due to werkzeug update
         };
       };
     };

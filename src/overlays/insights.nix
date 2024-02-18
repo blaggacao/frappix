@@ -5,11 +5,8 @@
   pythonRelaxDepsHook,
   fetchFromGitHub,
   flit-core,
-  pandas,
-  python-telegram-bot,
-  sqlalchemy,
   pythonOlder,
-  pythonPackages,
+  python,
   extractFrappeMeta,
 }:
 buildPythonPackage rec {
@@ -27,7 +24,7 @@ buildPythonPackage rec {
     flit-core
   ];
 
-  propagatedBuildInputs = [
+  propagatedBuildInputs = with python.pkgs; [
     pandas
     python-telegram-bot
     sqlalchemy

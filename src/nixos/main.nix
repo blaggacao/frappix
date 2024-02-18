@@ -21,11 +21,11 @@ in {
 
       package = mkOption {
         type = types.package;
-        default = frappixPkgs.python310Packages.frappe;
+        default = frappixPkgs.python3.pkgs.frappe;
         description = mkDoc ''
           The frappe base package to use.
         '';
-        example = literalExpression frappixPkgs.python310Packages.frappe;
+        example = literalExpression frappixPkgs.python3.pkgs.frappe;
       };
 
       project = mkOption {
@@ -48,9 +48,9 @@ in {
           Always includes frappe.
         '';
         example = literalExpression [
-          frappixPkgs.python310Packages.erpnext
-          frappixPkgs.python310Packages.insight
-          frappixPkgs.python310Packages.gameplan
+          frappixPkgs.python3.pkgs.erpnext
+          frappixPkgs.python3.pkgs.insight
+          frappixPkgs.python3.pkgs.gameplan
         ];
       };
 

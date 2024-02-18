@@ -4,13 +4,8 @@
   buildPythonPackage,
   flit-core,
   pythonRelaxDepsHook,
-  braintree,
-  paytmchecksum,
-  pycryptodome,
-  razorpay,
-  stripe,
   pythonOlder,
-  pythonPackages,
+  python,
   mkYarnApp,
   mkYarnOfflineCache,
   fetchYarnDeps,
@@ -31,7 +26,7 @@ buildPythonPackage rec {
     flit-core
   ];
 
-  propagatedBuildInputs = [
+  propagatedBuildInputs = with python.pkgs; [
     braintree
     paytmchecksum
     pycryptodome

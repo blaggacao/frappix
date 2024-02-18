@@ -5,10 +5,8 @@
   pythonRelaxDepsHook,
   fetchFromGitHub,
   flit-core,
-  shopify-python-api,
-  boto,
   pythonOlder,
-  pythonPackages,
+  python,
   extractFrappeMeta,
 }:
 buildPythonPackage rec {
@@ -26,7 +24,7 @@ buildPythonPackage rec {
     flit-core
   ];
 
-  propagatedBuildInputs = [
+  propagatedBuildInputs = with python.pkgs; [
     shopify-python-api
     boto
   ];

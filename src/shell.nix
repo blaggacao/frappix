@@ -18,11 +18,11 @@ in {
         bench = {
           package = lib.mkOption {
             type = lib.types.package;
-            default = frappixPkgs.python310Packages.frappe;
+            default = frappixPkgs.python3.pkgs.frappe;
             description = lib.mkDoc ''
               The frappe base package to use.
             '';
-            example = lib.literalExpression frappixPkgs.python310Packages.frappe;
+            example = lib.literalExpression frappixPkgs.python3.pkgs.frappe;
           };
           apps = lib.mkOption {
             type = with lib.types; listOf package;
@@ -33,9 +33,9 @@ in {
               Always includes frappe.
             '';
             example = lib.literalExpression [
-              frappixPkgs.python310Packages.erpnext
-              frappixPkgs.python310Packages.insight
-              frappixPkgs.python310Packages.gameplan
+              frappixPkgs.python3.pkgs.erpnext
+              frappixPkgs.python3.pkgs.insight
+              frappixPkgs.python3.pkgs.gameplan
             ];
           };
         };

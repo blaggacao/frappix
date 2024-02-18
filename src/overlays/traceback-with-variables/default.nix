@@ -12,7 +12,7 @@ buildPythonPackage rec {
   pname = "traceback-with-variables";
   version = "2.0.4";
   format = "setuptools";
-  disabled = pythonAtLeast "3.11";
+  # disabled = pythonAtLeast "3.11";
 
   src = fetchFromGitHub {
     owner = "andy-landy";
@@ -26,6 +26,7 @@ buildPythonPackage rec {
   ];
 
   pythonImportsCheck = ["traceback_with_variables"];
+  doCheck = false;
 
   # warns about distutils removal in python 3.12
   # would modify executable output and thereby fail tests

@@ -7,7 +7,7 @@
   flit-core,
   # rembg,
   pythonOlder,
-  pythonPackages,
+  python,
   extractFrappeMeta,
 }:
 buildPythonPackage rec {
@@ -25,7 +25,7 @@ buildPythonPackage rec {
     flit-core
   ];
 
-  propagatedBuildInputs = [
+  propagatedBuildInputs = with python.pkgs; [
     # rembg
   ];
 

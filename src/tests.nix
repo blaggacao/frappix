@@ -188,9 +188,9 @@ let
         penv = lib.mkForce penv-test;
         apps = [
           # combining tests fails some frappe tests
-          cell.pkgs.python310Packages.erpnext
-          # cell.pkgs.python310Packages.insight
-          # cell.pkgs.python310Packages.gameplan
+          cell.pkgs.python3.pkgs.erpnext
+          # cell.pkgs.python3.pkgs.insight
+          # cell.pkgs.python3.pkgs.gameplan
         ];
         sites = {
           "erp.${site}" = {

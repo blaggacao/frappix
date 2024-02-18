@@ -6,7 +6,7 @@
   pythonRelaxDepsHook,
   pythonOlder,
   flit-core,
-  pythonPackages,
+  python,
   pkgs,
   mkYarnApp,
   mkYarnOfflineCache,
@@ -57,7 +57,7 @@ buildPythonPackage rec {
       nodejs-18_x
       redis
     ];
-    test-dependencies = with pythonPackages; [
+    test-dependencies = with python.pkgs; [
       faker
       hypothesis
       responses
@@ -76,7 +76,7 @@ buildPythonPackage rec {
       mkYarnApp pname src offlineCache;
   };
 
-  propagatedBuildInputs = with pythonPackages;
+  propagatedBuildInputs = with python.pkgs;
     [
       babel
       beautifulsoup4
