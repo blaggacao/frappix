@@ -2,7 +2,6 @@
   lib,
   pkgs,
   config,
-  frappixPkgs,
   ...
 }:
 with lib;
@@ -50,7 +49,7 @@ with builtins; let
     ++ [
       pkgs.coreutils
       # our custom ultra-slim bench command
-      frappixPkgs.bench
+      pkgs.bench
       # /usr/bin/env python resolution for out mini bench
       cfg.penv
     ];

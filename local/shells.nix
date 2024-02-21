@@ -5,7 +5,6 @@ They conveniently also generate config files in their startup hook.
 */
 let
   inherit (inputs.std.lib) dev cfg;
-  inherit (inputs.cells) bench;
   inherit (inputs) nixpkgs;
 in {
   # Tool Homepage: https://numtide.github.io/devshell/

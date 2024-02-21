@@ -3,7 +3,6 @@
   pkgs,
   config,
   options,
-  frappixPkgs,
   ...
 }:
 with lib; let

@@ -84,7 +84,7 @@ let
     lib,
     pkgs,
     config,
-    frappixPkgs,
+    frappix,
     ...
   }: let
     inherit (lib) nameValuePair;
@@ -107,6 +107,7 @@ let
     imports = [cell.nixos.frappe];
     _file = ./tests.nix;
     config = {
+      nixpkgs = {inherit (cell) pkgs;};
       users.mutableUsers = false;
       networking.firewall.enable = false;
       networking.hosts = {
@@ -191,11 +192,11 @@ let
           CURL_CA_BUNDLE = config.environment.etc."ssl/certs/ca-certificates.crt".source;
         };
 
-        apps = [
+        apps = with frappix; [
           # combining tests fails some frappe tests
-          # cell.pkgs.python3.pkgs.erpnext
-          # cell.pkgs.python3.pkgs.insight
-          # cell.pkgs.python3.pkgs.gameplan
+          # erpnext
+          # insight
+          # gameplan
         ];
         sites = {
           "erp.${site}" = {

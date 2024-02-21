@@ -41,7 +41,7 @@
     },
     "erpnext": {
         "cargoLocks": null,
-        "date": "2024-02-16",
+        "date": "2024-02-21",
         "extract": null,
         "name": "erpnext",
         "passthru": null,
@@ -53,15 +53,15 @@
             "name": null,
             "owner": "frappe",
             "repo": "erpnext",
-            "rev": "028d31a6f91427821e2a491ab49b59579fce0098",
-            "sha256": "sha256-+u4HemzaglHK04PH2r+c+h/BAjkbxWqDUjxT9988d1Q=",
+            "rev": "38e88db2c9245a3fec392941d2937cace7bf8e5f",
+            "sha256": "sha256-MWDDekYsr8Ewx/++8zQeqk5azEGhgWtjg2pceqrLXY8=",
             "type": "github"
         },
-        "version": "028d31a6f91427821e2a491ab49b59579fce0098"
+        "version": "38e88db2c9245a3fec392941d2937cace7bf8e5f"
     },
     "frappe": {
         "cargoLocks": null,
-        "date": "2024-02-18",
+        "date": "2024-02-21",
         "extract": null,
         "name": "frappe",
         "passthru": null,
@@ -73,11 +73,11 @@
             "name": null,
             "owner": "frappe",
             "repo": "frappe",
-            "rev": "59f8e361a575e6bd883512f883f5e953ca5afbfa",
-            "sha256": "sha256-hA6XWTPJtAkVCnd1jBzZpwFfyAtzAPtZiPTLiI63FbA=",
+            "rev": "4f18daba1768efab42c55aa67dff4e85f65ea125",
+            "sha256": "sha256-e/Ryi6tZTeIQAYWWaDpmA3k+eGHk6JPV2bDnrDxJ82g=",
             "type": "github"
         },
-        "version": "59f8e361a575e6bd883512f883f5e953ca5afbfa"
+        "version": "4f18daba1768efab42c55aa67dff4e85f65ea125"
     },
     "gameplan": {
         "cargoLocks": null,
@@ -113,11 +113,11 @@
             "name": null,
             "owner": "frappe",
             "repo": "insights",
-            "rev": "v2.1.0",
-            "sha256": "sha256-dR/CwwQA7SXzfxYuGXnIgc2Hu0F9fXsIGOfNvxP90TE=",
+            "rev": "v2.1.2",
+            "sha256": "sha256-Qope4iYQ+SoWahU7k8Fq+E4+iwdg5lZaAQHas/IDhoU=",
             "type": "github"
         },
-        "version": "v2.1.0"
+        "version": "v2.1.2"
     },
     "payments": {
         "cargoLocks": null,

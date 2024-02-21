@@ -1,10 +1,10 @@
 # https://github.com/NixOS/nixpkgs/pull/242577
-{ lib
-, buildPythonPackage
-, fetchPypi
-, python-stdnum
+{
+  lib,
+  buildPythonPackage,
+  fetchPypi,
+  python-stdnum,
 }:
-
 buildPythonPackage rec {
   pname = "barcodenumber";
   version = "0.5.0";
@@ -22,12 +22,12 @@ buildPythonPackage rec {
     python-stdnum
   ];
 
-  pythonImportsCheck = [ "barcodenumber" ];
+  pythonImportsCheck = ["barcodenumber"];
 
   meta = with lib; {
     description = "Python module to validate product codes";
     homepage = "https://pypi.org/project/barcodenumber/";
     license = licenses.gpl3Only;
-    maintainers = with maintainers; [ blaggacao ];
+    maintainers = with maintainers; [blaggacao];
   };
 }

@@ -2,7 +2,7 @@
   lib,
   pkgs,
   config,
-  frappixPkgs,
+  frappix,
   ...
 }:
 with lib; let
@@ -21,11 +21,11 @@ in {
 
       package = mkOption {
         type = types.package;
-        default = frappixPkgs.python3.pkgs.frappe;
+        default = frappix.frappe;
         description = mkDoc ''
           The frappe base package to use.
         '';
-        example = literalExpression frappixPkgs.python3.pkgs.frappe;
+        example = literalExpression frappix.frappe;
       };
 
       project = mkOption {
@@ -48,9 +48,9 @@ in {
           Always includes frappe.
         '';
         example = literalExpression [
-          frappixPkgs.python3.pkgs.erpnext
-          frappixPkgs.python3.pkgs.insight
-          frappixPkgs.python3.pkgs.gameplan
+          frappix.erpnext
+          frappix.insight
+          frappix.gameplan
         ];
       };
 
@@ -173,7 +173,7 @@ in {
         cfg.packages
         ++ [
           # our custom ultra-slim bench command
-          frappixPkgs.bench
+          pkgs.bench
           # /usr/bin/env python resolution for out mini bench
           cfg.penv
         ];
@@ -193,7 +193,7 @@ in {
       frappe.socketIOSocket = "/run/${cfg.project}/ws/socketIO.socket";
       frappe.benchDirectory = "/var/lib/${cfg.project}";
       # - preprocessed inputs
-      frappe.combinedAssets = frappixPkgs.mkFrappeAssets (catAttrs "frontend" cfg.apps);
+      frappe.combinedAssets = pkgs.mkFrappeAssets (catAttrs "frontend" cfg.apps);
       frappe.penv = cfg.package.pythonModule.buildEnv.override {extraLibs = cfg.apps;};
       frappe.packages = flatten (catAttrs "packages" cfg.apps);
       frappe.environment = {

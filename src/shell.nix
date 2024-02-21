@@ -7,22 +7,24 @@ in {
     __functor = _: {
       pkgs,
       config,
-      frappixPkgs,
+      frappix,
       ...
     }: let
       cfg = config.bench;
     in {
       # load our custom `pkgs`
-      config._module.args.frappixPkgs = cell.pkgs;
+      config._module.args = {
+        inherit (pkgs) frappix;
+      };
       options = {
         bench = {
           package = lib.mkOption {
             type = lib.types.package;
-            default = frappixPkgs.python3.pkgs.frappe;
+            default = frappix.frappe;
             description = lib.mkDoc ''
               The frappe base package to use.
             '';
-            example = lib.literalExpression frappixPkgs.python3.pkgs.frappe;
+            example = lib.literalExpression frappix.frappe;
           };
           apps = lib.mkOption {
             type = with lib.types; listOf package;
@@ -33,9 +35,9 @@ in {
               Always includes frappe.
             '';
             example = lib.literalExpression [
-              frappixPkgs.python3.pkgs.erpnext
-              frappixPkgs.python3.pkgs.insight
-              frappixPkgs.python3.pkgs.gameplan
+              frappix.erpnext
+              frappix.insight
+              frappix.gameplan
             ];
           };
         };
@@ -132,11 +134,11 @@ in {
           (devPackage pkgs.overmind)
           (devPackage pkgs.nvfetcher)
           (devPackage pkgs.nodePackages.localtunnel)
-          (devPackage frappixPkgs.frappix)
-          (devPackage frappixPkgs.bench)
-          (devPackage frappixPkgs.apps)
-          (devPackage frappixPkgs.fsjd)
-          (devPackage frappixPkgs.start-mariadb-for-frappe)
+          (devPackage pkgs.frappix)
+          (devPackage pkgs.bench)
+          (devPackage pkgs.apps)
+          (devPackage pkgs.fsjd)
+          (devPackage pkgs.start-mariadb-for-frappe)
         ];
       };
     };

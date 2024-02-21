@@ -3,9 +3,11 @@ let
 in {
   frappe = {
     meta.description = "The main frappix nixos module";
-    __functor = _: {...}: {
+    __functor = _: {pkgs, ...}: {
       # load our custom `pkgs`
-      _module.args.frappixPkgs = cell.pkgs;
+      _module.args = {
+        inherit (pkgs) frappix;
+      };
       _file = ./nixos.nix;
       imports = map (m: setDefaultModuleLocation m m) [
         ./nixos/main.nix

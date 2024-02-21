@@ -6,8 +6,9 @@ let
     system = inputs.nixpkgs.system;
 
     overlays = [
-      cell.overlays.python
       cell.overlays.tools
+      cell.overlays.python
+      cell.overlays.frappe
     ];
   };
 in

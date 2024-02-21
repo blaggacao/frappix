@@ -27,31 +27,31 @@
   };
   erpnext = {
     pname = "erpnext";
-    version = "028d31a6f91427821e2a491ab49b59579fce0098";
+    version = "38e88db2c9245a3fec392941d2937cace7bf8e5f";
     src = fetchFromGitHub {
       owner = "frappe";
       repo = "erpnext";
-      rev = "028d31a6f91427821e2a491ab49b59579fce0098";
+      rev = "38e88db2c9245a3fec392941d2937cace7bf8e5f";
       fetchSubmodules = false;
       deepClone = false;
       leaveDotGit = true;
-      sha256 = "sha256-+u4HemzaglHK04PH2r+c+h/BAjkbxWqDUjxT9988d1Q=";
+      sha256 = "sha256-MWDDekYsr8Ewx/++8zQeqk5azEGhgWtjg2pceqrLXY8=";
     };
-    date = "2024-02-16";
+    date = "2024-02-21";
   };
   frappe = {
     pname = "frappe";
-    version = "59f8e361a575e6bd883512f883f5e953ca5afbfa";
+    version = "4f18daba1768efab42c55aa67dff4e85f65ea125";
     src = fetchFromGitHub {
       owner = "frappe";
       repo = "frappe";
-      rev = "59f8e361a575e6bd883512f883f5e953ca5afbfa";
+      rev = "4f18daba1768efab42c55aa67dff4e85f65ea125";
       fetchSubmodules = false;
       deepClone = false;
       leaveDotGit = true;
-      sha256 = "sha256-hA6XWTPJtAkVCnd1jBzZpwFfyAtzAPtZiPTLiI63FbA=";
+      sha256 = "sha256-e/Ryi6tZTeIQAYWWaDpmA3k+eGHk6JPV2bDnrDxJ82g=";
     };
-    date = "2024-02-18";
+    date = "2024-02-21";
   };
   gameplan = {
     pname = "gameplan";
@@ -69,13 +69,13 @@
   };
   insights = {
     pname = "insights";
-    version = "v2.1.0";
+    version = "v2.1.2";
     src = fetchFromGitHub {
       owner = "frappe";
       repo = "insights";
-      rev = "v2.1.0";
+      rev = "v2.1.2";
       fetchSubmodules = false;
-      sha256 = "sha256-dR/CwwQA7SXzfxYuGXnIgc2Hu0F9fXsIGOfNvxP90TE=";
+      sha256 = "sha256-Qope4iYQ+SoWahU7k8Fq+E4+iwdg5lZaAQHas/IDhoU=";
     };
   };
   payments = {
