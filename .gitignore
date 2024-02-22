@@ -17,3 +17,5 @@ docs/build/**
 /.run
 /.bin
 
+# template development
+/workbench

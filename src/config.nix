@@ -61,4 +61,56 @@ in {
     };
     engine = redisEngine;
   };
+  editorconfig = {
+    data = {
+      root = true;
+      "*" = {
+        end_of_line = "lf";
+        insert_final_newline = true;
+        trim_trailing_whitespace = true;
+        charset = "utf-8";
+        indent_style = "space";
+        indent_size = 2;
+      };
+      "*.md" = {
+        max_line_length = "off";
+        trim_trailing_whitespace = false;
+      };
+    };
+  };
+  mdbook = {
+    # add preprocessor packages here
+    packages = [
+      inputs.nixpkgs.mdbook-linkcheck
+    ];
+    data = {
+      # Configuration Reference: https://rust-lang.github.io/mdBook/format/configuration/index.html
+      book = {
+        language = "en";
+        multilingual = false;
+        src = "docs";
+      };
+      build.build-dir = "docs/build";
+      preprocessor = {};
+      output = {
+        html = {};
+        # Tool Homepage: https://github.com/Michael-F-Bryan/mdbook-linkcheck
+        linkcheck = {};
+      };
+    };
+    output = "book.toml";
+    hook.mode = "copy"; # let CI pick it up outside of devshell
+  };
+  conform = {
+    data.commit = {
+      conventional = {
+        types = [
+          "test"
+          "perf"
+          ""
+        ];
+        scopes = [];
+      };
+    };
+  };
 }

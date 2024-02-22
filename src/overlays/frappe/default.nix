@@ -11,13 +11,13 @@ self: final: prev: {
       gameplan = self.gameplan;
     };
     insights = final.python3.pkgs.callPackage ./insights.nix {
-      insight = self.insight;
+      insights = self.insights;
     };
     ecommerce-integrations = final.python3.pkgs.callPackage ./ecommerce-integrations.nix {
-      ecommerce-integrations = self.sources.ecommerce-integrations;
+      ecommerce-integrations = self.ecommerce-integrations;
     };
     payments = final.python3.pkgs.callPackage ./payments.nix {
-      payment = self.payment;
+      payments = self.payments;
     };
   };
 }

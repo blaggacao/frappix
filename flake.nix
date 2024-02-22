@@ -23,6 +23,7 @@
         (anything "nixos")
         (anything "shell")
         (nixostests "tests")
+        (runnables "jobs" // {cli = false;}) # for downstream use
 
         # local
         (anything "config" // {cli = false;})
@@ -31,6 +32,10 @@
     }
     {
       packages = std.winnow (n: _: n == "frappix") self ["src" "pkgs"];
+      shellModule = std.harvest self ["src" "shell" "bench"];
+      toolsOverlay = std.harvest self ["src" "overlays" "tools"];
+      pythonOverlay = std.harvest self ["src" "overlays" "python"];
+      frappeOverlay = std.harvest self ["src" "overlays" "frappe"];
     };
 
   # stick with master for a while until more dependencies are stabilized

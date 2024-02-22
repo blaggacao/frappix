@@ -1,0 +1,34 @@
+diff --git a/frappe/database/mariadb/setup_db.py b/frappe/database/mariadb/setup_db.py
+index 152d16c649..769b850970 100644
+--- a/frappe/database/mariadb/setup_db.py
++++ b/frappe/database/mariadb/setup_db.py
+@@ -154,11 +154,11 @@ def check_compatible_versions():
+ 
+ def get_root_connection():
+ 	if not frappe.local.flags.root_connection:
+-		from getpass import getpass
++		from getpass import getpass, getuser
+ 
+ 		if not frappe.flags.root_login:
+ 			frappe.flags.root_login = (
+-				frappe.conf.get("root_login") or input("Enter mysql super user [root]: ") or "root"
++				frappe.conf.get("root_login") or getuser()
+ 			)
+ 
+ 		if not frappe.flags.root_password and not frappe.conf.db_socket:
+diff --git a/frappe/installer.py b/frappe/installer.py
+index 5c2f931b51..a82de85936 100644
+--- a/frappe/installer.py
++++ b/frappe/installer.py
+@@ -143,11 +143,6 @@ def install_db(
+ 	if not db_type:
+ 		db_type = frappe.conf.db_type
+ 
+-	if not root_login and db_type == "mariadb":
+-		root_login = "root"
+-	elif not root_login and db_type == "postgres":
+-		root_login = "postgres"
+-
+ 	make_conf(
+ 		db_name,
+ 		site_config=site_config,

@@ -30,6 +30,9 @@ buildPythonPackage rec {
     patches = [
       # Add missing unix domain socket support
       ./frappe-uds.patch
+      # This mariadb has passwordless root access
+      # for the current user
+      ./frappe-uds-current-user.patch
     ];
   };
 

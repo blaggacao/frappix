@@ -24,7 +24,7 @@ in
       ${mariadbd} ''${args[@]} &
       PID=`jobs -p`
 
-      trap "kill -SIGQUIT $PID" INT
+      trap "kill -SIGTERM $PID && wait $PID" INT EXIT
 
       wait
     '';

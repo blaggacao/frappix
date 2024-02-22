@@ -15,7 +15,7 @@ src.git = "https://github.com/frappe/erpnext"
 fetch.github = "frappe/erpnext"
 
 [insights]
-# git.leaveDotGit = true
+git.leaveDotGit = true
 src.github = "frappe/insights"
 fetch.github = "frappe/insights"
 
@@ -32,6 +32,6 @@ fetch.github = "frappe/ecommerce_integrations"
 
 [payments]
 # src.github= "frappe/payments" -- no release yet
+git.leaveDotGit = true
 src.git = "https://github.com/frappe/payments"
 fetch.github = "frappe/payments"
-git.leaveDotGit = true

@@ -18,11 +18,13 @@ lib.lazyDerivation {
       import os
       import sys
       import click
+      import json
       import warnings
       import frappe
       import frappe.utils.bench_helper
 
       site_root = os.getenv('FRAPPE_SITES_ROOT')
+      skipped_commands = json.loads(os.getenv('FRAPPE_DISABLED_COMMANDS', "[]"))
 
       if not site_root:
         raise Exception('FRAPPE_SITES_ROOT env variable must be set!')
@@ -38,6 +40,9 @@ lib.lazyDerivation {
         commands = {}
         for app in frappe.utils.bench_helper.get_apps():
           commands[app] = frappe.utils.bench_helper.get_app_group(app)
+          for n, cmd in commands[app].commands.items():
+            if n in skipped_commands:
+              cmd.hidden = True
         click.Group(commands=commands)(prog_name="bench")
     '';
   meta.description = "Run bench frappe CLI commands";

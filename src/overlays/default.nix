@@ -1,4 +1,4 @@
-with inputs.std.yants "frappix"; {
+{
   python = {
     __functor = _: final: prev: {
       python311 = prev.python311.override {

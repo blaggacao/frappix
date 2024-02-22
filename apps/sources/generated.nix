@@ -27,15 +27,15 @@
   };
   erpnext = {
     pname = "erpnext";
-    version = "38e88db2c9245a3fec392941d2937cace7bf8e5f";
+    version = "45b25e09c1e6931a2efa278732c0260b94f321f2";
     src = fetchFromGitHub {
       owner = "frappe";
       repo = "erpnext";
-      rev = "38e88db2c9245a3fec392941d2937cace7bf8e5f";
+      rev = "45b25e09c1e6931a2efa278732c0260b94f321f2";
       fetchSubmodules = false;
       deepClone = false;
       leaveDotGit = true;
-      sha256 = "sha256-MWDDekYsr8Ewx/++8zQeqk5azEGhgWtjg2pceqrLXY8=";
+      sha256 = "sha256-M2bZkus9W8XyC8cgVfIV+oWDUMH8z3Y4WHKUi4Xdc6c=";
     };
     date = "2024-02-21";
   };
@@ -75,7 +75,9 @@
       repo = "insights";
       rev = "v2.1.2";
       fetchSubmodules = false;
-      sha256 = "sha256-Qope4iYQ+SoWahU7k8Fq+E4+iwdg5lZaAQHas/IDhoU=";
+      deepClone = false;
+      leaveDotGit = true;
+      sha256 = "sha256-BznvKSHH7Qfj8HHGQQ/T32c8iTcoVxwbtNNue/mToh0=";
     };
   };
   payments = {

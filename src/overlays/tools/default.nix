@@ -15,7 +15,8 @@ inputs: final: prev: {
     (final.callPackage (mkYarnNix yarnLock) {}).offline_cache;
 
   fsjd = final.callPackage ./fsjd.nix {};
-  frappix = final.callPackage ./frappix.nix {
+  frappix-tool = final.callPackage ./frappix-tool.nix {
+    version = inputs.nixpkgs.lib.fileContents (inputs.self + /VERSION);
     inherit (inputs.std.inputs) paisano-tui;
     inherit (import (inputs.self + /flake.nix)) description;
   };
