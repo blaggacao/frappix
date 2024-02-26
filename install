@@ -3,6 +3,6 @@
 # optional, if you have a branded package
 export OWNER=blaggacao
 export REPO=frappix
-export PACKAGE=frappix
+export PACKAGE=frappix-tool
 
 bash <(curl -L https://raw.githubusercontent.com/paisano-nix/onboarding/main/install)

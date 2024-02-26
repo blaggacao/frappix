@@ -33,7 +33,7 @@
       ];
     }
     {
-      packages = std.winnow (n: _: n == "frappix") self ["src" "pkgs"];
+      packages = std.winnow (n: _: n == "frappix-tool") self ["src" "pkgs"];
       shellModule = std.harvest self ["src" "shell" "bench"];
       toolsOverlay = std.harvest self ["src" "overlays" "tools"];
       pythonOverlay = std.harvest self ["src" "overlays" "python"];
