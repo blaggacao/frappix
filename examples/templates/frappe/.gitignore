@@ -1,0 +1,18 @@
+# local sources except pinning instrumentation
+/apps/*
+!/apps/_pins/
+!/apps/_pins.nix
+!/apps/pkgs.nix
+
+# prj spec
+/.bin
+/.cache
+/.config
+/.data
+/.run
+
+# nix
+result
+
+# nixago: ignore-linked-files
+/process-compose.yaml

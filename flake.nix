@@ -8,9 +8,9 @@
   } @ inputs:
     std.growOn {
       inherit inputs;
-      cellsFrom = std.incl ./. ["src" "local" "apps"];
+      cellsFrom = std.incl ./. ["src" "local" "apps" "examples"];
       cellBlocks = with std.blockTypes; [
-        # lib
+        (data "templates")
 
         # Pkgs Functions for Frappe Framework Components
         (functions "overlays")
@@ -39,6 +39,7 @@
       pythonOverlay = std.harvest self ["src" "overlays" "python"];
       frappeOverlay = std.harvest self ["src" "overlays" "frappe"];
       frapper = import ./std/frapper.nix {inherit inputs;};
+      templates = std.pick self ["examples" "templates"];
     };
 
   # stick with master for a while until more dependencies are stabilized
