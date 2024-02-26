@@ -1,33 +1,72 @@
 let
   lib = inputs.nixpkgs.lib // builtins;
 
-  procfileEngine = request:
-    inputs.nixpkgs.writeText "procfile" (lib.concatStringsSep "\n"
-      (lib.mapAttrsToList (name: command: "${name}: ${command}")
-        request.data));
-
   redisEngine = request:
     inputs.nixpkgs.writeText "redis.conf" (lib.concatStringsSep "\n"
       (lib.mapAttrsToList (name: command: "${name} ${command}")
         request.data));
 in {
-  procfile = {
-    output = "Procfile";
-    hook.mode = "copy";
+  process-compose = {
+    output = "process-compose.yaml";
     data = {
-      mysql = "start-mariadb-for-frappe";
-      redis_cache = "envsubst < $PRJ_CONFIG_HOME/redis_cache.conf | redis-server -";
-      redis_queue = "envsubst < $PRJ_CONFIG_HOME/redis_queue.conf | redis-server -";
-
-      socketio = "node $FRAPPE_BENCH_ROOT/apps/frappe/socketio.js";
-
-      watch = "bench frappe watch";
-      web = "bench frappe serve --port 8000";
-      schedule = "bench frappe schedule";
-      worker = "bench frappe worker";
+      "processes" = {
+        "MySQL" = {
+          "command" = "start-mariadb-for-frappe";
+        };
+        "RedisCache" = {
+          "command" = "envsubst < $PRJ_CONFIG_HOME/redis_cache.conf | redis-server -";
+        };
+        "RedisQueue" = {
+          "command" = "envsubst < $PRJ_CONFIG_HOME/redis_queue.conf | redis-server -";
+        };
+        "Scheduler" = {
+          "command" = "bench frappe schedule";
+        };
+        "Socketio" = {
+          "command" = "node $FRAPPE_BENCH_ROOT";
+          "depends_on" = {
+            "RedisQueue" = {
+              "condition" = "process_started";
+            };
+          };
+        };
+        "Watcher" = {
+          "command" = "bench frappe watch";
+        };
+        "Backend" = {
+          "command" = "bench frappe serve --port 8000";
+          "depends_on" = {
+            "RedisQueue" = {
+              "condition" = "process_started";
+            };
+            "RedisCache" = {
+              "condition" = "process_started";
+            };
+            "MySQL" = {
+              "condition" = "process_started";
+            };
+            "Socketio" = {
+              "condition" = "process_started";
+            };
+          };
+        };
+        "Worker" = {
+          "command" = "bench frappe worker";
+          "depends_on" = {
+            "RedisQueue" = {
+              "condition" = "process_started";
+            };
+            "MySQL" = {
+              "condition" = "process_started";
+            };
+          };
+        };
+      };
     };
-    engine = procfileEngine;
-    packages = [inputs.nixpkgs.envsubst];
+    packages = [
+      inputs.nixpkgs.process-compose
+      inputs.nixpkgs.envsubst
+    ];
   };
 
   redis_queue = {

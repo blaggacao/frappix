@@ -9,7 +9,7 @@
 }:
 buildGoModule rec {
   inherit version;
-  pname = "frp";
+  pname = "frx";
   meta = {
     inherit description;
     license = with lib.licenses; unlicense;

@@ -65,7 +65,7 @@ in {
         name = lib.mkDefault "Frappix Shell";
         nixago =
           [
-            (dev.mkNixago cell.config.procfile)
+            (dev.mkNixago cell.config.process-compose)
             (dev.mkNixago cell.config.redis_queue)
             (dev.mkNixago cell.config.redis_cache)
           ]
@@ -143,7 +143,12 @@ in {
         ];
 
         devshell = {
-          packages = lib.flatten (lib.catAttrs "packages" cfg.apps);
+          packages =
+            lib.flatten (lib.catAttrs "packages" cfg.apps)
+            ++ [
+              pkgs.start-mariadb-for-frappe
+              pkgs.fsjd
+            ];
           startup = {
             emplace-folders = {
               text = ''
@@ -218,14 +223,11 @@ in {
           };
         in [
           (devPackage pkgs.pre-commit)
-          (devPackage pkgs.overmind)
           (devPackage pkgs.nvfetcher)
           (devPackage pkgs.nodePackages.localtunnel)
           (devPackage pkgs.frappix-tool)
           (devPackage pkgs.bench)
           (devPackage pkgs.apps)
-          (devPackage pkgs.fsjd)
-          (devPackage pkgs.start-mariadb-for-frappe)
         ];
       };
     };

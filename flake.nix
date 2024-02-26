@@ -1,5 +1,5 @@
 {
-  description = "Nix-based frappe development & deployment environment";
+  description = "Frappe Development & Deployment Environment";
 
   outputs = {
     std,
@@ -36,13 +36,14 @@
       toolsOverlay = std.harvest self ["src" "overlays" "tools"];
       pythonOverlay = std.harvest self ["src" "overlays" "python"];
       frappeOverlay = std.harvest self ["src" "overlays" "frappe"];
+      frapper = import ./std/frapper.nix {inherit inputs;};
     };
 
   # stick with master for a while until more dependencies are stabilized
   inputs.nixpkgs.url = "github:nixos/nixpkgs/release-23.11";
 
   inputs = {
-    std.url = "github:divnix/std/v0.32.1";
+    std.url = "github:divnix/std/v0.33.0";
     devshell.url = "github:numtide/devshell";
     devshell.inputs.nixpkgs.follows = "nixpkgs";
     nixago.url = "github:nix-community/nixago";
