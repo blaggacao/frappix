@@ -33,8 +33,7 @@
   inputs.nixpkgs.url = "github:nixos/nixpkgs/release-23.11";
 
   inputs = {
-    # frappix.url = "github:blaggacao/frappix";
-    frappix.url = "/home/blaggacao/src/github.com/blaggacao/frappix";
+    frappix.url = "github:blaggacao/frappix";
     std.follows = "frappix/std";
     devshell.url = "github:numtide/devshell";
     devshell.inputs.nixpkgs.follows = "nixpkgs";
