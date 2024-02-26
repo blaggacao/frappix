@@ -3,13 +3,13 @@
 {
   bench = {
     pname = "bench";
-    version = "v5.22.0";
+    version = "v5.22.3";
     src = fetchFromGitHub {
       owner = "frappe";
       repo = "bench";
-      rev = "v5.22.0";
+      rev = "v5.22.3";
       fetchSubmodules = false;
-      sha256 = "sha256-GjFtuvGz6hLLXN1Zsssq+415qltO+TxmydH7qtsOhYE=";
+      sha256 = "sha256-l42ZbovVUcm8WuRqESw1VdIWW8Ah+wHcYBQX/ML8REk=";
     };
   };
   ecommerce-integrations = {
@@ -20,38 +20,32 @@
       repo = "ecommerce_integrations";
       rev = "v1.20.0";
       fetchSubmodules = false;
-      deepClone = false;
-      leaveDotGit = true;
-      sha256 = "sha256-dAIozsn2qUtSqHB5huDxrlC1tbeI3E6mZItH84CnDbc=";
+      sha256 = "sha256-ydJn38hOQ2kfFIp8ZmIGT7Jn/D2H5Op5OkI6NGBgOdk=";
     };
   };
   erpnext = {
     pname = "erpnext";
-    version = "45b25e09c1e6931a2efa278732c0260b94f321f2";
+    version = "08caa7cfa15912f8b45d97088fed30c32e55db29";
     src = fetchFromGitHub {
       owner = "frappe";
       repo = "erpnext";
-      rev = "45b25e09c1e6931a2efa278732c0260b94f321f2";
+      rev = "08caa7cfa15912f8b45d97088fed30c32e55db29";
       fetchSubmodules = false;
-      deepClone = false;
-      leaveDotGit = true;
-      sha256 = "sha256-M2bZkus9W8XyC8cgVfIV+oWDUMH8z3Y4WHKUi4Xdc6c=";
+      sha256 = "sha256-eofJ+Cy87BrZ1LD9NiqImFNBDQoLonLfb6BQ19EKYrk=";
     };
-    date = "2024-02-21";
+    date = "2024-02-26";
   };
   frappe = {
     pname = "frappe";
-    version = "4f18daba1768efab42c55aa67dff4e85f65ea125";
+    version = "0934dfea93c22e111bd0c2b836273bc5b78adc9e";
     src = fetchFromGitHub {
       owner = "frappe";
       repo = "frappe";
-      rev = "4f18daba1768efab42c55aa67dff4e85f65ea125";
+      rev = "0934dfea93c22e111bd0c2b836273bc5b78adc9e";
       fetchSubmodules = false;
-      deepClone = false;
-      leaveDotGit = true;
-      sha256 = "sha256-e/Ryi6tZTeIQAYWWaDpmA3k+eGHk6JPV2bDnrDxJ82g=";
+      sha256 = "sha256-ly6dopRikmqrDG4yGlBpqDvgchWOqoynDM+jmgh9SOg=";
     };
-    date = "2024-02-21";
+    date = "2024-02-26";
   };
   gameplan = {
     pname = "gameplan";
@@ -61,9 +55,7 @@
       repo = "gameplan";
       rev = "9f9332cf29496afe5e912e4f1734fbf1142cb18c";
       fetchSubmodules = false;
-      deepClone = false;
-      leaveDotGit = true;
-      sha256 = "sha256-jyKtxVmf30nkhim7PckzT7a6qM/JpleFw+fCJR4J+JM=";
+      sha256 = "sha256-LhSoUr+sqtwGSnfu4aux8/NE09EzX+uNibiBgwXKJAA=";
     };
     date = "2024-02-06";
   };
@@ -75,9 +67,7 @@
       repo = "insights";
       rev = "v2.1.2";
       fetchSubmodules = false;
-      deepClone = false;
-      leaveDotGit = true;
-      sha256 = "sha256-BznvKSHH7Qfj8HHGQQ/T32c8iTcoVxwbtNNue/mToh0=";
+      sha256 = "sha256-Qope4iYQ+SoWahU7k8Fq+E4+iwdg5lZaAQHas/IDhoU=";
     };
   };
   payments = {
@@ -88,9 +78,7 @@
       repo = "payments";
       rev = "54cc513fa9420a7fda48251099b1b158f3f9be6b";
       fetchSubmodules = false;
-      deepClone = false;
-      leaveDotGit = true;
-      sha256 = "sha256-Q7yOcBoDfFBFdFbVpxp5X5rSLHmukxesqgPXuPNZ2/8=";
+      sha256 = "sha256-y+yXbieiDMkYTyL6Fc95EQCnuRtqAD0WMBTU4xF3zxo=";
     };
     date = "2024-01-23";
   };

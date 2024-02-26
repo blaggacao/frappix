@@ -178,18 +178,13 @@ in {
               text = let
                 clone = app: ''
                   if [[ ! -d "$PRJ_ROOT/apps/${app.pname}" ]]; then
-                    # git clone --branch {app.src.rev} --depth 1  {app.src.gitRepoUrl} "$PRJ_ROOT/apps/${app.pname}"
-                    cp -r --no-preserve=all ${app.src} "$PRJ_ROOT/apps/${app.pname}"
-                    # chmod -R 755 "$PRJ_ROOT/apps/${app.pname}/.git"
+                    git clone --branch {app.src.src.rev} --origin upstream --branch custom --depth 1  ${app.src.src.gitRepoUrl} "$PRJ_ROOT/apps/${app.pname}"
                     (
                       cd "$PRJ_ROOT/apps/${app.pname}";
-                      git restore --staged .
+                      diff -uraN ${app.src} "$PRJ_ROOT/apps/${app.pname}" | patch
                       find . -type f -iname "*.orig" -delete
-                      git config core.fileMode false
                       git add .
                       git commit -m "FRAPPIX START" --no-verify --allow-empty --no-gpg-sign
-                      git switch -c "custom"
-                      git remote add upstream ${app.src.src.gitRepoUrl}
                       yarn --silent || true
                     )
                     relpath="$(realpath --relative-to=`pwd` $PRJ_ROOT/apps/${app.pname})"

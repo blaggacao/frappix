@@ -13,11 +13,11 @@
             "name": null,
             "owner": "frappe",
             "repo": "bench",
-            "rev": "v5.22.0",
-            "sha256": "sha256-GjFtuvGz6hLLXN1Zsssq+415qltO+TxmydH7qtsOhYE=",
+            "rev": "v5.22.3",
+            "sha256": "sha256-l42ZbovVUcm8WuRqESw1VdIWW8Ah+wHcYBQX/ML8REk=",
             "type": "github"
         },
-        "version": "v5.22.0"
+        "version": "v5.22.3"
     },
     "ecommerce-integrations": {
         "cargoLocks": null,
@@ -29,19 +29,19 @@
         "src": {
             "deepClone": false,
             "fetchSubmodules": false,
-            "leaveDotGit": true,
+            "leaveDotGit": false,
             "name": null,
             "owner": "frappe",
             "repo": "ecommerce_integrations",
             "rev": "v1.20.0",
-            "sha256": "sha256-dAIozsn2qUtSqHB5huDxrlC1tbeI3E6mZItH84CnDbc=",
+            "sha256": "sha256-ydJn38hOQ2kfFIp8ZmIGT7Jn/D2H5Op5OkI6NGBgOdk=",
             "type": "github"
         },
         "version": "v1.20.0"
     },
     "erpnext": {
         "cargoLocks": null,
-        "date": "2024-02-21",
+        "date": "2024-02-26",
         "extract": null,
         "name": "erpnext",
         "passthru": null,
@@ -49,19 +49,19 @@
         "src": {
             "deepClone": false,
             "fetchSubmodules": false,
-            "leaveDotGit": true,
+            "leaveDotGit": false,
             "name": null,
             "owner": "frappe",
             "repo": "erpnext",
-            "rev": "45b25e09c1e6931a2efa278732c0260b94f321f2",
-            "sha256": "sha256-fFQ0QTk4ohuczA9NggIgU79D6WpKfrREyDlRus5CxYE=",
+            "rev": "08caa7cfa15912f8b45d97088fed30c32e55db29",
+            "sha256": "sha256-eofJ+Cy87BrZ1LD9NiqImFNBDQoLonLfb6BQ19EKYrk=",
             "type": "github"
         },
-        "version": "45b25e09c1e6931a2efa278732c0260b94f321f2"
+        "version": "08caa7cfa15912f8b45d97088fed30c32e55db29"
     },
     "frappe": {
         "cargoLocks": null,
-        "date": "2024-02-21",
+        "date": "2024-02-26",
         "extract": null,
         "name": "frappe",
         "passthru": null,
@@ -69,15 +69,15 @@
         "src": {
             "deepClone": false,
             "fetchSubmodules": false,
-            "leaveDotGit": true,
+            "leaveDotGit": false,
             "name": null,
             "owner": "frappe",
             "repo": "frappe",
-            "rev": "4f18daba1768efab42c55aa67dff4e85f65ea125",
-            "sha256": "sha256-e/Ryi6tZTeIQAYWWaDpmA3k+eGHk6JPV2bDnrDxJ82g=",
+            "rev": "0934dfea93c22e111bd0c2b836273bc5b78adc9e",
+            "sha256": "sha256-ly6dopRikmqrDG4yGlBpqDvgchWOqoynDM+jmgh9SOg=",
             "type": "github"
         },
-        "version": "4f18daba1768efab42c55aa67dff4e85f65ea125"
+        "version": "0934dfea93c22e111bd0c2b836273bc5b78adc9e"
     },
     "gameplan": {
         "cargoLocks": null,
@@ -89,12 +89,12 @@
         "src": {
             "deepClone": false,
             "fetchSubmodules": false,
-            "leaveDotGit": true,
+            "leaveDotGit": false,
             "name": null,
             "owner": "frappe",
             "repo": "gameplan",
             "rev": "9f9332cf29496afe5e912e4f1734fbf1142cb18c",
-            "sha256": "sha256-jyKtxVmf30nkhim7PckzT7a6qM/JpleFw+fCJR4J+JM=",
+            "sha256": "sha256-LhSoUr+sqtwGSnfu4aux8/NE09EzX+uNibiBgwXKJAA=",
             "type": "github"
         },
         "version": "9f9332cf29496afe5e912e4f1734fbf1142cb18c"
@@ -109,12 +109,12 @@
         "src": {
             "deepClone": false,
             "fetchSubmodules": false,
-            "leaveDotGit": true,
+            "leaveDotGit": false,
             "name": null,
             "owner": "frappe",
             "repo": "insights",
             "rev": "v2.1.2",
-            "sha256": "sha256-BznvKSHH7Qfj8HHGQQ/T32c8iTcoVxwbtNNue/mToh0=",
+            "sha256": "sha256-Qope4iYQ+SoWahU7k8Fq+E4+iwdg5lZaAQHas/IDhoU=",
             "type": "github"
         },
         "version": "v2.1.2"
@@ -129,12 +129,12 @@
         "src": {
             "deepClone": false,
             "fetchSubmodules": false,
-            "leaveDotGit": true,
+            "leaveDotGit": false,
             "name": null,
             "owner": "frappe",
             "repo": "payments",
             "rev": "54cc513fa9420a7fda48251099b1b158f3f9be6b",
-            "sha256": "sha256-Q7yOcBoDfFBFdFbVpxp5X5rSLHmukxesqgPXuPNZ2/8=",
+            "sha256": "sha256-y+yXbieiDMkYTyL6Fc95EQCnuRtqAD0WMBTU4xF3zxo=",
             "type": "github"
         },
         "version": "54cc513fa9420a7fda48251099b1b158f3f9be6b"
