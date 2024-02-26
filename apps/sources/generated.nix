@@ -25,13 +25,13 @@
   };
   erpnext = {
     pname = "erpnext";
-    version = "08caa7cfa15912f8b45d97088fed30c32e55db29";
+    version = "8aa2b7c1838e2af39f73557a0359313e76032197";
     src = fetchFromGitHub {
       owner = "frappe";
       repo = "erpnext";
-      rev = "08caa7cfa15912f8b45d97088fed30c32e55db29";
+      rev = "8aa2b7c1838e2af39f73557a0359313e76032197";
       fetchSubmodules = false;
-      sha256 = "sha256-eofJ+Cy87BrZ1LD9NiqImFNBDQoLonLfb6BQ19EKYrk=";
+      sha256 = "sha256-yPWUPvzsXBV1A63Nq6ehUz1Y4oK5pKyMZ9vVLloY0TU=";
     };
     date = "2024-02-26";
   };
@@ -45,6 +45,8 @@
       fetchSubmodules = false;
       sha256 = "sha256-ly6dopRikmqrDG4yGlBpqDvgchWOqoynDM+jmgh9SOg=";
     };
+    upstream = "URL: https://github.com/frappe/frappe\nPull: +refs/heads/develop:refs/remotes/upstream/develop\nPull: +refs/heads/version-15:refs/remotes/upstream/version-15\nPull: +refs/heads/version-15-hotfix:refs/remotes/upstream/version-15-hotfix\nPull: +refs/tags/v15.*:refs/remotes/upstream/tags/v15.*\n";
+    since = "version-13";
     date = "2024-02-26";
   };
   gameplan = {

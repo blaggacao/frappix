@@ -50,6 +50,7 @@ buildPythonPackage rec {
   ];
 
   passthru = rec {
+    pin = frappe;
     packages = with pkgs; [
       mysql
       restic

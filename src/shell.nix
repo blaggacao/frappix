@@ -178,16 +178,16 @@ in {
               text = let
                 clone = app: ''
                   if [[ ! -d "$PRJ_ROOT/apps/${app.pname}" ]]; then
-                    git clone --config "diff.fsjd.command=fsjd --git" --single-branch --branch "${app.src.src.rev}" \
-                      --origin upstream --depth 1 "${app.src.src.gitRepoUrl}" \
+                    git clone --config "diff.fsjd.command=fsjd --git" \
+                      --origin upstream --shallow-exclude="${app.pin.since}" "${app.pin.src.gitRepoUrl}" \
                       "$PRJ_ROOT/apps/${app.pname}"
                     (
                       cd "$PRJ_ROOT/apps/${app.pname}";
-                      git switch -c custom
-                      diff -uraN ${app.src} "$PRJ_ROOT/apps/${app.pname}" | patch
-                      find . -type f -iname "*.orig" -delete
-                      git add .
-                      git commit -m "FRAPPIX START" --no-verify --allow-empty --no-gpg-sign
+                      mkdir .git/remotes;
+                      echo "${app.pin.upstream}" > .git/remotes/upstream;
+                      git switch -c custom;
+                      (diff -ura $PRJ_ROOT/apps/${app.pname} ${app.src} | patch --strip 4) || true;
+                      git add . && git commit -m 'FRAPPIX START' --no-verify --allow-empty --no-gpg-sign
                       yarn --silent || true
                     )
                     relpath="$(realpath --relative-to=`pwd` $PRJ_ROOT/apps/${app.pname})"
@@ -220,12 +220,13 @@ in {
             inherit package;
           };
         in [
+          (devPackage pkgs.frx)
           (devPackage pkgs.pre-commit)
           (devPackage pkgs.nvfetcher)
           (devPackage pkgs.nodePackages.localtunnel)
-          (devPackage pkgs.frx)
           (devPackage pkgs.bench)
           (devPackage pkgs.apps)
+          (devPackage pkgs.yarn)
         ];
       };
     };

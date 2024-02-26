@@ -7,6 +7,16 @@ fetch.github = "frappe/bench"
 src.git = "https://github.com/frappe/frappe"
 fetch.github = "frappe/frappe"
 
+[frappe.passthru]
+since = "version-13"
+upstream = """
+URL: https://github.com/frappe/frappe
+Pull: +refs/heads/develop:refs/remotes/upstream/develop
+Pull: +refs/heads/version-15:refs/remotes/upstream/version-15
+Pull: +refs/heads/version-15-hotfix:refs/remotes/upstream/version-15-hotfix
+Pull: +refs/tags/v15.*:refs/remotes/upstream/tags/v15.*
+"""
+
 [erpnext]
 # src.github= "frappe/erpnext" -- 2024-02-17 - frappe patch doesn't apply and frappe 16 is not compatible with erpnext 15
 src.git = "https://github.com/frappe/erpnext"
