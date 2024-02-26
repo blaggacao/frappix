@@ -23,7 +23,7 @@ in {
           "command" = "bench frappe schedule";
         };
         "Socketio" = {
-          "command" = "node $FRAPPE_BENCH_ROOT";
+          "command" = "node $FRAPPE_BENCH_ROOT/apps/frappe/socketio.js";
           "depends_on" = {
             "RedisQueue" = {
               "condition" = "process_started";

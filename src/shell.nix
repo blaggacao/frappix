@@ -161,6 +161,7 @@ in {
               text = ''
                 [[ ! -f "$PRJ_ROOT/sites/apps.txt" ]] && cat > "$PRJ_DATA_HOME/sites/apps.txt" <<<"${lib.concatStringsSep "\n" appNames}"
                 [[ ! -f "$PRJ_ROOT/patches.txt" ]] && cp -f ${cfg.frappe}/share/patches.txt "$PRJ_ROOT"
+                [[ ! -f "$PRJ_DATA_HOME/sites/common_site_config.json" ]] &&  echo "{}" > "$PRJ_DATA_HOME/sites/common_site_config.json"
               '';
               deps = ["emplace-folders"];
             };
