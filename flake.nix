@@ -22,7 +22,9 @@
         # Modules
         (anything "nixos")
         (anything "shell")
+        (anything "testModules")
         (nixostests "tests")
+        (microvms "vms")
         (runnables "jobs" // {cli = false;}) # for downstream use
 
         # local
@@ -49,10 +51,13 @@
     nixago.url = "github:nix-community/nixago";
     nixago.inputs.nixpkgs.follows = "nixpkgs";
     nixago.inputs.nixago-exts.follows = "";
+    microvm.url = "github:astro/microvm.nix";
+    microvm.inputs.nixpkgs.follows = "nixpkgs";
     std.inputs = {
       nixpkgs.follows = "nixpkgs";
       devshell.follows = "devshell";
       nixago.follows = "nixago";
+      microvm.follows = "microvm";
     };
   };
 }

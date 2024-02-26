@@ -1,36 +1,45 @@
 let
   inherit (inputs.std.inputs) microvm;
+  inherit (inputs) nixpkgs;
+  inherit (cell) pkgs testModules;
+  eval = module:
+    import (nixpkgs + /nixos/lib/eval-config.nix) {
+      inherit (nixpkgs) system;
+      modules = [module];
+    };
 in {
-  default = {
-    config,
-    lib,
-    pkgs,
-    ...
-  }: {
-    imports = [microvm.nixosModules.microvm];
+  default = eval ({config, ...}: {
+    imports = [
+      microvm.nixosModules.microvm
+      testModules.default
+    ];
+    nixpkgs = {inherit pkgs;};
     # hardware.opengl.enable = true;
+    users.allowNoPasswordLogin = true;
     microvm = {
-      hypervisor = "cloud-hypervisor";
+      hypervisor = "qemu";
       graphics.enable = false;
       vcpu = 4;
-      ram = 4096;
-      forwardPorts = [
+      mem = 4096;
+      # forwardPorts = [
+      #   {
+      #     guest.port = 80;
+      #     host.port = 8080;
+      #   }
+      #   {
+      #     guest.port = 443;
+      #     host.port = 4433;
+      #   }
+      # ];
+      # share the host's /nix/store if the hypervisor can do 9p
+      shares = [
         {
-          guest.port = 80;
-          host.port = 8080;
-        }
-        {
-          guest.port = 443;
-          host.port = 4433;
+          tag = "ro-store";
+          source = "/nix/store";
+          mountPoint = "/nix/.ro-store";
+          # proto = "virtiofs";
         }
       ];
-      # share the host's /nix/store if the hypervisor can do 9p
-      shares = {
-        tag = "ro-store";
-        source = "/nix/store";
-        mountPoint = "/nix/.ro-store";
-        proto = "virtiofs";
-      };
       writableStoreOverlay = "/nix/.rw-store";
       volumes = [
         {
@@ -40,5 +49,5 @@ in {
         }
       ];
     };
-  };
+  });
 }
