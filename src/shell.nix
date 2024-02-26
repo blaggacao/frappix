@@ -225,7 +225,7 @@ in {
           (devPackage pkgs.pre-commit)
           (devPackage pkgs.nvfetcher)
           (devPackage pkgs.nodePackages.localtunnel)
-          (devPackage pkgs.frappix-tool)
+          (devPackage pkgs.frx)
           (devPackage pkgs.bench)
           (devPackage pkgs.apps)
         ];
