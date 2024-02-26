@@ -3,7 +3,9 @@
 To use one of the avialable project templates, run:
 
 ```console
-nix flake new <myproject> -t github:blaggacao/frappix#<my-chosen-template>
+PROJECT=<my-project>
+TEMPLATE=<my-chosen-template>
+nix flake new "$PROJECT" -t github:blaggacao/frappix#"$TEMPLATE"
 ```
 
 ## Simple Frappe
@@ -11,5 +13,7 @@ nix flake new <myproject> -t github:blaggacao/frappix#<my-chosen-template>
 To start your project with a simple Frappe setup, run:
 
 ```console
-nix flake new <myproject> -t github:blaggacao/frappix#<frappe>
+PROJECT=<my-project>
+TEMPLATE=frappe
+nix flake new "$PROJECT" -t github:blaggacao/frappix#"$TEMPLATE"
 ```
