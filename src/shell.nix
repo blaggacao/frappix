@@ -178,9 +178,12 @@ in {
               text = let
                 clone = app: ''
                   if [[ ! -d "$PRJ_ROOT/apps/${app.pname}" ]]; then
-                    git clone --branch {app.src.src.rev} --origin upstream --branch custom --depth 1  ${app.src.src.gitRepoUrl} "$PRJ_ROOT/apps/${app.pname}"
+                    git clone --config "diff.fsjd.command=fsjd --git" --single-branch --branch "${app.src.src.rev}" \
+                      --origin upstream --depth 1 "${app.src.src.gitRepoUrl}" \
+                      "$PRJ_ROOT/apps/${app.pname}"
                     (
                       cd "$PRJ_ROOT/apps/${app.pname}";
+                      git switch -c custom
                       diff -uraN ${app.src} "$PRJ_ROOT/apps/${app.pname}" | patch
                       find . -type f -iname "*.orig" -delete
                       git add .
