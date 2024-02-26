@@ -56,7 +56,7 @@ A: (1) dotfile proliferation
             "*.yaml"
             "*.toml"
           ];
-          excludes = ["apps/sources/generated.json"];
+          excludes = ["apps/sources/generated.json" "docs/README.md"];
         };
         shell = {
           command = "shfmt";
