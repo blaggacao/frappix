@@ -33,4 +33,12 @@ in {
       ];
     })
     // {meta.description = "Development environment for this repository";};
+  book =
+    (dev.mkShell {
+      name = "Frappix Book Shell";
+      nixago = [
+        ((dev.mkNixago cfg.mdbook) cell.config.mdbook)
+      ];
+    })
+    // {meta.description = "Book development & rendering environment for this repository";};
 }
