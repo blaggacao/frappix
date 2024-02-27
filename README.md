@@ -14,7 +14,7 @@ Frappix is a development and deployment environment designed to cover the full s
 
 It is intended for developers and operator alike in their respective role in customer-facing or educational projects.
 
-It can be used in simple scenarios to prototype apps that could later be run on Frappe Cloud but also for very complex production deployments which required esxtensive customization and fork-like patching of the upstream framework.
+It can be used in simple scenarios to prototype apps that could later be run on Frappe Cloud but also for very complex production deployments which required extensive customization and fork-like patching of the upstream framework.
 
 ### Motivation
 
@@ -22,7 +22,7 @@ Frappix bridges the gap between system depedencies and such that are already ava
 
 It brings the power of the _entire_ software ecosystem to Frappe, not only the Python ecosystem.
 
-It leverages Nix to achive (close to) reproducible builds of your deployment artifacts, while Nixpkgs is leverage for its vast amount of up to date and readily available packages across various language ecosystems.
+It leverages Nix to achive (close to) reproducible builds of your deployment artifacts, while Nixpkgs is leveraged for its vast amount of up to date and readily available packages across various language ecosystems.
 
 For example it is near trivial to setup and run a LLM efficiently via llama.cpp alongside your production setup, while it _is_ trivial to provide a swalwart email service in-scope on the same project, setup a nightly backup with StorJ, tweak your database performance with hugepages, host you plausible analytics instance alongside, or even spin up an entire private chat solution based on the Matrix protocol, etc.
 
