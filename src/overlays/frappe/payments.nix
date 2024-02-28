@@ -1,14 +1,10 @@
 {
-  payments,
+  appSources,
   lib,
   buildPythonPackage,
   flit-core,
   pythonRelaxDepsHook,
-  pythonOlder,
   python,
-  mkYarnApp,
-  mkYarnOfflineCache,
-  fetchYarnDeps,
   extractFrappeMeta,
 }:
 buildPythonPackage rec {
@@ -19,7 +15,7 @@ buildPythonPackage rec {
     format
     ;
 
-  inherit (payments) src;
+  inherit (appSources.payments) src;
 
   nativeBuildInputs = [
     pythonRelaxDepsHook

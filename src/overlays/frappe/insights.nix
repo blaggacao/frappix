@@ -1,11 +1,9 @@
 {
-  insights,
+  appSources,
   lib,
   buildPythonPackage,
   pythonRelaxDepsHook,
-  fetchFromGitHub,
   flit-core,
-  pythonOlder,
   python,
   extractFrappeMeta,
 }:
@@ -17,7 +15,7 @@ buildPythonPackage rec {
     format
     ;
 
-  inherit (insights) src;
+  inherit (appSources.insights) src;
 
   nativeBuildInputs = [
     pythonRelaxDepsHook

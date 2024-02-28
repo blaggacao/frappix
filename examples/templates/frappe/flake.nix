@@ -21,12 +21,8 @@
         # local
         (anything "config" // {cli = false;})
         (devshells "shells")
-        (frappix.frapper "jobs")
+        (frappix.frapper "tasks")
       ];
-    }
-    {
-      packages = std.winnow (n: _: n == "frappix") self ["src" "pkgs"];
-      templates = std.pick self ["src" "templates"];
     };
 
   # try to stick with a relesed version for a while

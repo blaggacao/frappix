@@ -1,12 +1,10 @@
 {
-  gameplan,
+  appSoucres,
   lib,
   buildPythonPackage,
   pythonRelaxDepsHook,
-  fetchFromGitHub,
   flit-core,
   # rembg,
-  pythonOlder,
   python,
   extractFrappeMeta,
 }:
@@ -18,7 +16,7 @@ buildPythonPackage rec {
     format
     ;
 
-  inherit (gameplan) src;
+  inherit (appSoucres.gameplan) src;
 
   nativeBuildInputs = [
     pythonRelaxDepsHook

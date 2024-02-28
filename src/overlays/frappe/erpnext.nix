@@ -1,15 +1,12 @@
 {
-  erpnext,
+  appSources,
   lib,
   buildPythonPackage,
   pythonRelaxDepsHook,
-  fetchFromGitHub,
   flit-core,
-  pythonOlder,
   python,
   mkYarnApp,
   mkYarnOfflineCache,
-  fetchYarnDeps,
   extractFrappeMeta,
 }:
 buildPythonPackage rec {
@@ -20,7 +17,7 @@ buildPythonPackage rec {
     format
     ;
 
-  inherit (erpnext) src;
+  inherit (appSources.erpnext) src;
 
   patches = [
     ./erpnext-plaid-bump.patch

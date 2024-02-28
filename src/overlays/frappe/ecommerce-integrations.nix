@@ -1,11 +1,9 @@
 {
-  ecommerce-integrations,
+  appSources,
   lib,
   buildPythonPackage,
   pythonRelaxDepsHook,
-  fetchFromGitHub,
   flit-core,
-  pythonOlder,
   python,
   extractFrappeMeta,
 }:
@@ -17,7 +15,7 @@ buildPythonPackage rec {
     format
     ;
 
-  inherit (ecommerce-integrations) src;
+  inherit (appSources.ecommerce-integrations) src;
 
   nativeBuildInputs = [
     pythonRelaxDepsHook

@@ -1,23 +1,18 @@
-self: final: prev: {
-  frappix = {
-    frappe = final.python3.pkgs.callPackage ./frappe.nix {
-      frappe = self.frappe;
-      bench = self.bench;
-    };
-    erpnext = final.python3.pkgs.callPackage ./erpnext.nix {
-      erpnext = self.erpnext;
-    };
-    gameplan = final.python3.pkgs.callPackage ./gameplan.nix {
-      gameplan = self.gameplan;
-    };
-    insights = final.python3.pkgs.callPackage ./insights.nix {
-      insights = self.insights;
-    };
-    ecommerce-integrations = final.python3.pkgs.callPackage ./ecommerce-integrations.nix {
-      ecommerce-integrations = self.ecommerce-integrations;
-    };
-    payments = final.python3.pkgs.callPackage ./payments.nix {
-      payments = self.payments;
-    };
-  };
+self: final: prev: let
+  inherit (final) lib;
+  inherit (final) python3;
+  newScope = extra: lib.callPackagesWith ({} // extra);
+in {
+  frappix = lib.makeScope python3.pkgs.newScope (scope: let
+    inherit (scope) callPackage;
+  in {
+    appSources = lib.makeScope newScope (_: self.sources);
+
+    frappe = callPackage ./frappe.nix {};
+    erpnext = callPackage ./erpnext.nix {};
+    gameplan = callPackage ./gameplan.nix {};
+    insights = callPackage ./insights.nix {};
+    ecommerce-integrations = callPackage ./ecommerce-integrations.nix {};
+    payments = callPackage ./payments.nix {};
+  });
 }

@@ -1,16 +1,13 @@
 {
-  frappe,
-  bench,
+  appSources,
   lib,
   buildPythonPackage,
   pythonRelaxDepsHook,
-  pythonOlder,
   flit-core,
   python,
   pkgs,
   mkYarnApp,
   mkYarnOfflineCache,
-  fetchYarnDeps,
   substituteAll,
   applyPatches,
   extractFrappeMeta,
@@ -24,7 +21,7 @@ buildPythonPackage rec {
     ;
 
   src = applyPatches {
-    inherit (frappe) src;
+    inherit (appSources.frappe) src;
     # this patch is needs to be present in all source trees,
     # such as the one used for the frontend below
     patches = [
@@ -50,7 +47,7 @@ buildPythonPackage rec {
   ];
 
   passthru = rec {
-    pin = frappe;
+    pin = appSources.frappe;
     packages = with pkgs; [
       mysql
       restic
@@ -198,8 +195,8 @@ buildPythonPackage rec {
 
   postInstall = ''
     mkdir -p $out/share
-    install -m 0666 ${bench.src}/bench/config/templates/502.html  $out/share
-    install -m 0666 ${bench.src}/bench/patches/patches.txt        $out/share
+    install -m 0666 ${appSources.bench.src}/bench/config/templates/502.html  $out/share
+    install -m 0666 ${appSources.bench.src}/bench/patches/patches.txt        $out/share
   '';
 
   # has no tests
