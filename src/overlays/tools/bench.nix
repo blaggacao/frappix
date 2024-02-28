@@ -40,6 +40,8 @@ lib.lazyDerivation {
         commands = {}
         for app in frappe.utils.bench_helper.get_apps():
           commands[app] = frappe.utils.bench_helper.get_app_group(app)
+          if not commands[app]:
+            continue
           for n, cmd in commands[app].commands.items():
             if n in skipped_commands:
               cmd.hidden = True
