@@ -1,8 +1,7 @@
 # local sources except pinning instrumentation
 /apps/*
 !/apps/_pins/
-!/apps/_pins.nix
-!/apps/pkgs.nix
+!/apps/*.nix
 
 # prj spec
 /.bin
