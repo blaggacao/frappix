@@ -70,14 +70,14 @@ in {
             (dev.mkNixago cell.config.redis_cache)
           ]
           ++ lib.optionals cfg.enableExtraProjectTools [
-            ((dev.mkNixago libcfg.cog) configs.cog {
+            (dev.mkNixago configs.cog {
               data = {
                 repository = "";
                 owner = "";
                 remote = "";
               };
             })
-            ((dev.mkNixago libcfg.conform) {
+            (dev.mkNixago libcfg.conform {
               data.commit.conventional = {
                 types = [
                   "test"
@@ -87,8 +87,8 @@ in {
                 scopes = [];
               };
             })
-            ((dev.mkNixago libcfg.lefthook) configs.lefthook)
-            ((dev.mkNixago libcfg.treefmt) configs.treefmt {
+            (dev.mkNixago configs.lefthook)
+            (dev.mkNixago configs.treefmt {
               packages = [nixpkgs.ruff];
               data.formatter = {
                 ruff = {
@@ -100,9 +100,9 @@ in {
                 prettier.excludes = ["apps/_pins/generated.json"];
               };
             })
-            ((dev.mkNixago libcfg.editorconfig) cell.config.editorconfig)
-            ((dev.mkNixago libcfg.mdbook) cell.config.mdbook {
-              data.book.title = cfg.name + " Documentation";
+            (dev.mkNixago libcfg.editorconfig cell.config.editorconfig)
+            (dev.mkNixago libcfg.mdbook cell.config.mdbook {
+              data.book.title = config.name + " Documentation";
             })
           ];
 
