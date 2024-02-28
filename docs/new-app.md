@@ -107,3 +107,14 @@ Chose the right name from the previous step and uncomment where it reads:
 This ensures that `apps.txt` will be updated.
 
 TODO: make this part of automatism.
+
+# Configure `fjsd`
+
+To obtain semantic diff on Frappé JSON, within the git repository of your new app, run:
+
+```console
+git config --local --add diff.fsjd.command "fsjd --git"
+cat << CONFIG >> .git/info/attributes
+*.json diff=fsjd
+CONFIG
+```
