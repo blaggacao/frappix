@@ -15,7 +15,7 @@ Change the name of the file to the name of your app and paste the following cont
 ```nix
 {
   # access to the pinned frappix sources
-  appSoucres,
+  appSources,
   # helper function to extract metadata from frappe apps
   extractFrappeMeta,
   # access to a nixpkgs library
@@ -35,7 +35,7 @@ buildPythonPackage rec {
     ;
 
   # change to access your app's sources
-  inherit (appSoucres.my-app) src;
+  inherit (appSources.my-app) src;
   # change for a rudimentary `import my-app`-like assertion
   # of the final package as if run from a python repl
   pythonImportsCheck = ["my-app"];
@@ -56,12 +56,17 @@ buildPythonPackage rec {
     # rembg
   ];
 
-  # typically, we want to simply relax all dependency versions and use the prepackages ones
+  # typically, we want to simply relax all dependency versions and use the prepackaged ones;
   # if a version does _really_ not work, you'll need to package the correct python package
   # yourself; for that: get help in the Matrix Chat!
   pythonRelaxDeps = true;
 }
 ```
+
+<div class="warning">
+Because Nix is designed to only load files which are principally under version controll,
+you'll at least to `git add ./apps/<my-app>.nix` before it will be visible to the builder.
+</div>
 
 # Add it to `./apps/pkgs.nix`
 

@@ -1,5 +1,5 @@
 {
-  appSoucres,
+  appSources,
   lib,
   buildPythonPackage,
   pythonRelaxDepsHook,
@@ -16,7 +16,7 @@ buildPythonPackage rec {
     format
     ;
 
-  inherit (appSoucres.gameplan) src;
+  inherit (appSources.gameplan) src;
 
   nativeBuildInputs = [
     pythonRelaxDepsHook
