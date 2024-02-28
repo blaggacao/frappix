@@ -101,3 +101,9 @@ Chose the right name from the previous step and uncomment where it reads:
         # my-app
       ];
 ```
+
+# Finally `devenv reload`
+
+This ensures that `apps.txt` will be updated.
+
+TODO: make this part of automatism.
