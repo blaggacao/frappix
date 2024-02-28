@@ -191,17 +191,6 @@ in {
                       git add . && git commit -m 'FRAPPIX START' --no-verify --allow-empty --no-gpg-sign
                       yarn --silent || true
                     )
-                    relpath="$(realpath --relative-to=`pwd` $PRJ_ROOT/apps/${app.pname})"
-                    if (
-                      [[ ! -f "$PRJ_ROOT/apps/${app.pname}/.git/hooks/pre-commit" ]] &&
-                      [[ -f "$PRJ_ROOT/apps/${app.pname}/.pre-commit-config.yaml" ]]
-                    ); then
-                       echo -e "\033[0;32mInstalling $relpath pre-commit hook ...\033[0m" && \
-                        (cd $PRJ_ROOT/apps/${app.pname}; pre-commit install --install-hooks;)
-                    fi
-                    echo -e "\033[0;32mInstalling $relpath into virtual env ...\033[0m" && \
-                    "$PRJ_ROOT/pyenv/bin/python" -m pip install --quiet --upgrade --editable \
-                      "$PRJ_ROOT/apps/${app.pname}" --no-cache-dir --no-dependencies
                   fi
                 '';
               in ''
@@ -209,9 +198,41 @@ in {
               '';
               deps = ["emplace-pyenv"];
             };
+            install-pre-commit = {
+              text = let
+                install = app: ''
+                  if (
+                    [[ ! -f "$PRJ_ROOT/apps/${app.pname}/.git/hooks/pre-commit" ]] &&
+                    [[ -f "$PRJ_ROOT/apps/${app.pname}/.pre-commit-config.yaml" ]]
+                  ); then
+                     relpath="$(realpath --relative-to=`pwd` $PRJ_ROOT/apps/${app.pname})"
+                     echo -e "\033[0;32mInstalling $relpath pre-commit hook ...\033[0m" && \
+                      (cd $PRJ_ROOT/apps/${app.pname}; pre-commit install --install-hooks;)
+                  fi
+                '';
+              in ''
+                ${lib.concatMapStrings install cfg.apps}
+              '';
+              deps = ["emplace-apps"];
+            };
+            pyinstall-apps = {
+              text = let
+                install = app: ''
+                  if [[ ! -f "$PRJ_DATA_HOME/pyenv/${sitePackagesPath}/${app.pname}.pth" ]]; then
+                    relpath="$(realpath --relative-to=`pwd` $PRJ_ROOT/apps/${app.pname})"
+                    echo -e "\033[0;32mInstalling $relpath into virtual env ...\033[0m" && \
+                    "$PRJ_ROOT/pyenv/bin/python" -m pip install --quiet --upgrade --editable \
+                      "$PRJ_ROOT/apps/${app.pname}" --no-cache-dir --no-dependencies
+                  fi
+                '';
+              in ''
+                ${lib.concatMapStrings install cfg.apps}
+              '';
+              deps = ["emplace-apps"];
+            };
             activate-pyenv = {
               text = ''source "$PRJ_DATA_HOME/pyenv/bin/activate"'';
-              deps = ["emplace-apps"];
+              deps = ["pyinstall-apps"];
             };
           };
         };
