@@ -65,7 +65,7 @@ buildPythonPackage rec {
 
 <div class="warning">
 Because Nix is designed to only load files which are principally under version controll,
-you'll at least to `git add ./apps/<my-app>.nix` before it will be visible to the builder.
+you'll at least to <code>git add ./apps/\<my-app\>.nix</code> before it will be visible to the builder.
 </div>
 
 # Add it to `./apps/pkgs.nix`
