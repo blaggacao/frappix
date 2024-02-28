@@ -11,9 +11,6 @@
       inherit inputs;
       cellsFrom = std.incl ./. ["tools" "apps" "deploy"];
       cellBlocks = with std.blockTypes; [
-        # Pkgs Functions for Frappe Framework Components
-        (functions "overlays")
-
         # apps
         (nvfetcher "_pins")
         (pkgs "pkgs")
