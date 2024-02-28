@@ -194,7 +194,7 @@ in {
                   fi
                 '';
               in ''
-                ${lib.concatMapStrings clone cfg.apps}
+                ${lib.concatMapStrings clone (lib.filter (a: a ? pin) cfg.apps)}
               '';
               deps = ["emplace-pyenv"];
             };

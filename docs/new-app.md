@@ -8,6 +8,10 @@ _Note: this is an upstream `bench` command and not yet seamlessly integrated wit
 
 TODO: describe how to set up nvfetcher sources pinning
 
+Note:
+
+- Explain `since` and `upstream` passthru in nvfetcher.toml
+
 # Add `./apps/<my-app>.nix`
 
 Change the name of the file to the name of your app and paste the following content and go through the comments:
