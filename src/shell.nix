@@ -149,7 +149,7 @@ in {
                 if [[ -z "$PRJ_DATA_HOME" ]]; then
                     echo "This shell must be run in an environment conforming to 'PRJ Base Directory Specification'." 1>&2
                     echo "For more info on 'PRJ Base Directory Specification', see: https://github.com/numtide/prj-spec" 1>&2
-                    echo "You can use direnv to provide the environment or enter the shell via the `frx` command which sets the environment at runtime 1>&2
+                    echo "You can use direnv to provide the environment or enter the shell via the `frx` command which sets the environment at runtime" 1>&2
                    exit 1
                 fi
               '';
