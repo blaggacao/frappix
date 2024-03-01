@@ -150,12 +150,22 @@ in {
               pkgs.fsjd
             ];
           startup = {
+            ensure-env-vars = {
+              text = ''
+                if [[ -z "$PRJ_ROOT" ]]; then
+                    echo "This shell must be run in the context of the environments of the 'PRJ Base Directory Specification' being set." 1>&2
+                    echo "For more info on 'PRJ Base Directory Specification', see: https://github.com/numtide/prj-spec" 1>&2
+                   exit 1
+                fi
+              '';
+              deps = [];
+            };
             emplace-folders = {
               text = ''
                 mkdir -p "$PRJ_DATA_HOME"/{sites,logs}
                 mkdir -p "$PRJ_ROOT/apps"
               '';
-              deps = [];
+              deps = ["ensure-env-vars"];
             };
             emplace-files = {
               text = ''
@@ -163,7 +173,7 @@ in {
                 [[ ! -f "$PRJ_ROOT/patches.txt" ]] && cp -f ${cfg.frappe}/share/patches.txt "$PRJ_ROOT"
                 [[ ! -f "$PRJ_DATA_HOME/sites/common_site_config.json" ]] &&  echo "{}" > "$PRJ_DATA_HOME/sites/common_site_config.json"
               '';
-              deps = ["emplace-folders"];
+              deps = ["emplace-folders" "ensure-env-vars"];
             };
             emplace-pyenv = {
               text = ''
@@ -173,7 +183,7 @@ in {
                 }
                 echo "${penv}/${sitePackagesPath}" > "$PRJ_DATA_HOME/pyenv/${sitePackagesPath}/zzz-shell-python-env.pth"
               '';
-              deps = ["emplace-folders"];
+              deps = ["emplace-folders" "ensure-env-vars"];
             };
             emplace-apps = {
               text = let
@@ -196,7 +206,7 @@ in {
               in ''
                 ${lib.concatMapStrings clone (lib.filter (a: a ? pin) cfg.apps)}
               '';
-              deps = ["emplace-pyenv"];
+              deps = ["emplace-pyenv" "ensure-env-vars"];
             };
             install-pre-commit = {
               text = let
@@ -213,7 +223,7 @@ in {
               in ''
                 ${lib.concatMapStrings install cfg.apps}
               '';
-              deps = ["emplace-apps"];
+              deps = ["emplace-apps" "ensure-env-vars"];
             };
             pyinstall-apps = {
               text = let
@@ -228,11 +238,11 @@ in {
               in ''
                 ${lib.concatMapStrings install cfg.apps}
               '';
-              deps = ["emplace-apps"];
+              deps = ["emplace-apps" "ensure-env-vars"];
             };
             activate-pyenv = {
               text = ''source "$PRJ_DATA_HOME/pyenv/bin/activate"'';
-              deps = ["pyinstall-apps"];
+              deps = ["pyinstall-apps" "ensure-env-vars"];
             };
           };
         };
