@@ -146,7 +146,7 @@ in {
           startup = {
             ensure-env-vars = {
               text = ''
-                if [[ -z "$PRJ_ROOT" ]]; then
+                if [[ -z "$PRJ_DATA_HOME" ]]; then
                     echo "This shell must be run in the context of the environments of the 'PRJ Base Directory Specification' being set." 1>&2
                     echo "For more info on 'PRJ Base Directory Specification', see: https://github.com/numtide/prj-spec" 1>&2
                    exit 1
