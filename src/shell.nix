@@ -70,13 +70,7 @@ in {
             (dev.mkNixago cell.config.redis_cache)
           ]
           ++ lib.optionals cfg.enableExtraProjectTools [
-            (dev.mkNixago configs.cog {
-              data = {
-                repository = "";
-                owner = "";
-                remote = "";
-              };
-            })
+            (dev.mkNixago configs.cog)
             (dev.mkNixago libcfg.conform {
               data.commit.conventional = {
                 types = [
