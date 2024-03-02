@@ -2,7 +2,13 @@ let
   inherit (inputs) nixpkgs frappix;
   inherit (cell) _pins;
 
-  inject = _: prev: {
+  inject = final: prev: {
+    pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
+      (pyFinal: pyPrev: {
+        # extend the python package set with yet-unpackaged or
+        # more up-to-date python dependencies
+      })    
+    ];
     # extend the frappix package set
     frappix = prev.frappix.overrideScope' (finalFrappix: prevFrappix: {
       # inject your pinned sources (if any) into the frappix build pipeline

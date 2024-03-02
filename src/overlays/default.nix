@@ -1,9 +1,7 @@
 {
   python = {
     __functor = _: final: prev: {
-      python311 = prev.python311.override {
-        packageOverrides = import ./python;
-      };
+      pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [(import ./python)];
     };
     meta.description = "Frappix python overlays";
   };
