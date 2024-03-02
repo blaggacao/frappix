@@ -1,6 +1,6 @@
 let
   inherit (builtins) readDir;
-  inherit (inputs.nixpkgs) lib;
+  inherit (inputs.nixpkgs) lib applyPatches substituteAll;
 
   fileIsNix = basename: type: type == "regular" && lib.hasSuffix ".nix" basename;
 
@@ -8,6 +8,55 @@ let
 
   sourceDirectoryEntries = path: lib.mapAttrs (loadPath path) (lib.filterAttrs fileIsNix (readDir path));
 
-  sanitizeKey = name: path: lib.nameValuePair (lib.removeSuffix ".nix" name) path;
+  sanitizeKey = name: attrs: lib.nameValuePair (lib.removeSuffix ".nix" name) attrs;
+
+  applyInputPatches = name: attrs:
+    {
+      frappe =
+        attrs
+        // {
+          src = let
+            stage_1 = applyPatches {
+              name = "frappe-source-1";
+              inherit (attrs) src;
+              # this patch is needs to be present in all source trees,
+              # such as the one used for the frontend below
+              patches = [
+                # Add missing unix domain socket support
+                ./sources/frappe-uds.patch
+                # This mariadb has passwordless root access
+                # for the current user
+                ./sources/frappe-uds-current-user.patch
+              ];
+            };
+            stage_2 = applyPatches {
+              name = "frappe-source-2";
+              src = stage_1;
+              patches = [
+                # make the relative path to the generator script absolute
+                # but reference the already patched version to work with uds
+                (substituteAll {
+                  src = ./sources/frappe-website-generator.patch;
+                  frappe = stage_1;
+                })
+              ];
+            };
+          in
+            stage_2;
+        };
+      erpnext =
+        attrs
+        // {
+          src = applyPatches {
+            name = "erpnext-source";
+            inherit (attrs) src;
+            patches = [
+              ./sources/erpnext-plaid-bump.patch
+            ];
+          };
+        };
+    }
+    .${name}
+    or attrs;
 in
-  lib.mapAttrs' sanitizeKey (sourceDirectoryEntries ./sources)
+  lib.mapAttrs applyInputPatches (lib.mapAttrs' sanitizeKey (sourceDirectoryEntries ./sources))

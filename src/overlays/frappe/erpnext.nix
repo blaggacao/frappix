@@ -19,10 +19,6 @@ buildPythonPackage rec {
 
   inherit (appSources.erpnext) src;
 
-  patches = [
-    ./erpnext-plaid-bump.patch
-  ];
-
   nativeBuildInputs = [
     pythonRelaxDepsHook
     flit-core

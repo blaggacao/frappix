@@ -8,8 +8,6 @@
   pkgs,
   mkYarnApp,
   mkYarnOfflineCache,
-  substituteAll,
-  applyPatches,
   extractFrappeMeta,
 }:
 buildPythonPackage rec {
@@ -20,27 +18,7 @@ buildPythonPackage rec {
     format
     ;
 
-  src = applyPatches {
-    name = "frappe-source";
-    inherit (appSources.frappe) src;
-    # this patch is needs to be present in all source trees,
-    # such as the one used for the frontend below
-    patches = [
-      # Add missing unix domain socket support
-      ./frappe-uds.patch
-      # This mariadb has passwordless root access
-      # for the current user
-      ./frappe-uds-current-user.patch
-    ];
-  };
-
-  patches = [
-    # make the relative path to the generator script absolute
-    (substituteAll {
-      src = ./frappe-website-generator.patch;
-      frappe = src;
-    })
-  ];
+  inherit (appSources.frappe) src;
 
   nativeBuildInputs = [
     pythonRelaxDepsHook
