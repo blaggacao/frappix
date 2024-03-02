@@ -250,6 +250,7 @@ in {
           (devPackage pkgs.frx)
           (devPackage pkgs.pre-commit)
           (devPackage pkgs.nvfetcher)
+          (devPackage pkgs.nvchecker-nix)
           (devPackage pkgs.nodePackages.localtunnel)
           (devPackage pkgs.bench)
           (devPackage pkgs.apps)

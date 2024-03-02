@@ -21,6 +21,7 @@ buildPythonPackage rec {
     ;
 
   src = applyPatches {
+    name = "frappe-source";
     inherit (appSources.frappe) src;
     # this patch is needs to be present in all source trees,
     # such as the one used for the frontend below

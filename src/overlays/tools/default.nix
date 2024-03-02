@@ -1,4 +1,5 @@
 inputs: final: prev: {
+  nvchecker-nix = final.python3.pkgs.callPackage ./nvchecker.nix {};
   # special yarn build tooling for frappe
   mkYarnApp = final.callPackage ./mkYarnApp.nix {};
   mkFrappeAssets = final.callPackage ./mkFrappeAssets.nix {};

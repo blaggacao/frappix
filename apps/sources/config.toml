@@ -1,0 +1,46 @@
+[__config__]
+oldver = "oldver.json"
+newver = "newver.json"
+nix-expr-folder = "."
+
+[bench] # only used for some static outputs
+source = "github"
+github = "frappe/bench"
+
+[frappe]
+source = "github"
+branch = "develop" #-- 2024-02-17 - patch doesn't apply to latest release: https://github.com/frappe/frappe/pull/22548
+github = "frappe/frappe"
+
+[frappe.passthru]
+since = "version-13"
+upstream = """
+URL: https://github.com/frappe/frappe
+Pull: +refs/heads/develop:refs/remotes/upstream/develop
+Pull: +refs/heads/version-15:refs/remotes/upstream/version-15
+Pull: +refs/heads/version-15-hotfix:refs/remotes/upstream/version-15-hotfix
+Pull: +refs/tags/v15.*:refs/remotes/upstream/tags/v15.*
+"""
+
+[erpnext]
+source = "github"
+branch = "develop" #  -- 2024-02-17 - frappe patch doesn't apply and frappe 16 is not compatible with erpnext 15
+github = "frappe/erpnext"
+
+[insights]
+source = "github"
+github = "frappe/insights"
+
+[gameplan]
+source = "github"
+branch = "main" # no release yet
+github = "frappe/gameplan"
+
+[ecommerce-integrations]
+source = "github"
+github = "frappe/ecommerce_integrations"
+
+[payments]
+source = "github"
+branch = "develop" # no release yet
+github = "frappe/payments"
