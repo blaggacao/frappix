@@ -1,7 +1,7 @@
 let
   inherit (inputs.nixpkgs.lib.modules) setDefaultModuleLocation mkDefault;
 in {
-  frappe = {
+  frappix = {
     meta.description = "The main frappix nixos module";
     __functor = _: {pkgs, ...}: {
       # load our custom `pkgs`

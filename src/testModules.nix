@@ -104,7 +104,7 @@ in {
     penv-test = cfg.package.pythonModule.buildEnv.override {extraLibs = cfg.apps ++ test-deps;};
   in {
     # loads custom `pkgs`
-    imports = [nixos.frappe];
+    imports = [nixos.frappix];
     _file = ./tests.nix;
     config = {
       users.mutableUsers = false;
