@@ -16,7 +16,7 @@ buildPythonPackage rec {
     format
     ;
 
-  inherit (appSources.gameplan) src;
+  inherit (appSources.gameplan) src passthru;
 
   nativeBuildInputs = [
     pythonRelaxDepsHook

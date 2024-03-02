@@ -28,19 +28,21 @@ buildPythonPackage rec {
     flit-core
   ];
 
-  passthru = {
-    frontend = let
-      yarnLock = "${src}/yarn.lock";
-      # # w/o IFD
-      # offlineCache = fetchYarnDeps {
-      #   inherit yarnLock;
-      #   hash = "";
-      # };
-      # w/  IFD
-      offlineCache = mkYarnOfflineCache {inherit yarnLock;};
-    in
-      mkYarnApp pname src offlineCache;
-  };
+  passthru =
+    {
+      frontend = let
+        yarnLock = "${src}/yarn.lock";
+        # # w/o IFD
+        # offlineCache = fetchYarnDeps {
+        #   inherit yarnLock;
+        #   hash = "";
+        # };
+        # w/  IFD
+        offlineCache = mkYarnOfflineCache {inherit yarnLock;};
+      in
+        mkYarnApp pname src offlineCache;
+    }
+    // appSources.erpnext.passthru;
 
   propagatedBuildInputs = with python.pkgs; [
     barcodenumber

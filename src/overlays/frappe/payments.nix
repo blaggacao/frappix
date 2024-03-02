@@ -15,7 +15,7 @@ buildPythonPackage rec {
     format
     ;
 
-  inherit (appSources.payments) src;
+  inherit (appSources.payments) src passthru;
 
   nativeBuildInputs = [
     pythonRelaxDepsHook

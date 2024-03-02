@@ -15,7 +15,7 @@ buildPythonPackage rec {
     format
     ;
 
-  inherit (appSources.ecommerce-integrations) src;
+  inherit (appSources.ecommerce-integrations) src passthru;
 
   nativeBuildInputs = [
     pythonRelaxDepsHook

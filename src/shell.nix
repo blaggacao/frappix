@@ -145,52 +145,66 @@ in {
             ];
           startup = {
             ensure-env-vars = {
-              text = ''
-                if [[ -z "$PRJ_DATA_HOME" ]]; then
-                    echo "This shell must be run in an environment conforming to 'PRJ Base Directory Specification'." 1>&2
-                    echo "For more info on 'PRJ Base Directory Specification', see: https://github.com/numtide/prj-spec" 1>&2
-                    echo "You can use direnv to provide the environment or enter the shell via the `frx` command which sets the environment at runtime" 1>&2
-                   exit 1
-                fi
-              '';
+              text =
+                # bash
+                ''
+                  if [[ -z "$PRJ_DATA_HOME" ]]; then
+                      echo "This shell must be run in an environment conforming to 'PRJ Base Directory Specification'." 1>&2
+                      echo "For more info on 'PRJ Base Directory Specification', see: https://github.com/numtide/prj-spec" 1>&2
+                      echo "You can use direnv to provide the environment or enter the shell via the 'frx' command which sets the environment at runtime" 1>&2
+                     exit 1
+                  fi
+                '';
               deps = [];
             };
             emplace-folders = {
-              text = ''
-                mkdir -p "$PRJ_DATA_HOME"/{sites,logs}
-                mkdir -p "$PRJ_ROOT/apps"
-              '';
+              text =
+                # bash
+                ''
+                  mkdir -p "$PRJ_DATA_HOME"/{sites,logs}
+                  mkdir -p "$PRJ_ROOT/apps"
+                '';
               deps = ["ensure-env-vars"];
             };
             emplace-files = {
-              text = ''
-                cat > "$PRJ_DATA_HOME/sites/apps.txt" <<<"${lib.concatStringsSep "\n" appNames}"
-                [[ ! -f "$PRJ_ROOT/patches.txt" ]] && cp -f ${cfg.frappe}/share/patches.txt "$PRJ_ROOT"
-                [[ ! -f "$PRJ_DATA_HOME/sites/common_site_config.json" ]] &&  echo "{}" > "$PRJ_DATA_HOME/sites/common_site_config.json"
-              '';
+              text =
+                # bash
+                ''
+                  cat > "$PRJ_DATA_HOME/sites/apps.txt" <<<"${lib.concatStringsSep "\n" appNames}"
+                  [[ ! -f "$PRJ_ROOT/patches.txt" ]] && cp -f ${cfg.frappe}/share/patches.txt "$PRJ_ROOT"
+                  [[ ! -f "$PRJ_DATA_HOME/sites/common_site_config.json" ]] &&  echo "{}" > "$PRJ_DATA_HOME/sites/common_site_config.json"
+                '';
               deps = ["emplace-folders" "ensure-env-vars"];
             };
             emplace-pyenv = {
-              text = ''
-                [[ ! -d "$PRJ_DATA_HOME/pyenv" ]] && {
-                   ${lib.getExe python} -m venv "$PRJ_DATA_HOME/pyenv";
-                  "$PRJ_DATA_HOME/pyenv/bin/python" -m pip install --quiet --upgrade pip
-                }
-                echo "${penv}/${sitePackagesPath}" > "$PRJ_DATA_HOME/pyenv/${sitePackagesPath}/zzz-shell-python-env.pth"
-              '';
+              text =
+                # bash
+                ''
+                  [[ ! -d "$PRJ_DATA_HOME/pyenv" ]] && {
+                     ${lib.getExe python} -m venv "$PRJ_DATA_HOME/pyenv";
+                    "$PRJ_DATA_HOME/pyenv/bin/python" -m pip install --quiet --upgrade pip
+                  }
+                  echo "${penv}/${sitePackagesPath}" > "$PRJ_DATA_HOME/pyenv/${sitePackagesPath}/zzz-shell-python-env.pth"
+                '';
               deps = ["emplace-folders" "ensure-env-vars"];
             };
             emplace-apps = {
               text = let
-                clone = app: ''
+                clone = app:
+                # bash
+                ''
                   if [[ ! -d "$PRJ_ROOT/apps/${app.pname}" ]]; then
                     git clone --config "diff.fsjd.command=fsjd --git" \
-                      --origin upstream --shallow-exclude="${app.pin.since}" "${app.pin.src.gitRepoUrl}" \
+                      --origin upstream ${
+                    lib.optionalString (app ? since) ''--shallow-exclude="'' + app.since + ''"''
+                  } "${app.pin.src.gitRepoUrl}" \
                       "$PRJ_ROOT/apps/${app.pname}"
                     (
                       cd "$PRJ_ROOT/apps/${app.pname}";
                       mkdir .git/remotes;
-                      echo "${app.pin.upstream}" > .git/remotes/upstream;
+                      ${
+                    lib.optionalString (app ? upstream) ''echo "${app.upstream}" > .git/remotes/upstream;''
+                  }
                       git switch -c custom;
                       (diff -ura $PRJ_ROOT/apps/${app.pname} ${app.src} | patch --strip 4) || true;
                       git add . && git commit -m 'FRAPPIX START' --no-verify --allow-empty --no-gpg-sign
@@ -205,7 +219,9 @@ in {
             };
             install-pre-commit = {
               text = let
-                install = app: ''
+                install = app:
+                # bash
+                ''
                   if (
                     [[ ! -f "$PRJ_ROOT/apps/${app.pname}/.git/hooks/pre-commit" ]] &&
                     [[ -f "$PRJ_ROOT/apps/${app.pname}/.pre-commit-config.yaml" ]]
@@ -222,7 +238,9 @@ in {
             };
             pyinstall-apps = {
               text = let
-                install = app: ''
+                install = app:
+                # bash
+                ''
                   if [[ ! -f "$PRJ_DATA_HOME/pyenv/${sitePackagesPath}/${app.pname}.pth" ]]; then
                     relpath="$(realpath --relative-to=`pwd` $PRJ_ROOT/apps/${app.pname})"
                     echo -e "\033[0;32mInstalling $relpath into virtual env ...\033[0m" && \

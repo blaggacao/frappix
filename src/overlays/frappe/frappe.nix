@@ -47,37 +47,38 @@ buildPythonPackage rec {
     flit-core
   ];
 
-  passthru = rec {
-    pin = appSources.frappe;
-    packages = with pkgs; [
-      mysql
-      restic
-      wkhtmltopdf-bin
-      which # pdfkit detects wkhtmltopdf this way
-      gzip # for manual backups from the frappe ui
-      bash
-      nodejs-18_x
-      redis
-    ];
-    test-dependencies = with python.pkgs; [
-      faker
-      hypothesis
-      responses
-      freezegun
-    ];
-    websocket = frontend + /share/apps/frappe/socketio.js;
-    frontend = let
-      yarnLock = "${src}/yarn.lock";
-      # # w/o IFD
-      # offlineCache = fetchYarnDeps {
-      #   inherit yarnLock;
-      #   hash = "";
-      # };
-      # w/  IFD
-      offlineCache = mkYarnOfflineCache {inherit yarnLock;};
-    in
-      mkYarnApp pname src offlineCache;
-  };
+  passthru =
+    rec {
+      packages = with pkgs; [
+        mysql
+        restic
+        wkhtmltopdf-bin
+        which # pdfkit detects wkhtmltopdf this way
+        gzip # for manual backups from the frappe ui
+        bash
+        nodejs-18_x
+        redis
+      ];
+      test-dependencies = with python.pkgs; [
+        faker
+        hypothesis
+        responses
+        freezegun
+      ];
+      websocket = frontend + /share/apps/frappe/socketio.js;
+      frontend = let
+        yarnLock = "${src}/yarn.lock";
+        # # w/o IFD
+        # offlineCache = fetchYarnDeps {
+        #   inherit yarnLock;
+        #   hash = "";
+        # };
+        # w/  IFD
+        offlineCache = mkYarnOfflineCache {inherit yarnLock;};
+      in
+        mkYarnApp pname src offlineCache;
+    }
+    // appSources.frappe.passthru;
 
   propagatedBuildInputs = with python.pkgs;
     [
