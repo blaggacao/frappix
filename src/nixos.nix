@@ -108,18 +108,16 @@ in {
       BoDph0rArKB6fjiQgpi+gZQa6A==
       -----END PRIVATE KEY-----
     '';
-    setCert = prefix:
-      nameValuePair (
-        if prefix != null
-        then "${prefix}.${site}"
-        else site
-      ) {
-        sslTrustedCertificate = "${sslPath}/ca.crt";
-        sslCertificate = "${sslPath}/ca.crt";
-        sslCertificateKey = "${sslPath}/key.pem";
-      };
   in {
     _file = ./tests.nix;
+    options.services.nginx.virtualHosts = lib.mkOption {
+      type = lib.types.attrsOf (lib.types.submodule {
+        sslTrustedCertificate = lib.mkDefault "${sslPath}/ca.crt";
+        sslCertificate = lib.mkDefault "${sslPath}/ca.crt";
+        sslCertificateKey = lib.mkDefault "${sslPath}/key.pem";
+        enableACME = mkTestOverride false;
+      });
+    };
     config = {
       users.mutableUsers = false;
       networking.firewall.enable = false;
@@ -130,6 +128,7 @@ in {
         ];
       };
       networking.domain = mkTestOverride site;
+      security.acme.acceptTerms = mkTestOverride false;
       # setup a complete bench environment at the system level
       environment = {
         etc."${cfg.project}/admin-password".text = "admin";
@@ -150,8 +149,8 @@ in {
       };
       security.pki.certificateFiles = [ca];
       systemd.tmpfiles.rules = ["d ${sslPath} 744 ${config.services.nginx.user} ${config.services.nginx.group}"];
-      services.nginx.virtualHosts = builtins.listToAttrs (map setCert ["erp" null]);
       services.getty.autologinUser = "root";
+      users.users.root.password = "root";
       security.sudo = {
         enable = mkTestOverride true;
         wheelNeedsPassword = false;
