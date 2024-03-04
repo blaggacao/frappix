@@ -22,7 +22,6 @@
         # Modules
         (anything "nixos")
         (anything "shell")
-        (anything "testModules")
         (nixostests "tests")
         (microvms "vms")
         (runnables "jobs" // {cli = false;}) # for downstream use

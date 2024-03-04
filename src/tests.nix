@@ -1,6 +1,6 @@
 let
   inherit (inputs) nixpkgs;
-  inherit (cell) pkgs testModules nixos;
+  inherit (cell) pkgs nixos;
   site = "testproject.local";
   project = "TestProject";
   nixos-lib = import (nixpkgs + /nixos/lib) {inherit (nixpkgs) system;};
@@ -12,7 +12,10 @@ in {
       skipLint = true;
       defaults = {
         nixpkgs = {inherit pkgs;};
-        imports = [testModules.default nixos.frappix];
+        imports = [
+          nixos.testrig
+          nixos.frappix
+        ];
         virtualisation = {
           # we don't do any nix build inside the test vm
           writableStore = false;
