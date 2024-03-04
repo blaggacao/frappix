@@ -1,7 +1,7 @@
 let
   inherit (inputs.std.inputs) microvm;
   inherit (inputs) nixpkgs;
-  inherit (cell) pkgs testModules;
+  inherit (cell) pkgs testModules nixos;
   eval = module:
     import (nixpkgs + /nixos/lib/eval-config.nix) {
       inherit (nixpkgs) system;
@@ -12,6 +12,7 @@ in {
     imports = [
       microvm.nixosModules.microvm
       testModules.default
+      nixos.frappix
     ];
     nixpkgs = {inherit pkgs;};
     # hardware.opengl.enable = true;

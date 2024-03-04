@@ -1,6 +1,6 @@
 let
-  inherit (inputs.nixpkgs.lib) nameValuePair;
-  inherit (cell) nixos;
+  inherit (inputs.nixpkgs.lib) nameValuePair mkVMOverride mkDefault;
+  mkTestOverride = mkVMOverride;
   site = "testproject.local";
   project = "TestProject";
 
@@ -64,23 +64,6 @@ let
     BoDph0rArKB6fjiQgpi+gZQa6A==
     -----END PRIVATE KEY-----
   '';
-
-  common-site-config =
-    builtins.toFile "commont-site-config.json"
-    (builtins.toJSON {
-      default_site = "erp.${site}";
-      allow_tests = true;
-      # fake smtp setting for notification / email tests
-      auto_email_id = "test@example.com";
-      mail_server = "smtp.example.com";
-      mail_login = "test@example.com";
-      mail_password = "test";
-      # not sure about these
-      monitor = 1;
-      server_script_enabled = true;
-      redis_queue = "unix:///run/redis-${project}-queue/redis.sock";
-      redis_cache = "unix:///run/redis-${project}-cache/redis.sock";
-    });
   setCert = prefix:
     nameValuePair (
       if prefix != null
@@ -102,9 +85,24 @@ in {
     cfg = config.services.frappe;
     test-deps = lib.flatten (lib.catAttrs "test-dependencies" cfg.apps);
     penv-test = cfg.package.pythonModule.buildEnv.override {extraLibs = cfg.apps ++ test-deps;};
+
+    common-site-config =
+      builtins.toFile "commont-site-config.json"
+      (builtins.toJSON {
+        default_site = "erp.${site}";
+        allow_tests = true;
+        # fake smtp setting for notification / email tests
+        auto_email_id = "test@example.com";
+        mail_server = "smtp.example.com";
+        mail_login = "test@example.com";
+        mail_password = "test";
+        # not sure about these
+        monitor = 1;
+        server_script_enabled = true;
+        redis_queue = "unix:///run/redis-${cfg.project}-queue/redis.sock";
+        redis_cache = "unix:///run/redis-${cfg.project}-cache/redis.sock";
+      });
   in {
-    # loads custom `pkgs`
-    imports = [nixos.frappix];
     _file = ./tests.nix;
     config = {
       users.mutableUsers = false;
@@ -115,10 +113,10 @@ in {
           "erp.${site}"
         ];
       };
-      networking.domain = site;
+      networking.domain = mkTestOverride site;
       # setup a complete bench environment at the system level
       environment = {
-        etc."${project}/admin-password".text = "admin";
+        etc."${cfg.project}/admin-password".text = "admin";
         extraInit = ''
           # when the testing backdoor service enters the environment, the frappe systemd services
           # havn't emplaced this folders yet so we create it manually for the linking below
@@ -139,7 +137,7 @@ in {
       services.nginx.virtualHosts = builtins.listToAttrs (map setCert ["erp" null]);
       services.getty.autologinUser = "root";
       security.sudo = {
-        enable = true;
+        enable = mkTestOverride true;
         wheelNeedsPassword = false;
       };
       systemd.services."create-wildcard.${site}-cert" = {
@@ -168,22 +166,15 @@ in {
       };
 
       services.frappe = {
-        inherit project;
+        project = mkDefault project;
         enable = true;
-        adminPassword = "/etc/${project}/admin-password";
-        gunicorn_workers = 1;
-        penv = lib.mkForce penv-test;
+        adminPassword = mkTestOverride "/etc/${cfg.project}/admin-password";
+        gunicorn_workers = mkTestOverride 1;
+        penv = mkTestOverride penv-test;
         environment = {
           # python requests observes this, among others
           CURL_CA_BUNDLE = config.environment.etc."ssl/certs/ca-certificates.crt".source;
         };
-
-        apps = with frappix; [
-          # combining tests fails some frappe tests
-          # erpnext
-          # insight
-          # gameplan
-        ];
         sites = {
           "erp.${site}" = {
             domains = ["erp.${site}"];
