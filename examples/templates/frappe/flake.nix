@@ -12,7 +12,7 @@
       cellsFrom = std.incl ./. ["tools" "apps" "deploy"];
       cellBlocks = with std.blockTypes; [
         # apps
-        (nvfetcher "_pins")
+        (frappix.nvchecker "_pins")
         (pkgs "pkgs")
 
         # local
