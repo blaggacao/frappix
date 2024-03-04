@@ -6,11 +6,18 @@ _Note: this is an upstream `bench` command and not yet seamlessly integrated wit
 
 # Add the production pin for your new sources
 
-TODO: describe how to set up nvfetcher sources pinning
+_Note: this is dumped from memory after the fact, expect imprecision._
 
-Note:
+- Go to `apps/_pins/config.toml`
+- Declare your new source; take examples from the Frappix repository
+- Run `nvchecker -c config.toml` to pin the sources and generate the files
 
-- Explain `since` and `upstream` passthru in nvfetcher.toml
+Note: you may have seen `<app>.passthru` arguments in the Frappix repository's `config.toml`
+
+- `since` declares how far the shallow clone should go back (acquiring a common ancestor if since isn't in the parent tree of the current branch)
+- `upstream` declares a fetch configuration to only fetch the portions of history from upstream that you may be interested in
+
+These setups are done on first clone, so they don't have any effect on your newly created app, since you already initialized the repository locally.
 
 # Add `./apps/<my-app>.nix`
 
