@@ -17,7 +17,7 @@
         (pkgs "pkgs")
 
         # App Sources
-        (nvfetcher "sources")
+        (anything "sources")
 
         # Modules
         (anything "nixos")
@@ -39,6 +39,7 @@
       frappeOverlay = std.harvest self ["src" "overlays" "frappe"];
       nixosModules = std.harvest self ["src" "nixos"];
       frapper = import ./std/frapper.nix {inherit inputs;};
+      nvchecker = import ./std/nvchecker.nix {inherit inputs;};
       templates = std.pick self ["examples" "templates"];
     };
 
