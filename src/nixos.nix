@@ -29,14 +29,13 @@ in {
     test-deps = lib.flatten (lib.catAttrs "test-dependencies" cfg.apps);
     penv-test = cfg.package.pythonModule.buildEnv.override {extraLibs = cfg.apps ++ test-deps;};
 
-    site = "testproject.local";
     project = "TestProject";
 
     sslPath = "/etc/nginx/ssl";
     common-site-config =
       builtins.toFile "commont-site-config.json"
       (builtins.toJSON {
-        default_site = "erp.${site}";
+        default_site = "erp.${config.networking.fqdn}";
         allow_tests = true;
         # fake smtp setting for notification / email tests
         auto_email_id = "test@example.com";
@@ -50,63 +49,57 @@ in {
         redis_cache = "unix:///run/redis-${cfg.project}-cache/redis.sock";
       });
 
-    # minica --domains '*.testproject.local'
+    # minica --domains '*.localdomain'
     ca = builtins.toFile "ca.crt" ''
       -----BEGIN CERTIFICATE-----
-      MIIESjCCArKgAwIBAgIQIXBO2S6MrbNPYiRm/w9LdDANBgkqhkiG9w0BAQsFADB1
-      MR4wHAYDVQQKExVta2NlcnQgZGV2ZWxvcG1lbnQgQ0ExJTAjBgNVBAsMHGJsYWdn
-      YWNhb0BkYXIgKERhdmlkIEFybm9sZCkxLDAqBgNVBAMMI21rY2VydCBibGFnZ2Fj
-      YW9AZGFyIChEYXZpZCBBcm5vbGQpMB4XDTI0MDIwMTAzMDY1NVoXDTI2MDUwMTAy
-      MDY1NVowUDEnMCUGA1UEChMebWtjZXJ0IGRldmVsb3BtZW50IGNlcnRpZmljYXRl
-      MSUwIwYDVQQLDBxibGFnZ2FjYW9AZGFyIChEYXZpZCBBcm5vbGQpMIIBIjANBgkq
-      hkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuadc9NfaU3pWx6w7I6GKumfnDf4CpcqJ
-      mEw1Betl6nXwIhUyL5Ubl9sB8WfEt31oyXYIgbUD8bpKfQ45andyPk0hDkZzcBtC
-      mekr076xw1NQr/zc8Jg6RtMjeNyRw6DiVfcCFp7zL7qxx1dyfai5z9ldIuG/7m99
-      sXWLE3Sgt9kkL5dEEKDrvanCIAKn7wegQpgXq3hhEi7fXzLMkEueZjoLjLpSIKCV
-      NJlxdW2fSTyvNqD5UUonoy+io3sjX9a9XoZIn/WnPDud4umCirbAAReTqWGxsvD8
-      WCEsRGIrl9uVQ+nq416twMWev9iBDi2cRDTBCS8s7pTko43A6qw/ZwIDAQABo3sw
-      eTAOBgNVHQ8BAf8EBAMCBaAwEwYDVR0lBAwwCgYIKwYBBQUHAwEwHwYDVR0jBBgw
-      FoAUV1//tWJO87/4RwIl6BXNAkELsK8wMQYDVR0RBCowKIITKi50ZXN0cHJvamVj
-      dC5sb2NhbIIRdGVzdHByb2plY3QubG9jYWwwDQYJKoZIhvcNAQELBQADggGBAF2b
-      7IsYfyUBYMj2+rDE1bcBm4Xhh5bvUMQx/fYmOL7W3kpbtia1w/uS6+OiyidbooTZ
-      Y2EXNvQdGb0i6rzpXdlNu0hGLCjux1zsCOodpLUJ01CngAbRfXl9tdoS5zQM0ENj
-      xTPjTQDE86XXjUMA+C/xk+AP9bzlwBoQkOyxfDtbyrrjsB1vej65LUfiVPdRr6Zi
-      2yI451drt1+JsmJkUwGdv6SfJ6ZTgy1TlEs+MVF7jKDaKH14zqZljtdA9JgvzGnw
-      oDp4KUIObU/AlfRaWsWnUp20LAUruDB6gwSLHGS3g/5yrFyROJfumUhubZvJVCZw
-      4vSPayxPLMgzRJXkI0mhLeD9YUQgzR/70Yz3pKcnbLcWLv+RX9ltcDu6daayfJAl
-      hWaeZEy7M6vQHhCHziUcpVXPa84K6ZAf8XHwANLAGLKL3wv94UkL2m6aB6NNkDW8
-      t7aYTZL3n0OPuGtrUqtbyM43hJutjoyX9qoCH4l/48e+rAfLDDc+2cwaz2GZzw==
+      MIIDNDCCAhygAwIBAgIIKghNJgzTsqgwDQYJKoZIhvcNAQELBQAwIDEeMBwGA1UE
+      AxMVbWluaWNhIHJvb3QgY2EgNzk5YmQ5MB4XDTI0MDMwNjE2NDExMFoXDTI2MDQw
+      NTE1NDExMFowGDEWMBQGA1UEAwwNKi5sb2NhbGRvbWFpbjCCASIwDQYJKoZIhvcN
+      AQEBBQADggEPADCCAQoCggEBAKjzsw1piQxEaFbEmnXMSHMkitQn7WCI4EDQk0bV
+      +voEZTEtWVcsvXFORq7rn0vjTLHff8Hg3dUAi42In2+ntP/5Gmarbn8nIUUEYtGP
+      kmi50jAbqwxEZNR5mshqBBKC5Da2iUsOzK+2lq25h72h2GcXSNSwJTIyOluN9VFW
+      4m9cgJL2z2AUwq2FIslF5V1c6gshs0yO35flANya9ExYBoIz6i5jZ1cN/hrJffQW
+      UkglzMx6YsF9k+bDSJE94PrgoBKW8TIguVotu7/Iw8a9En9Z+OkhEaY4ABpTdu8L
+      RxSJe0upLRdY5+y9R4OK0mJCoVfHg0BEtfz9b1FswXvjFJMCAwEAAaN6MHgwDgYD
+      VR0PAQH/BAQDAgWgMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEFBQcDAjAMBgNV
+      HRMBAf8EAjAAMB8GA1UdIwQYMBaAFGPwy4elA+T+7Ud6os74hgPhYIEiMBgGA1Ud
+      EQQRMA+CDSoubG9jYWxkb21haW4wDQYJKoZIhvcNAQELBQADggEBAEe3lnCGKYZp
+      HVSTGiwxG6RTlXnNT+9SXDS09gRVQa67dHPizfRNjCXPFTXiPrYtBDYWLJj5pOS1
+      zaFQcZHujbw4qsRt1gTn27+29vs86wfbWRuxp8UvDn+zuFanng3CjXeONrYgB5Un
+      U1TCrchv4ubK8V2YO3Vj3cJoTtcCV3tU5FfWHoSPiK/MhxQfMZTi/cnNwurbjZ93
+      CMAqlJrn25DQEOidcf5qEWDXZCmI25qjAGwh8+RTa5ImYcSvbjem+m7aUbJSdm6T
+      R45pdO8l0ZlU3eg/D86ln4rhCgyHXyGHGknkEWnkTmd3oKusg5tD26u4fwvEx9vm
+      v0U2eKtsHWY=
       -----END CERTIFICATE-----
     '';
     key = builtins.toFile "key.pem" ''
-      -----BEGIN PRIVATE KEY-----
-      MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQC5p1z019pTelbH
-      rDsjoYq6Z+cN/gKlyomYTDUF62XqdfAiFTIvlRuX2wHxZ8S3fWjJdgiBtQPxukp9
-      Djlqd3I+TSEORnNwG0KZ6SvTvrHDU1Cv/NzwmDpG0yN43JHDoOJV9wIWnvMvurHH
-      V3J9qLnP2V0i4b/ub32xdYsTdKC32SQvl0QQoOu9qcIgAqfvB6BCmBereGESLt9f
-      MsyQS55mOguMulIgoJU0mXF1bZ9JPK82oPlRSiejL6KjeyNf1r1ehkif9ac8O53i
-      6YKKtsABF5OpYbGy8PxYISxEYiuX25VD6erjXq3AxZ6/2IEOLZxENMEJLyzulOSj
-      jcDqrD9nAgMBAAECggEBAIXkhyzp88Jaq/VraGdlHOkdAE1eEUjCjoNxCpiPUbxL
-      fHkIMl6QugrF31vcC8qNvqH052OsSgDu6sPQG2aGaLU36QwjkSOb9WeM+5fFouyM
-      zNdvlWRLVVQ4+A81fEbLZBC9iRsJXbfhfE+Y6LBpnECjsgDzMPnkHJF8hWXtqe+M
-      h0Wz7f2PZHU7vv9qYS1/jYdNSEy2EvfFMssxLZqTzzYxccakagase32otdv5JVRJ
-      FQa/h1Mrxt27QeRPZZ95jmT+pm/cORJ3XdsfGaXCnaeN9odoQA2VwFPc7fOBoBSt
-      r8oi/uwDc/XpzSbWr7GkETwmKiRj0SHQQjCNkzsB9BECgYEA0NE2fn3gJOBCXcLd
-      ckVxvfh7V2rZLWdO2l+qkqJlbjmQUqG6uSfy2bwbMPKSwLW8hgHk2rmCQQAqhor1
-      aCtTcVdnezF/PpSZhTmsEgRyXoowEz2BJhQ81+/p/nWrN5cc/hdUH0YfU6QxOPzz
-      zwsaf6F5Y5LcRcYLx2KaZU6mC3kCgYEA45pJSdonVXM/0cx4JU+2+41A387CT9PX
-      xHo6H/F/rlXrqmQcUP/hKK2cBFq3B0FkpmjPLG18Eqx54ZNJNzS2WfjC9Nks/HjQ
-      BOZfqSnFpKcCHeL4pTJK7R1OoIFmUsfTgA2VZO1Yvl1kXZycrYD/sfjOGpLcxXMR
-      GFpe1YVpCd8CgYEAxJq2PBI334Bl+/FknhpUJRC20G+BWwZRb7ly1+yeo1D/WU18
-      iKfcNrSsxUEeeuKhRWqzFlxjDuAhKdvbguCIB8bLX2oS69DtWkoagDw/klN5QCRA
-      XKHhR05TeYlAU26rlXBRe8CB7jZBQe6nfuBtao2VxPKZAfidTnS/+XI7U8ECgYBV
-      MYQrS6gbeRczXZi/RpZUlGvrGkZrgP0rwyCMomXLiMe8sNpUi2LpSgqzKo2F/rlA
-      /MxHcffWOY8pm2r1ahqzlMTMx5nqKwKaQu0dsdAUMJs/Op0doLShCq5KsATwCXIm
-      ZW89JwZnwyd1TtDqtPWA1YO4OK7AjbChb/o9bEGD+wKBgQCOuE8d7dmWLymxUByF
-      0L0mYg9j9VynKRfYZ5k72s0MIa71T8nep9t4MeB6trfm/+iSbtNur0NNMS3fL0v7
-      ZWDic5OvpDZloM1TqfvzC7NE5BtcqqZPC+y/n4s58Ya/zAyTffkc3/h/vk6oMlRG
-      BoDph0rArKB6fjiQgpi+gZQa6A==
-      -----END PRIVATE KEY-----
+      -----BEGIN RSA PRIVATE KEY-----
+      MIIEpAIBAAKCAQEAqPOzDWmJDERoVsSadcxIcySK1CftYIjgQNCTRtX6+gRlMS1Z
+      Vyy9cU5GruufS+NMsd9/weDd1QCLjYifb6e0//kaZqtufychRQRi0Y+SaLnSMBur
+      DERk1HmayGoEEoLkNraJSw7Mr7aWrbmHvaHYZxdI1LAlMjI6W431UVbib1yAkvbP
+      YBTCrYUiyUXlXVzqCyGzTI7fl+UA3Jr0TFgGgjPqLmNnVw3+Gsl99BZSSCXMzHpi
+      wX2T5sNIkT3g+uCgEpbxMiC5Wi27v8jDxr0Sf1n46SERpjgAGlN27wtHFIl7S6kt
+      F1jn7L1Hg4rSYkKhV8eDQES1/P1vUWzBe+MUkwIDAQABAoIBAQCnN4wf2jQqUAp0
+      1mGJ9YY/cAt3r4zh3pcVj1o04dRlX7RH1/p0rXNSkYaj2dDv6ygdZHeuDEGCb+ev
+      TWl/uR0LvCDFPSc/8hqblJu5jb/6pu/BbaD9ozOomDL56PPe3m3BOSjpgNxVjQHV
+      L6uJpIXqgsEywKQP6maX9wi2WKgETozvEt/tbxZxeRlnW/o14A9g/U7R32Zj2h1s
+      xpvtYWo2dCNu+bkcyvEi8R0L9DBumgMuasJdc4aFzQO/Rze8L7uLOf+4xekiHfXq
+      BCk3ccMUZOj53WSAPHprmJ8jcTQRn+gmg+vWr1RXuUSjCjzOw5In5cEWjieNjRA2
+      JQ2oNKcBAoGBAMMb4jnY5NV4fASEpV//JKbbQISWeT4jJSeZ3tHyyj/4OtuJ8mFV
+      WsRhx2A529Nug/kApFlchAM7ZNwOkXLXYBAQ/iugzje1i+QLUpKMg4Y+zi9Vk/MN
+      tCne8VadTfzuI9EnIeU96MMkw8yLVKsFuw5IIjyQ6xLooUiEVc0klxitAoGBAN2u
+      BP2YDS4e32XgI1s9yNl5VU+9myex38vYoZPvuqS5Vwt5AdoX6Xo0Y74B5WMN4IaY
+      wgQOwVkgPaz/qY+X6q7XlPCPZ9e+nvghmp2bHOaHXbM6G/czeaDG/Y2UfCepCJwZ
+      PZQGzAr9N6HBuDz8SpIBZ/zRIxXFuR0QUiv8Gko/AoGAV4LjNlUNVp5C6ffhASy8
+      cMa4qn+fg/pZiOigI4UFqCmbpKq792JEYv8EYSmyaqQQN5hNHvO7FoQGWhmCrYLi
+      yHIGvuTSefRI+ZEGiUrTF1yGOH7m7EaCP6GKl/HYcBEUKZSmxF6/Tv/nfpAj+s2I
+      OACssoPBnGqRJKiOn4PA7cUCgYEAz1IswK8vxG6DJ9gTuQVzjlB3hPgi32DvmMml
+      c6HEwMHFsqkdHkc2yF+u2MkVKyqTTc4XxYu3MA+DHwSMJAtEJPjiBolX6OIR8qYa
+      4ENtJ/x5mWFDPlIZ8k+oWn0AEGd58eN5P7OLqMtg+Bsgn4ikhSBjjIJbecVNdu0I
+      rLI+NCkCgYBleIxoh4d35di2ezKvRBkjN7UunY8Z7QRg49MU9bLt1x4m6iPIJFjc
+      wOKNemlph1WT8VkSornd7do0fpYdQnIbIYLZ3cyar8IpeLuLZG3vfzWT++yICoTk
+      2h6l9GCupVt4nnaErtigL1ahff4tMVhzA5GndrsG5aR2qVH5LTU+OA==
+      -----END RSA PRIVATE KEY-----
     '';
   in {
     _file = ./tests.nix;
@@ -136,37 +129,42 @@ in {
       };
       users.mutableUsers = false;
       networking.firewall.enable = false;
-      networking.hosts = {
-        # ensure services can resolve each other via DNS (and use the configured TLS, e.g. for OIDC flow)
-        "127.0.0.1" = lib.pipe config.services.nginx.virtualHosts [
-          (lib.mapAttrsToList (
-            name: vhost:
-              (lib.singleton (
-                if vhost.serverName != null
-                then vhost.serverName
-                else name
-              ))
-              ++ vhost.serverAliases
-          ))
-          lib.flatten
-          lib.unique
-        ];
-        # same for ipv6
-        "::1" = lib.pipe config.services.nginx.virtualHosts [
-          (lib.mapAttrsToList (
-            name: vhost:
-              (lib.singleton (
-                if vhost.serverName != null
-                then vhost.serverName
-                else name
-              ))
-              ++ vhost.serverAliases
-          ))
-          lib.flatten
-          lib.unique
-        ];
+      # networking.hosts = {
+      #   # ensure services can resolve each other via DNS (and use the configured TLS, e.g. for OIDC flow)
+      #   "127.0.0.1" = lib.pipe config.services.nginx.virtualHosts [
+      #     (lib.mapAttrsToList (
+      #       name: vhost:
+      #         (lib.singleton (
+      #           if vhost.serverName != null
+      #           then vhost.serverName
+      #           else name
+      #         ))
+      #         ++ vhost.serverAliases
+      #     ))
+      #     lib.flatten
+      #     lib.unique
+      #   ];
+      #   # same for ipv6
+      #   "::1" = lib.pipe config.services.nginx.virtualHosts [
+      #     (lib.mapAttrsToList (
+      #       name: vhost:
+      #         (lib.singleton (
+      #           if vhost.serverName != null
+      #           then vhost.serverName
+      #           else name
+      #         ))
+      #         ++ vhost.serverAliases
+      #     ))
+      #     lib.flatten
+      #     lib.unique
+      #   ];
+      # };
+      networking = {
+        # nss-myhostname specially resolves *.localhost.localdomain
+        # so that we get local routing without any further config
+        # wilcard cert from above on *.localdomain
+        domain = mkTestOverride "localhost.localdomain";
       };
-      networking.domain = mkTestOverride site;
       security.acme.acceptTerms = mkTestOverride false;
       # setup a complete bench environment at the system level
       environment = {
@@ -194,8 +192,8 @@ in {
         enable = mkTestOverride true;
         wheelNeedsPassword = false;
       };
-      systemd.services."create-wildcard.${site}-cert" = {
-        description = "Create a wildcard certificate for *.${site}";
+      systemd.services."create-wildcard-localdomain-cert" = {
+        description = "Create a wildcard certificate for *.localdomain";
         script = ''
           cp ${ca} ca.crt
           cp ${key} key.pem
@@ -230,8 +228,8 @@ in {
           CURL_CA_BUNDLE = config.environment.etc."ssl/certs/ca-certificates.crt".source;
         };
         sites = {
-          "erp.${site}" = {
-            domains = ["erp.${site}"];
+          "erp.${config.networking.fqdn}" = {
+            domains = ["erp.${config.networking.fqdn}"];
             apps = ["frappe"];
           };
         };
