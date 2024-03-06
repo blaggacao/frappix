@@ -161,7 +161,7 @@ in {
               text =
                 # bash
                 ''
-                  mkdir -p "$PRJ_DATA_HOME"/{sites,logs}
+                  mkdir -p "$PRJ_DATA_HOME"/{sites,logs,archived}
                   mkdir -p "$PRJ_ROOT/apps"
                 '';
               deps = ["ensure-env-vars"];
