@@ -13,5 +13,8 @@
 # nix
 result
 
+# vms
+*.qcow2
+
 # nixago: ignore-linked-files
 /process-compose.yaml
