@@ -37,10 +37,11 @@ TODO: incorporate into `frx` more elegantly
 
 **Run the VM in headless mode:**
 
-TODO: figure out how to provide network devices
+- Note: `sudo` below is important to be able to bind to low ports
 
 ```console
-QEMU_KERNEL_PARAMS=console=ttyS0 ./result/bin/run-HOST-vm -nographic; reset
+# launch the VM
+QEMU_KERNEL_PARAMS=console=ttyS0 QEMU_NET_OPTS="hostfwd=tcp:127.0.0.1:80-:80,hostfwd=tcp:127.0.0.1:433-:443,hostfwd=tcp:127.0.0.1:2222-:22" sudo ./result/bin/run-HOST-vm -nographic; reset
 ```
 
 **TODO: Run tests:**
