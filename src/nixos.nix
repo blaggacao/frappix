@@ -119,6 +119,21 @@ in {
       });
     };
     config = {
+      virtualisation.vmVariant.virtualisation = {
+        memorySize = 4096;
+        cores = 2;
+        graphics = false;
+        forwardPorts = [
+          {
+            guest.port = 80;
+            host.port = 80;
+          }
+          {
+            guest.port = 443;
+            host.port = 443;
+          }
+        ];
+      };
       users.mutableUsers = false;
       networking.firewall.enable = false;
       networking.hosts = {

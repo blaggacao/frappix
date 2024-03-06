@@ -37,11 +37,11 @@ TODO: incorporate into `frx` more elegantly
 
 **Run the VM in headless mode:**
 
-- Note: `sudo` below is important to be able to bind to low ports
+- `sudo` ensures we can bind to the low ports `80` & `443` to fully test the VM
 
 ```console
 # launch the VM
-QEMU_KERNEL_PARAMS=console=ttyS0 QEMU_NET_OPTS="hostfwd=tcp:127.0.0.1:80-:80,hostfwd=tcp:127.0.0.1:433-:443,hostfwd=tcp:127.0.0.1:2222-:22" sudo ./result/bin/run-HOST-vm -nographic; reset
+QEMU_NET_OPTS="hostfwd=tcp:127.0.0.1:2222-:22" sudo ./result/bin/run-HOST-vm; reset
 ```
 
 **TODO: Run tests:**
