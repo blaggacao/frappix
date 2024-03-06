@@ -1,6 +1,5 @@
 let
   inherit (inputs.nixpkgs.lib.modules) setDefaultModuleLocation mkVMOverride mkDefault;
-  inherit (inputs.nixpkgs.lib) nameValuePair;
   mkTestOverride = mkVMOverride;
 in {
   frappix = {
@@ -49,56 +48,56 @@ in {
         redis_cache = "unix:///run/redis-${cfg.project}-cache/redis.sock";
       });
 
-    # minica --domains '*.localdomain'
+    # minica --domains '*.localhost,*.frx.localhost'
     ca = builtins.toFile "ca.crt" ''
       -----BEGIN CERTIFICATE-----
-      MIIDNDCCAhygAwIBAgIIKghNJgzTsqgwDQYJKoZIhvcNAQELBQAwIDEeMBwGA1UE
-      AxMVbWluaWNhIHJvb3QgY2EgNzk5YmQ5MB4XDTI0MDMwNjE2NDExMFoXDTI2MDQw
-      NTE1NDExMFowGDEWMBQGA1UEAwwNKi5sb2NhbGRvbWFpbjCCASIwDQYJKoZIhvcN
-      AQEBBQADggEPADCCAQoCggEBAKjzsw1piQxEaFbEmnXMSHMkitQn7WCI4EDQk0bV
-      +voEZTEtWVcsvXFORq7rn0vjTLHff8Hg3dUAi42In2+ntP/5Gmarbn8nIUUEYtGP
-      kmi50jAbqwxEZNR5mshqBBKC5Da2iUsOzK+2lq25h72h2GcXSNSwJTIyOluN9VFW
-      4m9cgJL2z2AUwq2FIslF5V1c6gshs0yO35flANya9ExYBoIz6i5jZ1cN/hrJffQW
-      UkglzMx6YsF9k+bDSJE94PrgoBKW8TIguVotu7/Iw8a9En9Z+OkhEaY4ABpTdu8L
-      RxSJe0upLRdY5+y9R4OK0mJCoVfHg0BEtfz9b1FswXvjFJMCAwEAAaN6MHgwDgYD
+      MIIDQzCCAiugAwIBAgIIZihSICHS/4kwDQYJKoZIhvcNAQELBQAwIDEeMBwGA1UE
+      AxMVbWluaWNhIHJvb3QgY2EgNzk5YmQ5MB4XDTI0MDMwNjE5MDQwNVoXDTI2MDQw
+      NTE4MDQwNVowFjEUMBIGA1UEAwwLKi5sb2NhbGhvc3QwggEiMA0GCSqGSIb3DQEB
+      AQUAA4IBDwAwggEKAoIBAQDUXpNy9YEfNcoJDNsZ4IaV5N7ZOv5/96fKyCs5WD6m
+      FRBqZuT0+FIoCdLEggAVPjgwPqdyeWXNIyxVXjHhAl/5wn4kR5ijfnQwTnIZgxqX
+      8hJZCshgL8xdCWbIbJKUzFdCZllgCfpJtynZIbTz95oKycR71fT0rVDdyPUKYzVe
+      Qrt4nX0TR2NjEQrVQY9SvwD7KGTMaboiLVaxuYI0lgZJJtFvv8Rm8h+qyq2+RmVE
+      bOODsVrswbb5V845F6FOoZlOnGbogbmLEjWjunZijQpfkxmgClkOgIC57aXPVyaM
+      R4ojMGMJp3MuF7arS4aT6lTA4NVM4B3WjFMBDgq8g7axAgMBAAGjgYowgYcwDgYD
       VR0PAQH/BAQDAgWgMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEFBQcDAjAMBgNV
-      HRMBAf8EAjAAMB8GA1UdIwQYMBaAFGPwy4elA+T+7Ud6os74hgPhYIEiMBgGA1Ud
-      EQQRMA+CDSoubG9jYWxkb21haW4wDQYJKoZIhvcNAQELBQADggEBAEe3lnCGKYZp
-      HVSTGiwxG6RTlXnNT+9SXDS09gRVQa67dHPizfRNjCXPFTXiPrYtBDYWLJj5pOS1
-      zaFQcZHujbw4qsRt1gTn27+29vs86wfbWRuxp8UvDn+zuFanng3CjXeONrYgB5Un
-      U1TCrchv4ubK8V2YO3Vj3cJoTtcCV3tU5FfWHoSPiK/MhxQfMZTi/cnNwurbjZ93
-      CMAqlJrn25DQEOidcf5qEWDXZCmI25qjAGwh8+RTa5ImYcSvbjem+m7aUbJSdm6T
-      R45pdO8l0ZlU3eg/D86ln4rhCgyHXyGHGknkEWnkTmd3oKusg5tD26u4fwvEx9vm
-      v0U2eKtsHWY=
+      HRMBAf8EAjAAMB8GA1UdIwQYMBaAFGPwy4elA+T+7Ud6os74hgPhYIEiMCcGA1Ud
+      EQQgMB6CCyoubG9jYWxob3N0gg8qLmZyeC5sb2NhbGhvc3QwDQYJKoZIhvcNAQEL
+      BQADggEBALfE075WUj6tk+2ds3wiODD3AnQz5BV5Z7b+MErpkH1IgT0vNM0lAXeF
+      ohzCgbW50TzfixJeol4oWT/sEO9yATih6kH65arEQ4ga8/jfMZPA9fyE+NL/trSq
+      M5NNbKT8GVf346tWhyHT9hVBjPiM2GDMOdv0bHGy808Qz2jjTRU6vLa7FntQGY5x
+      Sm5n7qZ4Os/jJoVazbfl4h5Uee1KRQweqHQux0xyxsaVcEJUgIVWTcCzXOV2mQKB
+      kF6fNtS00+B+a0deAZV2XDmTGf6PFEvaxflVU5KuC4wjeIMkmhDtbFV2Xeqz8jd1
+      0GQs8/QOW/64g8PkeGtCXtPfwJWWse8=
       -----END CERTIFICATE-----
     '';
     key = builtins.toFile "key.pem" ''
       -----BEGIN RSA PRIVATE KEY-----
-      MIIEpAIBAAKCAQEAqPOzDWmJDERoVsSadcxIcySK1CftYIjgQNCTRtX6+gRlMS1Z
-      Vyy9cU5GruufS+NMsd9/weDd1QCLjYifb6e0//kaZqtufychRQRi0Y+SaLnSMBur
-      DERk1HmayGoEEoLkNraJSw7Mr7aWrbmHvaHYZxdI1LAlMjI6W431UVbib1yAkvbP
-      YBTCrYUiyUXlXVzqCyGzTI7fl+UA3Jr0TFgGgjPqLmNnVw3+Gsl99BZSSCXMzHpi
-      wX2T5sNIkT3g+uCgEpbxMiC5Wi27v8jDxr0Sf1n46SERpjgAGlN27wtHFIl7S6kt
-      F1jn7L1Hg4rSYkKhV8eDQES1/P1vUWzBe+MUkwIDAQABAoIBAQCnN4wf2jQqUAp0
-      1mGJ9YY/cAt3r4zh3pcVj1o04dRlX7RH1/p0rXNSkYaj2dDv6ygdZHeuDEGCb+ev
-      TWl/uR0LvCDFPSc/8hqblJu5jb/6pu/BbaD9ozOomDL56PPe3m3BOSjpgNxVjQHV
-      L6uJpIXqgsEywKQP6maX9wi2WKgETozvEt/tbxZxeRlnW/o14A9g/U7R32Zj2h1s
-      xpvtYWo2dCNu+bkcyvEi8R0L9DBumgMuasJdc4aFzQO/Rze8L7uLOf+4xekiHfXq
-      BCk3ccMUZOj53WSAPHprmJ8jcTQRn+gmg+vWr1RXuUSjCjzOw5In5cEWjieNjRA2
-      JQ2oNKcBAoGBAMMb4jnY5NV4fASEpV//JKbbQISWeT4jJSeZ3tHyyj/4OtuJ8mFV
-      WsRhx2A529Nug/kApFlchAM7ZNwOkXLXYBAQ/iugzje1i+QLUpKMg4Y+zi9Vk/MN
-      tCne8VadTfzuI9EnIeU96MMkw8yLVKsFuw5IIjyQ6xLooUiEVc0klxitAoGBAN2u
-      BP2YDS4e32XgI1s9yNl5VU+9myex38vYoZPvuqS5Vwt5AdoX6Xo0Y74B5WMN4IaY
-      wgQOwVkgPaz/qY+X6q7XlPCPZ9e+nvghmp2bHOaHXbM6G/czeaDG/Y2UfCepCJwZ
-      PZQGzAr9N6HBuDz8SpIBZ/zRIxXFuR0QUiv8Gko/AoGAV4LjNlUNVp5C6ffhASy8
-      cMa4qn+fg/pZiOigI4UFqCmbpKq792JEYv8EYSmyaqQQN5hNHvO7FoQGWhmCrYLi
-      yHIGvuTSefRI+ZEGiUrTF1yGOH7m7EaCP6GKl/HYcBEUKZSmxF6/Tv/nfpAj+s2I
-      OACssoPBnGqRJKiOn4PA7cUCgYEAz1IswK8vxG6DJ9gTuQVzjlB3hPgi32DvmMml
-      c6HEwMHFsqkdHkc2yF+u2MkVKyqTTc4XxYu3MA+DHwSMJAtEJPjiBolX6OIR8qYa
-      4ENtJ/x5mWFDPlIZ8k+oWn0AEGd58eN5P7OLqMtg+Bsgn4ikhSBjjIJbecVNdu0I
-      rLI+NCkCgYBleIxoh4d35di2ezKvRBkjN7UunY8Z7QRg49MU9bLt1x4m6iPIJFjc
-      wOKNemlph1WT8VkSornd7do0fpYdQnIbIYLZ3cyar8IpeLuLZG3vfzWT++yICoTk
-      2h6l9GCupVt4nnaErtigL1ahff4tMVhzA5GndrsG5aR2qVH5LTU+OA==
+      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
       -----END RSA PRIVATE KEY-----
     '';
   in {
@@ -128,42 +127,16 @@ in {
         ];
       };
       users.mutableUsers = false;
-      networking.firewall.enable = false;
-      # networking.hosts = {
-      #   # ensure services can resolve each other via DNS (and use the configured TLS, e.g. for OIDC flow)
-      #   "127.0.0.1" = lib.pipe config.services.nginx.virtualHosts [
-      #     (lib.mapAttrsToList (
-      #       name: vhost:
-      #         (lib.singleton (
-      #           if vhost.serverName != null
-      #           then vhost.serverName
-      #           else name
-      #         ))
-      #         ++ vhost.serverAliases
-      #     ))
-      #     lib.flatten
-      #     lib.unique
-      #   ];
-      #   # same for ipv6
-      #   "::1" = lib.pipe config.services.nginx.virtualHosts [
-      #     (lib.mapAttrsToList (
-      #       name: vhost:
-      #         (lib.singleton (
-      #           if vhost.serverName != null
-      #           then vhost.serverName
-      #           else name
-      #         ))
-      #         ++ vhost.serverAliases
-      #     ))
-      #     lib.flatten
-      #     lib.unique
-      #   ];
-      # };
       networking = {
-        # nss-myhostname specially resolves *.localhost.localdomain
-        # so that we get local routing without any further config
-        # wilcard cert from above on *.localdomain
-        domain = mkTestOverride "localhost.localdomain";
+        firewall.enable = false;
+        # chrome and other browsers don't show a warining screen for self signed certs on localhost
+        domain = mkTestOverride "localhost";
+        hostName = mkTestOverride "frx";
+        # workarround
+        hosts = mkTestOverride {
+          # "127.0.0.1" = ["frx.localhost" "localhost"];
+          # "::1" = ["frx.localhost" "localhost"];
+        };
       };
       security.acme.acceptTerms = mkTestOverride false;
       # setup a complete bench environment at the system level
@@ -192,8 +165,8 @@ in {
         enable = mkTestOverride true;
         wheelNeedsPassword = false;
       };
-      systemd.services."create-wildcard-localdomain-cert" = {
-        description = "Create a wildcard certificate for *.localdomain";
+      systemd.services."create-wildcard-localhost-cert" = {
+        description = "Create a wildcard certificate for *.localhost";
         script = ''
           cp ${ca} ca.crt
           cp ${key} key.pem
