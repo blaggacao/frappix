@@ -137,9 +137,33 @@ in {
       users.mutableUsers = false;
       networking.firewall.enable = false;
       networking.hosts = {
-        "127.0.0.1" = [
-          site
-          "erp.${site}"
+        # ensure services can resolve each other via DNS (and use the configured TLS, e.g. for OIDC flow)
+        "127.0.0.1" = lib.pipe config.services.nginx.virtualHosts [
+          (lib.mapAttrsToList (
+            name: vhost:
+              (lib.singleton (
+                if vhost.serverName != null
+                then vhost.serverName
+                else name
+              ))
+              ++ vhost.serverAliases
+          ))
+          lib.flatten
+          lib.unique
+        ];
+        # same for ipv6
+        "::1" = lib.pipe config.services.nginx.virtualHosts [
+          (lib.mapAttrsToList (
+            name: vhost:
+              (lib.singleton (
+                if vhost.serverName != null
+                then vhost.serverName
+                else name
+              ))
+              ++ vhost.serverAliases
+          ))
+          lib.flatten
+          lib.unique
         ];
       };
       networking.domain = mkTestOverride site;
