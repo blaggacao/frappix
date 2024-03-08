@@ -34,7 +34,7 @@ in {
     common-site-config =
       builtins.toFile "commont-site-config.json"
       (builtins.toJSON {
-        default_site = "erp.${config.networking.fqdn}";
+        default_site = "erp.${config.networking.domain}";
         allow_tests = true;
         # fake smtp setting for notification / email tests
         auto_email_id = "test@example.com";
@@ -154,8 +154,8 @@ in {
       networking = {
         firewall.enable = false;
         # chrome and other browsers don't show a warning screen for self signed certs on localhost
-        domain = mkTestOverride "localhost";
-        hostName = mkTestOverride "frx";
+        domain = mkTestOverride "frx.localhost";
+        hostName = mkTestOverride "testhost";
         # workarround
         hosts = mkTestOverride {
           # "127.0.0.1" = ["frx.localhost" "localhost"];
@@ -225,8 +225,8 @@ in {
           CURL_CA_BUNDLE = config.environment.etc."ssl/certs/ca-certificates.crt".source;
         };
         sites = {
-          "erp.${config.networking.fqdn}" = {
-            domains = ["erp.${config.networking.fqdn}"];
+          "erp.${config.networking.domain}" = {
+            domains = ["erp.${config.networking.domain}"];
             apps = ["frappe"];
           };
         };
