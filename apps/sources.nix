@@ -12,6 +12,17 @@ let
 
   applyInputPatches = name: attrs:
     {
+      webshop =
+        attrs
+        // {
+          src = applyPatches {
+            name = "webshop-source";
+            inherit (attrs) src;
+            patches = [
+              ./sources/webshop-pr-99-flit-core.patch
+            ];
+          };
+        };
       frappe =
         attrs
         // {

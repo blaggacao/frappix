@@ -55,6 +55,11 @@ source = "github"
 branch = "version-15" # no proper releases
 github = "frappe/payments"
 
+[webshop]
+source = "github"
+branch = "version-15" # no proper releases
+github = "frappe/webshop"
+
 [wiki]
 source = "github"
 branch = "master" # Latest release (Wiki v2.0.1) is for frappe 14
