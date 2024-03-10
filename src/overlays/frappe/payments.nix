@@ -44,7 +44,7 @@ buildPythonPackage rec {
 
   meta = with lib; {
     description = "Payments app for frappe";
-    homepage = "https://gitlab.com/pristina/sistema/payments.git";
+    homepage = "https://github.com/frappe/payments.git";
     license = licenses.mit;
     maintainers = with maintainers; [];
   };
