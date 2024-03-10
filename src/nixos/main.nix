@@ -21,11 +21,11 @@ in {
 
       package = mkOption {
         type = types.package;
-        default = frappix.frappe;
+        default = pkgs.frappix.frappe;
         description = mkDoc ''
           The frappe base package to use.
         '';
-        example = literalExpression frappix.frappe;
+        example = literalExpression pkgs.frappix.frappe;
       };
 
       project = mkOption {
@@ -48,9 +48,9 @@ in {
           Always includes frappe.
         '';
         example = literalExpression [
-          frappix.erpnext
-          frappix.insight
-          frappix.gameplan
+          pkgs.frappix.erpnext
+          pkgs.frappix.insight
+          pkgs.frappix.gameplan
         ];
       };
 
