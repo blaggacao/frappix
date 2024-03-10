@@ -52,7 +52,7 @@ github = "frappe/ecommerce_integrations"
 
 [payments]
 source = "github"
-branch = "develop" # no release yet
+branch = "version-15" # no proper releases
 github = "frappe/payments"
 
 [wiki]
