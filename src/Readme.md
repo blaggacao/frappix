@@ -23,6 +23,7 @@ It also contains packaging for:
 - `gameplan`
 - `ecommerce-integrations`
 - `payments`
+- `wiki`
 
 See the [overlays readme](./overlays/Readme.md) for tips on how to package Frappe apps for Frappix.
 

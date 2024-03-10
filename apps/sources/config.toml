@@ -54,3 +54,8 @@ github = "frappe/ecommerce_integrations"
 source = "github"
 branch = "develop" # no release yet
 github = "frappe/payments"
+
+[wiki]
+source = "github"
+branch = "master" # Latest release (Wiki v2.0.1) is for frappe 14
+github = "frappe/wiki"
