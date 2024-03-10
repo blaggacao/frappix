@@ -14,5 +14,6 @@ in {
     insights = callPackage ./insights.nix {};
     ecommerce-integrations = callPackage ./ecommerce-integrations.nix {};
     payments = callPackage ./payments.nix {};
+    wiki = callPackage ./wiki.nix {};
   });
 }
