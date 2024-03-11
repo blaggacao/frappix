@@ -35,6 +35,9 @@ lib.lazyDerivation {
     done
 
     for app in $(ls "$FRAPPE_APPS_ROOT"); do
+      if [[ ! -e "$FRAPPE_APPS_ROOT/$app/.git" ]]; then
+        continue
+      fi
       GIT_ARGS=(
         "--git-dir" "$FRAPPE_APPS_ROOT/$app/.git"
         "--work-tree" "$FRAPPE_APPS_ROOT/$app"
