@@ -47,4 +47,5 @@ inputs: final: prev: {
   bench = final.callPackage ./bench.nix {};
   apps = final.callPackage ./apps.nix {};
   start-mariadb-for-frappe = final.callPackage ./start-mariadb-for-frappe.nix {};
+  analyze-prs = final.callPackage ./analyze-prs.nix {};
 }

@@ -272,6 +272,7 @@ in {
           (devPackage pkgs.nodePackages.localtunnel)
           (devPackage pkgs.bench)
           (devPackage pkgs.apps)
+          (devPackage pkgs.analyze-prs)
           (devPackage pkgs.yarn)
         ];
       };
