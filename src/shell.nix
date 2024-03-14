@@ -74,9 +74,9 @@ in {
             (dev.mkNixago libcfg.conform {
               data.commit.conventional = {
                 types = [
+                  "bump"
                   "test"
-                  "perf"
-                  ""
+                  "chore"
                 ];
                 scopes = [];
               };
@@ -90,8 +90,8 @@ in {
                   includes = ["*.py" "*.pyi"];
                 };
                 # a convention, see templates
-                nix.excludes = ["apps/_pins/generated.nix"];
-                prettier.excludes = ["apps/_pins/generated.json"];
+                nix.excludes = ["apps/_pins/*.nix"];
+                prettier.excludes = ["apps/_pins/*.json"];
               };
             })
             (dev.mkNixago libcfg.editorconfig cell.config.editorconfig)
