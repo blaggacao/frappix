@@ -66,6 +66,17 @@ let
             ];
           };
         };
+      builder =
+        attrs
+        // {
+          src = applyPatches {
+            name = "builder-source";
+            inherit (attrs) src;
+            patches = [
+              ./sources/0001-refactor-use-flit-build-and-align-with-upstream.patch
+            ];
+          };
+        };
     }
     .${name}
     or attrs;

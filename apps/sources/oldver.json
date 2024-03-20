@@ -1,11 +1,43 @@
 {
-  "bench": "20240224.061718",
-  "ecommerce-integrations": "20240205.173955",
-  "erpnext": "20240301.165654",
-  "frappe": "20240301.130826",
-  "gameplan": "20240206.065338",
-  "insights": "20240301.064651",
-  "payments": "20240123.122024",
-  "webshop": "20240125.060731",
-  "wiki": "20240121.050421"
+  "version": 2,
+  "data": {
+    "bench": {
+      "version": "20240224.061718"
+    },
+    "builder": {
+      "version": "v1.7.2",
+      "gitref": "refs/tags/v1.7.2",
+      "revision": "896e36a90500e8ca5577cb77ad01ceea8522a1f6",
+      "url": "https://github.com/frappe/builder/releases/tag/v1.7.2"
+    },
+    "ecommerce-integrations": {
+      "version": "20240205.173955"
+    },
+    "erpnext": {
+      "version": "20240301.165654"
+    },
+    "frappe": {
+      "version": "20240301.130826"
+    },
+    "gameplan": {
+      "version": "20240206.065338"
+    },
+    "insights": {
+      "version": "20240301.064651"
+    },
+    "payments": {
+      "version": "20240123.122024"
+    },
+    "print-designer": {
+      "version": "20240317.225753",
+      "revision": "f87b1aa2de3b5c720f24cc91fddc614a89d219a0",
+      "url": "https://github.com/frappe/print_designer/commit/f87b1aa2de3b5c720f24cc91fddc614a89d219a0"
+    },
+    "webshop": {
+      "version": "20240125.060731"
+    },
+    "wiki": {
+      "version": "20240121.050421"
+    }
+  }
 }

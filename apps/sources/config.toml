@@ -46,6 +46,16 @@ source = "github"
 branch = "main" # no release yet
 github = "frappe/gameplan"
 
+[builder]
+source = "github"
+use_max_tag = true
+github = "frappe/builder"
+
+[print-designer]
+source = "github"
+branch = "main" # no release yet
+github = "frappe/print_designer"
+
 [ecommerce-integrations]
 source = "github"
 github = "frappe/ecommerce_integrations"

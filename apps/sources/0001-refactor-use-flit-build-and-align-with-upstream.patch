@@ -1,0 +1,134 @@
+From c8e0e21265c471c5b8a2873261c0058af9ae3f79 Mon Sep 17 00:00:00 2001
+From: David <dgx.arnold@gmail.com>
+Date: Wed, 20 Mar 2024 14:56:49 +0100
+Subject: [PATCH] refactor: use flit build and align with upstream
+
+---
+ MANIFEST.in      | 18 ------------------
+ pyproject.toml   | 29 +++++++++++++++++++++++++++++
+ requirements.txt |  3 ---
+ setup.py         | 39 ---------------------------------------
+ 4 files changed, 29 insertions(+), 60 deletions(-)
+ delete mode 100644 MANIFEST.in
+ create mode 100644 pyproject.toml
+ delete mode 100644 requirements.txt
+ delete mode 100644 setup.py
+
+diff --git a/MANIFEST.in b/MANIFEST.in
+deleted file mode 100644
+index 1ca56c5..0000000
+--- a/MANIFEST.in
++++ /dev/null
+@@ -1,18 +0,0 @@
+-include MANIFEST.in
+-include requirements.txt
+-include *.json
+-include *.md
+-include *.py
+-include *.txt
+-recursive-include builder *.css
+-recursive-include builder *.csv
+-recursive-include builder *.html
+-recursive-include builder *.ico
+-recursive-include builder *.js
+-recursive-include builder *.json
+-recursive-include builder *.md
+-recursive-include builder *.png
+-recursive-include builder *.py
+-recursive-include builder *.svg
+-recursive-include builder *.txt
+-recursive-exclude builder *.pyc
+\ No newline at end of file
+diff --git a/pyproject.toml b/pyproject.toml
+new file mode 100644
+index 0000000..d352b46
+--- /dev/null
++++ b/pyproject.toml
+@@ -0,0 +1,29 @@
++[project]
++name = "builder"
++authors = [
++    { name = "Suraj Shetty", email = "surajshetty3416@gmail.com"}
++]
++description = "Modern website builder for modern web pages"
++requires-python = ">=3.10"
++readme = "README.md"
++dynamic = ["version"]
++dependencies = [
++    "playwright",
++    "install-playwright",
++]
++
++[build-system]
++requires = ["flit_core >=3.4,<4"]
++build-backend = "flit_core.buildapi"
++
++[tool.black]
++line-length = 99
++
++[tool.isort]
++line_length = 99
++multi_line_output = 3
++include_trailing_comma = true
++force_grid_wrap = 0
++use_parentheses = true
++ensure_newline_before_comments = true
++indent = "\t"
+diff --git a/requirements.txt b/requirements.txt
+deleted file mode 100644
+index ea1fee4..0000000
+--- a/requirements.txt
++++ /dev/null
+@@ -1,3 +0,0 @@
+-# frappe -- https://github.com/frappe/frappe is installed via 'bench init'
+-playwright
+-install-playwright
+\ No newline at end of file
+diff --git a/setup.py b/setup.py
+deleted file mode 100644
+index e8b9b71..0000000
+--- a/setup.py
++++ /dev/null
+@@ -1,39 +0,0 @@
+-import os
+-import atexit
+-import subprocess
+-from setuptools import find_packages, setup
+-from setuptools.command.develop import develop
+-
+-with open("requirements.txt") as f:
+-	install_requires = f.read().strip().split("\n")
+-
+-# get version from __version__ variable in builder/__init__.py
+-from builder import __version__ as version
+-
+-
+-def install_playwright():
+-	python_path = os.path.join("..", "..", "env", "bin", "python")
+-	print(subprocess.run(f"{python_path} -m playwright install chromium", shell=True))
+-
+-
+-class RunDevelopCommand(develop):
+-	def __init__(self, *args, **kwargs):
+-		super(RunDevelopCommand, self).__init__(*args, **kwargs)
+-		# This is a hack to ensure that the command is run
+-		# after all the dependencies are installed
+-		atexit.register(install_playwright)
+-
+-
+-setup(
+-	name="builder",
+-	version=version,
+-	author="Suraj Shetty",
+-	author_email="surajshetty3416@gmail.com",
+-	packages=find_packages(),
+-	zip_safe=False,
+-	include_package_data=True,
+-	install_requires=install_requires,
+-	cmdclass={
+-		"develop": RunDevelopCommand,
+-	},
+-)
+-- 
+2.42.0
+

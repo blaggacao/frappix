@@ -16,5 +16,7 @@ in {
     payments = callPackage ./payments.nix {};
     wiki = callPackage ./wiki.nix {};
     webshop = callPackage ./webshop.nix {};
+    builder = callPackage ./builder.nix {};
+    print-designer = callPackage ./print-designer.nix {};
   });
 }

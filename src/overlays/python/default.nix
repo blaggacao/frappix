@@ -12,6 +12,9 @@ pyFinal: pyPrev: {
   # erpnext dependencies
   gocardless-pro = pyFinal.callPackage ./gocardless-pro.nix {};
 
+  # builder dependencies
+  install-playwright = pyFinal.callPackage ./install-playwright.nix {};
+
   # payments dependencies
   razorpay = pyFinal.callPackage ./razorpay.nix {};
   paytmchecksum = pyFinal.callPackage ./paytmchecksum.nix {};
