@@ -6,6 +6,7 @@
   pythonRelaxDepsHook,
   python,
   extractFrappeMeta,
+  mkAssets,
 }:
 buildPythonPackage rec {
   inherit
@@ -15,7 +16,8 @@ buildPythonPackage rec {
     format
     ;
 
-  inherit (appSources.payments) src passthru;
+  src = mkAssets appSources.payments;
+  inherit (appSources.payments) passthru;
 
   nativeBuildInputs = [
     pythonRelaxDepsHook

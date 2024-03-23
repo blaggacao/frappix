@@ -7,6 +7,7 @@
   # rembg,
   python,
   extractFrappeMeta,
+  mkAssets,
 }:
 buildPythonPackage rec {
   inherit
@@ -16,7 +17,8 @@ buildPythonPackage rec {
     format
     ;
 
-  inherit (appSources.gameplan) src passthru;
+  src = mkAssets appSources.gameplan;
+  inherit (appSources.gameplan) passthru;
 
   nativeBuildInputs = [
     pythonRelaxDepsHook

@@ -6,6 +6,7 @@
   flit-core,
   python,
   extractFrappeMeta,
+  mkAssets,
 }:
 buildPythonPackage rec {
   inherit
@@ -15,7 +16,8 @@ buildPythonPackage rec {
     format
     ;
 
-  inherit (appSources.insights) src passthru;
+  src = mkAssets appSources.insights;
+  inherit (appSources.insights) passthru;
 
   nativeBuildInputs = [
     pythonRelaxDepsHook

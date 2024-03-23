@@ -6,9 +6,8 @@
   flit-core,
   python,
   pkgs,
-  mkYarnApp,
-  mkYarnOfflineCache,
   extractFrappeMeta,
+  mkAssets,
 }:
 buildPythonPackage rec {
   inherit
@@ -18,15 +17,10 @@ buildPythonPackage rec {
     format
     ;
 
-  inherit (appSources.frappe) src;
-
-  nativeBuildInputs = [
-    pythonRelaxDepsHook
-    flit-core
-  ];
-
+  src = mkAssets appSources.frappe;
   passthru =
-    rec {
+    appSources.frappe.passthru
+    // {
       packages = with pkgs; [
         mysql
         restic
@@ -43,20 +37,12 @@ buildPythonPackage rec {
         responses
         freezegun
       ];
-      websocket = frontend + /share/apps/frappe/socketio.js;
-      frontend = let
-        yarnLock = "${src}/yarn.lock";
-        # # w/o IFD
-        # offlineCache = fetchYarnDeps {
-        #   inherit yarnLock;
-        #   hash = "";
-        # };
-        # w/  IFD
-        offlineCache = mkYarnOfflineCache {inherit yarnLock;};
-      in
-        mkYarnApp pname src offlineCache;
-    }
-    // appSources.frappe.passthru;
+    };
+
+  nativeBuildInputs = [
+    pythonRelaxDepsHook
+    flit-core
+  ];
 
   propagatedBuildInputs = with python.pkgs;
     [

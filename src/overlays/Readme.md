@@ -29,14 +29,13 @@ How should this package be built?
 
 ## Passthru contracts
 
-In order to account for some of the pecularities of the frappe framework, the following passthru attributes are required:
+In order to account for some of the peculiarities of the frappé framework, the following passthru attributes are required:
 
 - `packages`
 - `test-dependencies`
-- `url`
-- `frontend`
+- `assets`
 
-They are for example consumed by the nixos, shell or testing modules.
+They are for example consumed by the NixOS, shell or testing modules.
 
 ```nix
     passthru = rec {
@@ -52,19 +51,5 @@ They are for example consumed by the nixos, shell or testing modules.
         hypothesis
         responses
       ];
-      # clone url to setup initial local development environment
-      url = "https://github.com/frappe/frappe.git";
-      # used to combined frontend assets of apps
-      frontend = let
-        yarnLock = "${src}/yarn.lock";
-        # # w/o IFD
-        # offlineCache = fetchYarnDeps {
-        #   inherit yarnLock;
-        #   hash = "";
-        # };
-        # w/  IFD
-        offlineCache = mkYarnOfflineCache {inherit yarnLock;};
-      in
-        mkYarnApp pname src offlineCache;
     };
 ```

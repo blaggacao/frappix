@@ -128,7 +128,7 @@ in {
         "${cfg.project}-socketio" = {
           path = defaultPath;
           inherit (cfg) environment;
-          script = "node ${cfg.package.websocket}";
+          script = "node ${cfg.package.src}/socketio.js";
           unitConfig =
             defaultUnitConfig
             // {

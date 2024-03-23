@@ -1,19 +1,9 @@
 inputs: final: prev: {
   nvchecker-nix = final.python3.pkgs.callPackage ./nvchecker.nix {};
-  # special yarn build tooling for frappe
-  mkYarnApp = final.callPackage ./mkYarnApp.nix {};
-  mkFrappeAssets = final.callPackage ./mkFrappeAssets.nix {};
-  mkYarnOfflineCache = {yarnLock}: let
-    mkYarnNix = yarnLock:
-      final.runCommand "yarn.nix" {}
-      ''
-        ${final.yarn2nix}/bin/yarn2nix \
-          --lockfile ${yarnLock} \
-          --no-patch \
-          --builtin-fetchgit > $out
-      '';
-  in
-    (final.callPackage (mkYarnNix yarnLock) {}).offline_cache;
+  # special (optional) yarn build tooling for frappe
+  mkAssets = final.callPackage ./mkAssets.nix {};
+  # consolidated site assets
+  mkSiteAssets = final.callPackage ./mkSiteAssets.nix {};
 
   fsjd = final.callPackage ./fsjd.nix {};
   frx = final.callPackage ./frx.nix {

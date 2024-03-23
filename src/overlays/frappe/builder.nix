@@ -5,9 +5,8 @@
   pythonRelaxDepsHook,
   flit-core,
   python,
-  mkYarnApp,
-  mkYarnOfflineCache,
   extractFrappeMeta,
+  mkAssets,
 }:
 buildPythonPackage rec {
   inherit
@@ -17,28 +16,13 @@ buildPythonPackage rec {
     format
     ;
 
-  inherit (appSources.builder) src;
+  src = mkAssets appSources.builder;
+  inherit (appSources.builder) passthru;
 
   nativeBuildInputs = [
     pythonRelaxDepsHook
     flit-core
   ];
-
-  passthru =
-    {
-      frontend = let
-        yarnLock = "${src}/yarn.lock";
-        # # w/o IFD
-        # offlineCache = fetchYarnDeps {
-        #   inherit yarnLock;
-        #   hash = "";
-        # };
-        # w/  IFD
-        offlineCache = mkYarnOfflineCache {inherit yarnLock;};
-      in
-        mkYarnApp pname src offlineCache;
-    }
-    // appSources.builder.passthru;
 
   propagatedBuildInputs = with python.pkgs; [
     playwright

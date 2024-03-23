@@ -193,7 +193,7 @@ in {
       frappe.socketIOSocket = "/run/${cfg.project}/ws/socketIO.socket";
       frappe.benchDirectory = "/var/lib/${cfg.project}";
       # - preprocessed inputs
-      frappe.combinedAssets = pkgs.mkFrappeAssets (catAttrs "frontend" cfg.apps);
+      frappe.combinedAssets = pkgs.mkSiteAssets cfg.apps;
       frappe.penv = cfg.package.pythonModule.buildEnv.override {extraLibs = cfg.apps;};
       frappe.packages = flatten (catAttrs "packages" cfg.apps);
       frappe.environment = {
