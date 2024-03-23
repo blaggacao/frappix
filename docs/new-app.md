@@ -86,9 +86,9 @@ Add your new package to `./apps/pkgs.nix`, change and uncomment the part about t
 ```nix
   inject = _: prev: {
     # extend the frappix package set
-    frappix = prev.frappix.overrideScope' (finalFrappix: prevFrappix: {
+    frappix = prev.frappix.overrideScope (finalFrappix: prevFrappix: {
       # inject your pinned sources (if any) into the frappix build pipeline
-      appSources = prevFrappix.appSources.overrideScope' (_: _: _pins);
+      appSources = prevFrappix.appSources.overrideScope (_: _: _pins);
       # add custom apps that are not yet packaged by frappix
       # my-app = finalFrappix.callPackage ./my-app.nix {};
     });

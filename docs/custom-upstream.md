@@ -10,7 +10,7 @@ The sources (`_pins`) will be injected via `apps/pkgs.nix` on this line into the
 
 ```nix
 {
-  appSources = prevFrappix.appSources.overrideScope' (_: _: _pins);
+  appSources = prevFrappix.appSources.overrideScope (_: _: _pins);
 }
 ```
 
@@ -45,7 +45,7 @@ If you also need to add custom dependencies, it will be only slightly more diffi
 
 ```nix
 {
-  frappix = prev.frappix.overrideScope' (finalFrappix: prevFrappix: {
+  frappix = prev.frappix.overrideScope (finalFrappix: prevFrappix: {
     frappe = prevFrappix.frappe.overridePythonAttrs (o: {
       propagatedBuildInputs = with prevFrappix.frappe.pythonModule.pkgs;
         o.propagatedBuildInputs
