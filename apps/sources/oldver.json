@@ -20,10 +20,15 @@
       "version": "20240301.130826"
     },
     "gameplan": {
-      "version": "20240206.065338"
+      "version": "20240206.065338",
+      "revision": "9f9332cf29496afe5e912e4f1734fbf1142cb18c",
+      "url": "https://github.com/frappe/gameplan/commit/9f9332cf29496afe5e912e4f1734fbf1142cb18c"
     },
     "insights": {
-      "version": "20240301.064651"
+      "version": "v2.1.4",
+      "gitref": "refs/tags/v2.1.4",
+      "revision": "c790cc06aa0b9d0c001fd6a867284e7edcb84ea0",
+      "url": "https://github.com/frappe/insights/releases/tag/v2.1.4"
     },
     "payments": {
       "version": "20240123.122024"

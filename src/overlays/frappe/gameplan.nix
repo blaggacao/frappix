@@ -8,6 +8,7 @@
   python,
   extractFrappeMeta,
   mkAssets,
+  applyPatches,
 }:
 buildPythonPackage rec {
   inherit
@@ -17,7 +18,20 @@ buildPythonPackage rec {
     format
     ;
 
-  src = mkAssets appSources.gameplan;
+  src = mkAssets (appSources.gameplan
+    // {
+      src = applyPatches {
+        inherit (appSources.gameplan) src;
+        name = "gameplan-prod";
+        patches = [
+          ./gameplan-0001-build-socket-port-is-reverse-proxied.patch
+          # https://github.com/frappe/gameplan/pull/278
+          ./gameplan-0001-fix-add-missing-oku-ui-motion.patch
+          ./gameplan-0002-fix-import-of-oku-ui-motion.patch
+          ./gameplan-0003-revert-re-enable-workspaces.patch
+        ];
+      };
+    });
   inherit (appSources.gameplan) passthru;
 
   nativeBuildInputs = [

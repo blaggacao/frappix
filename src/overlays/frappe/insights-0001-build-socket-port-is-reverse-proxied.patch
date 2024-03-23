@@ -1,0 +1,30 @@
+From 63b850891010a984f7f83a912528503268da1984 Mon Sep 17 00:00:00 2001
+From: David <dgx.arnold@gmail.com>
+Date: Sat, 23 Mar 2024 15:43:16 +0100
+Subject: [PATCH] build: socket port is reverse proxied
+
+---
+ frontend/src/socket.js | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/frontend/src/socket.js b/frontend/src/socket.js
+index 06e947db..6255ee76 100644
+--- a/frontend/src/socket.js
++++ b/frontend/src/socket.js
+@@ -1,12 +1,9 @@
+ import { io } from 'socket.io-client'
+-import { socketio_port } from '../../../../sites/common_site_config.json'
+ 
+ export function initSocket() {
+ 	let host = window.location.hostname
+ 	let siteName = import.meta.env.DEV ? host : window.site_name
+-	let port = window.location.port ? `:${socketio_port}` : ''
+-	let protocol = port ? 'http' : 'https'
+-	let url = `${protocol}://${host}${port}/${siteName}`
++	let url = `https://${host}/${siteName}`
+ 
+ 	let socket = io(url, {
+ 		withCredentials: true,
+-- 
+2.42.0
+

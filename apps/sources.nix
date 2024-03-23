@@ -31,7 +31,7 @@ let
               name = "frappe-source-1";
               inherit (attrs) src;
               # this patch is needs to be present in all source trees,
-              # such as the one used for the frontend below
+              # such as the next one used for the assets below
               patches = [
                 # Add missing unix domain socket support
                 ./sources/frappe-uds.patch

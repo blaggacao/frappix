@@ -40,16 +40,20 @@ Pull: +refs/tags/v15.*:refs/remotes/upstream/tags/v15.*
 [insights]
 source = "github"
 github = "frappe/insights"
+use_max_tag = true
+submodules = true
 
 [gameplan]
 source = "github"
 branch = "main" # no release yet
 github = "frappe/gameplan"
+submodules = true
 
 [builder]
 source = "github"
 use_max_tag = true
 github = "frappe/builder"
+submodules = true
 
 [print-designer]
 source = "github"

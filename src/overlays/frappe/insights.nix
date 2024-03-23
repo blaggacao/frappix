@@ -7,6 +7,7 @@
   python,
   extractFrappeMeta,
   mkAssets,
+  applyPatches,
 }:
 buildPythonPackage rec {
   inherit
@@ -16,7 +17,16 @@ buildPythonPackage rec {
     format
     ;
 
-  src = mkAssets appSources.insights;
+  src = mkAssets (appSources.insights
+    // {
+      src = applyPatches {
+        inherit (appSources.insights) src;
+        name = "gameplan-prod";
+        patches = [
+          ./insights-0001-build-socket-port-is-reverse-proxied.patch
+        ];
+      };
+    });
   inherit (appSources.insights) passthru;
 
   nativeBuildInputs = [
