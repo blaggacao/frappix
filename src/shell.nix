@@ -74,11 +74,23 @@ in {
             (dev.mkNixago libcfg.conform {
               data.commit.conventional = {
                 types = [
-                  "bump"
                   "test"
                   "chore"
+                  "docs"
+                  "bump"
+                  "new"
+                  "update"
+                  "remove"
+                  "enable"
                 ];
-                scopes = [];
+                scopes = lib.subtractLists [
+                  "callPackage"
+                  "overrideScope"
+                  "overrideScope'"
+                  "newScope"
+                  "appSources"
+                  "packages"
+                ] (builtins.attrNames pkgs.frappix);
               };
             })
             (dev.mkNixago configs.lefthook)
