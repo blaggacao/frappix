@@ -7,6 +7,7 @@
 - [New app](./new-app.md)
 - [Custom upstream](./custom-upstream.md)
 - [Run tests](./run-tests.md)
+- [Existing app](./existing-app.md)
 
 # Avalable Templates
 
