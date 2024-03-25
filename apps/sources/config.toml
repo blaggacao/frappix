@@ -78,3 +78,9 @@ github = "frappe/webshop"
 source = "github"
 branch = "master" # Latest release (Wiki v2.0.1) is for frappe 14
 github = "frappe/wiki"
+
+[hrms]
+source = "github"
+use_max_tag = true
+github = "frappe/hrms"
+submodules = true

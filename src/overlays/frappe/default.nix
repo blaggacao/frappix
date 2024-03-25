@@ -10,13 +10,15 @@ in {
 
     frappe = callPackage ./frappe.nix {};
     erpnext = callPackage ./erpnext.nix {};
-    gameplan = callPackage ./gameplan.nix {};
-    insights = callPackage ./insights.nix {};
-    ecommerce-integrations = callPackage ./ecommerce-integrations.nix {};
-    payments = callPackage ./payments.nix {};
-    wiki = callPackage ./wiki.nix {};
-    webshop = callPackage ./webshop.nix {};
+
     builder = callPackage ./builder.nix {};
+    ecommerce-integrations = callPackage ./ecommerce-integrations.nix {};
+    gameplan = callPackage ./gameplan.nix {};
+    hrms = callPackage ./hrms.nix {};
+    insights = callPackage ./insights.nix {};
+    payments = callPackage ./payments.nix {};
     print-designer = callPackage ./print-designer.nix {};
+    webshop = callPackage ./webshop.nix {};
+    wiki = callPackage ./wiki.nix {};
   });
 }

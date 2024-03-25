@@ -24,6 +24,12 @@
       "revision": "9f9332cf29496afe5e912e4f1734fbf1142cb18c",
       "url": "https://github.com/frappe/gameplan/commit/9f9332cf29496afe5e912e4f1734fbf1142cb18c"
     },
+    "hrms": {
+      "version": "v15.14.2",
+      "gitref": "refs/tags/v15.14.2",
+      "revision": "620a2d7cb8da43396c350483bcce54d339126da3",
+      "url": "https://github.com/frappe/hrms/releases/tag/v15.14.2"
+    },
     "insights": {
       "version": "v2.1.4",
       "gitref": "refs/tags/v2.1.4",
