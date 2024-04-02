@@ -55,17 +55,6 @@ let
           in
             stage_2;
         };
-      erpnext =
-        attrs
-        // {
-          src = applyPatches {
-            name = "erpnext-source";
-            inherit (attrs) src;
-            patches = [
-              ./sources/erpnext-plaid-bump.patch
-            ];
-          };
-        };
       builder =
         attrs
         // {

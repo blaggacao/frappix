@@ -11,6 +11,7 @@ pyFinal: pyPrev: {
 
   # erpnext dependencies
   gocardless-pro = pyFinal.callPackage ./gocardless-pro.nix {};
+  plaid-python = pyFinal.callPackage ./plaid-python.nix {}; # old version
 
   # builder dependencies
   install-playwright = pyFinal.callPackage ./install-playwright.nix {};
