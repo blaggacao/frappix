@@ -196,7 +196,7 @@ in {
                      ${lib.getExe python} -m venv "$PRJ_DATA_HOME/pyenv";
                     "$PRJ_DATA_HOME/pyenv/bin/python" -m pip install --quiet --upgrade pip
                   }
-                  echo 'import sys; sys.path.append("${penv}/${sitePackagesPath}")' > "$PRJ_DATA_HOME/pyenv/${sitePackagesPath}/frappix-prod-deps-fallback.pth"
+                  echo 'import sys; path = "${penv}/${sitePackagesPath}"; path in sys.path and sys.path.remove(path); sys.path.append(path)' > "$PRJ_DATA_HOME/pyenv/${sitePackagesPath}/frappix-prod-deps-fallback.pth"
                 '';
               deps = ["emplace-folders" "ensure-env-vars"];
             };
