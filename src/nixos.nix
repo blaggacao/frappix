@@ -31,22 +31,6 @@ in {
     project = "TestProject";
 
     sslPath = "/etc/nginx/ssl";
-    common-site-config =
-      builtins.toFile "commont-site-config.json"
-      (builtins.toJSON {
-        default_site = "erp.${config.networking.domain}";
-        allow_tests = true;
-        # fake smtp setting for notification / email tests
-        auto_email_id = "test@example.com";
-        mail_server = "smtp.example.com";
-        mail_login = "test@example.com";
-        mail_password = "test";
-        # not sure about these
-        monitor = 1;
-        server_script_enabled = true;
-        redis_queue = "unix:///run/redis-${cfg.project}-queue/redis.sock";
-        redis_cache = "unix:///run/redis-${cfg.project}-cache/redis.sock";
-      });
 
     # minica --domains '*.frx.localhost,frx.localhost'
     ca = builtins.toFile "ca.pem" ''
@@ -170,9 +154,6 @@ in {
           # when the testing backdoor service enters the environment, the frappe systemd services
           # havn't emplaced this folders yet so we create it manually for the linking below
           mkdir -p ${cfg.benchDirectory}/sites
-          # required for both, local bench command and systemd services to discover the shared test configuration
-          # some tests need it to be writable, e.g. `test_set_global_conf`
-          cp     ${common-site-config}                      ${cfg.benchDirectory}/sites/common_site_config.json
           # required also outside the systemd chroot for test runner command to discover assets via the file system
           ln -sf ${cfg.combinedAssets}/share/sites/assets   ${cfg.benchDirectory}/sites
           # required also outside the systemd chroot for test runner command to discover apps that are set-up in this environment
@@ -213,6 +194,21 @@ in {
           RemainAfterExit = true;
         };
       };
+      systemd.services."${cfg.project}-config-setup" = {
+        unitConfig.AssertPathIsReadWrite = mkTestOverride null;
+        script = let
+          settingsFormat = pkgs.formats.json {};
+          commonSiteConfigFile = settingsFormat.generate "common_site_config.json" cfg.commonSiteConfig;
+        in
+          mkTestOverride
+          # bash
+          ''
+            set -euo pipefail
+            # some tests need it to be writable, e.g. `test_set_global_conf`
+            cp -f ${commonSiteConfigFile} ./common_site_config.json
+            chmod 775 ./common_site_config.json
+          '';
+      };
 
       services.frappe = {
         project = mkDefault project;
@@ -220,6 +216,20 @@ in {
         adminPassword = mkTestOverride "/etc/${cfg.project}/admin-password";
         gunicorn_workers = mkTestOverride 1;
         penv = mkTestOverride penv-test;
+        commonSiteConfig = {
+          default_site = "erp.${config.networking.domain}";
+          allow_tests = true;
+          # fake smtp setting for notification / email tests
+          auto_email_id = "test@example.com";
+          mail_server = "smtp.example.com";
+          mail_login = "test@example.com";
+          mail_password = "test";
+          server_script_enabled = true;
+          # not sure about these
+          monitor = 1;
+          redis_queue = "unix:///run/redis-${cfg.project}-queue/redis.sock";
+          redis_cache = "unix:///run/redis-${cfg.project}-cache/redis.sock";
+        };
         environment = {
           # python requests observes this, among others
           CURL_CA_BUNDLE = config.environment.etc."ssl/certs/ca-certificates.crt".source;
