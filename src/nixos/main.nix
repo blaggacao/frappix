@@ -261,7 +261,7 @@ in {
         PYTHON_PATH = "${cfg.penv}/${cfg.package.pythonModule.sitePackages}";
       };
 
-      frappe.commonSiteConfig = {worker = cfg.workerQueues;};
+      frappe.commonSiteConfig = {workers = cfg.workerQueues;};
 
       # setup redis service
       redis = {
