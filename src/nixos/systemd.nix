@@ -7,7 +7,8 @@
 with lib;
 with builtins; let
   cfg = config.services.frappe;
-
+  settingsFormat = pkgs.formats.json {};
+  commonSiteConfigFile = settingsFormat.generate "common_site_config.json" cfg.commonSiteConfig;
   defaultServiceConfig = {
     Type = "simple";
 
@@ -76,16 +77,17 @@ in {
   # implementation
   config.systemd = mkIf (cfg.enable) {
     services = let
-      mkWorker = queue: {
-        "${cfg.project}-worker-${queue}" = {
+      mkWorker = queue: _:
+        nameValuePair "${cfg.project}-worker-${queue}" {
           path = defaultPath;
           inherit (cfg) environment;
           script = "bench frappe worker --queue ${queue}";
+          requiredBy = ["${cfg.project}.target"];
+          before = ["${cfg.project}.target"];
           unitConfig = defaultUnitConfig;
           serviceConfig = defaultServiceConfig;
           description = "Frappe worker ('${queue}' queue) for project: ${cfg.project}";
         };
-      };
     in
       {
         "${cfg.project}-schedule" = {
@@ -152,6 +154,27 @@ in {
               UMask = 002;
             };
           description = "Frappe websocket for project: ${cfg.project}";
+        };
+        "${cfg.project}-config-setup" = {
+          path = defaultPath;
+          inherit (cfg) environment;
+          serviceConfig =
+            defaultServiceConfig
+            // {
+              Type = "oneshot";
+              RemainAfterExit = true;
+            };
+          wantedBy = ["${cfg.project}-setup.target"];
+          unitConfig = {
+            AssertPathIsReadWrite = "!${cfg.benchDirectory}/sites/common_site_config.json";
+            PartOf = ["${cfg.project}-setup.target"];
+          };
+          script = ''
+            set -euo pipefail
+
+            ln -sf ${commonSiteConfigFile} ./common_site_config.json
+          '';
+          description = "Frappe common site config for project: ${cfg.project}";
         };
         "${cfg.project}-setup" = {
           path = defaultPath;
@@ -228,33 +251,25 @@ in {
           description = "Frappe setup for project: ${cfg.project}";
         };
       }
-      // (foldl' (acc: queue: acc // (mkWorker queue)) {} cfg.workerQueues);
+      // (mapAttrs' mkWorker cfg.workerQueues);
 
     targets = {
       ${cfg.project} = {
         # Main Target
         wantedBy = ["multi-user.target"];
-        after =
-          [
-            "network.target"
-            "${cfg.project}-setup.target"
-            "${cfg.project}-web.service"
-            "${cfg.project}-socketio.service"
-            "${cfg.project}-schedule.service"
-          ]
-          ++ (
-            map (scope: "${cfg.project}-worker-${scope}.service") cfg.workerQueues
-          );
-        requires =
-          [
-            "${cfg.project}-setup.target"
-            "${cfg.project}-web.service"
-            "${cfg.project}-socketio.service"
-            "${cfg.project}-schedule.service"
-          ]
-          ++ (
-            map (scope: "${cfg.project}-worker-${scope}.service") cfg.workerQueues
-          );
+        after = [
+          "network.target"
+          "${cfg.project}-setup.target"
+          "${cfg.project}-web.service"
+          "${cfg.project}-socketio.service"
+          "${cfg.project}-schedule.service"
+        ];
+        requires = [
+          "${cfg.project}-setup.target"
+          "${cfg.project}-web.service"
+          "${cfg.project}-socketio.service"
+          "${cfg.project}-schedule.service"
+        ];
         unitConfig = {
           # TODO: add notification service
           # OnFailure = ["${cfg.project}-notify-failure.service"];

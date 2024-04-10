@@ -7,6 +7,7 @@
 }:
 with lib; let
   cfg = config.services.frappe;
+  settingsFormat = pkgs.formats.json {};
   mkInternal = mkOption {
     internal = true;
     type = types.raw;
@@ -117,14 +118,42 @@ in {
         '';
       };
       workerQueues = mkOption {
-        type = with types; listOf str;
+        type = with types;
+          attrsOf (submodule {
+            options = {
+              timeout = mkOption {
+                type = with types; int;
+                default = 300;
+              };
+            };
+          });
         description = mkDoc ''
           Set additional worker queues besides the builtin queues:
           "short", "default" & "long"
         '';
+        example = literalExpression ''
+          {
+            myAdditionalWorker.timeout = 3000;
+          }
+        '';
         default = [];
       };
-
+      commonSiteConfig = mkOption {
+        type = settingsFormat.type;
+        default = {};
+        description = lib.mdDoc ''
+          Common Site Config. Refer to
+          <https://frappeframework.com/docs/user/en/basics/site_config#common-site-config>
+          for details on supported values.
+          Caution! The documentation is notoriously outdated and now all options apply to Frappix.
+          In case of doubt: you'll have no alternative but to audit the code.
+        '';
+        example = literalExpression ''
+          {
+            server_script_enabled = true;
+          }
+        '';
+      };
       /*
       Internal interface used in the nginx & systemd implementations
       */
@@ -182,7 +211,13 @@ in {
     services = {
       # module builtin values
       frappe.apps = [cfg.package];
-      frappe.workerQueues = ["short" "default" "long"];
+      frappe.workerQueues = {
+        # for the sake of uniformity or the data structure:
+        # replicating defaults from frappe/utils/backgroud_jobs.py
+        short.timeout = 300;
+        default.timeout = 300;
+        long.timeout = 1500;
+      };
 
       # backfill internal interface
       # - well-known (socket) paths
@@ -207,6 +242,8 @@ in {
         NODE_PATH = concatMapStringsSep ":" (app: "${cfg.combinedAssets}/share/apps/" + app.pname + "/node_modules") cfg.apps;
         PYTHON_PATH = "${cfg.penv}/${cfg.package.pythonModule.sitePackages}";
       };
+
+      frappe.commonSiteConfig = {worker = cfg.workerQueues;};
 
       # setup redis service
       redis = {
