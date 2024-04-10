@@ -186,10 +186,28 @@ in {
       "${cfg.project}-redis" = let
         redisName = t: "redis-" + t; # matches implementation in services.redis
       in {
-        wants = [
+        requires = [
           (redisName "${cfg.project}-cache.service")
           (redisName "${cfg.project}-queue.service")
         ];
+      };
+    };
+    systemd.services = {
+      "redis-${cfg.project}-reset-asset-cache" = {
+        path = [config.services.redis.package];
+        inherit (cfg) environment;
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+        };
+        requiredBy = ["${cfg.project}-redis.target"];
+        after = ["redis-${cfg.project}-cache.service"];
+        script = ''
+          set -euo pipefail
+
+          redis-cli -s "${cfg.redisCacheSocket}" del assets_json
+        '';
+        description = "Asset cache clearing on new deployments for project: ${cfg.project}";
       };
     };
 

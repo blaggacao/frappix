@@ -204,8 +204,6 @@ in {
           script = ''
             set -euo pipefail
 
-            redis-cli -s "${cfg.redisCacheSocket}" del assets_json
-
             while IFS=: read -r site apps domain scheme; do
               IFS=",";  _apps=($apps); IFS=" ";
               adminPassword="$(cat $CREDENTIALS_DIRECTORY/adminPassword)"
@@ -259,12 +257,14 @@ in {
         wantedBy = ["multi-user.target"];
         after = [
           "network.target"
+          "${cfg.project}-redis.target"
           "${cfg.project}-setup.target"
           "${cfg.project}-web.service"
           "${cfg.project}-socketio.service"
           "${cfg.project}-schedule.service"
         ];
         requires = [
+          "${cfg.project}-redis.target"
           "${cfg.project}-setup.target"
           "${cfg.project}-web.service"
           "${cfg.project}-socketio.service"
