@@ -39,12 +39,6 @@ with builtins; let
     ];
   };
 
-  defaultUnitConfig = {
-    PartOf = ["${cfg.project}.target"];
-    Requires = ["${cfg.project}-setup.target"];
-    After = ["${cfg.project}-setup.target"];
-  };
-
   defaultPath =
     cfg.packages
     ++ [
@@ -82,9 +76,13 @@ in {
           path = defaultPath;
           inherit (cfg) environment;
           script = "bench frappe worker --queue ${queue}";
-          requiredBy = ["${cfg.project}.target"];
-          before = ["${cfg.project}.target"];
-          unitConfig = defaultUnitConfig;
+          requiredBy = ["${cfg.project}-worker.target"];
+          before = ["${cfg.project}-worker.target"];
+          unitConfig = {
+            PartOf = ["${cfg.project}-worker.target"];
+            Requires = ["${cfg.project}-setup.target"];
+            After = ["${cfg.project}-setup.target"];
+          };
           serviceConfig = defaultServiceConfig;
           description = "Frappe worker ('${queue}' queue) for project: ${cfg.project}";
         };
@@ -94,7 +92,11 @@ in {
           path = defaultPath;
           inherit (cfg) environment;
           script = "bench frappe schedule";
-          unitConfig = defaultUnitConfig;
+          unitConfig = {
+            PartOf = ["${cfg.project}.target"];
+            Requires = ["${cfg.project}-setup.target"];
+            After = ["${cfg.project}-setup.target"];
+          };
           serviceConfig = defaultServiceConfig;
           description = "Frappe scheduler for project: ${cfg.project}";
         };
@@ -112,7 +114,11 @@ in {
             "frappe.app:application"
             "--preload"
           ];
-          unitConfig = defaultUnitConfig;
+          unitConfig = {
+            PartOf = ["${cfg.project}.target"];
+            Requires = ["${cfg.project}-setup.target"];
+            After = ["${cfg.project}-setup.target"];
+          };
           serviceConfig =
             defaultServiceConfig
             // {
@@ -131,20 +137,17 @@ in {
           path = defaultPath;
           inherit (cfg) environment;
           script = "node ${cfg.package.src}/socketio.js";
-          unitConfig =
-            defaultUnitConfig
-            // {
-              After =
-                defaultUnitConfig.After
-                ++ [
-                  "${cfg.project}-web.service"
-                ];
-              Requires =
-                defaultUnitConfig.Requires
-                ++ [
-                  "${cfg.project}-web.service"
-                ];
-            };
+          unitConfig = {
+            PartOf = ["${cfg.project}.target"];
+            Requires = [
+              "${cfg.project}-setup.target"
+              "${cfg.project}-web.service"
+            ];
+            After = [
+              "${cfg.project}-setup.target"
+              "${cfg.project}-web.service"
+            ];
+          };
           serviceConfig =
             defaultServiceConfig
             // {
@@ -190,6 +193,8 @@ in {
             };
           # assets map is cached into redis
           # site initiation against database
+          requiredBy = ["${cfg.project}-setup.target"];
+          before = ["${cfg.project}-setup.target"];
           unitConfig = {
             PartOf = ["${cfg.project}-setup.target"];
             Requires = [
@@ -251,39 +256,51 @@ in {
       }
       // (mapAttrs' mkWorker cfg.workerQueues);
 
-    targets = {
-      ${cfg.project} = {
-        # Main Target
-        wantedBy = ["multi-user.target"];
-        after = [
-          "network.target"
-          "${cfg.project}-redis.target"
-          "${cfg.project}-setup.target"
-          "${cfg.project}-web.service"
-          "${cfg.project}-socketio.service"
-          "${cfg.project}-schedule.service"
-        ];
-        requires = [
-          "${cfg.project}-redis.target"
-          "${cfg.project}-setup.target"
-          "${cfg.project}-web.service"
-          "${cfg.project}-socketio.service"
-          "${cfg.project}-schedule.service"
-        ];
-        unitConfig = {
-          # TODO: add notification service
-          # OnFailure = ["${cfg.project}-notify-failure.service"];
+    targets = let
+      makeSiteSetupTargets = sites:
+        listToAttrs (map (site:
+          nameValuePair "${cfg.project}-setup-${site}" {
+            # Setup Target
+            requiredBy = ["${cfg.project}-setup.target"];
+            before = ["${cfg.project}-setup.target"];
+            unitConfig = {
+              # TODO: add notification service
+              # OnFailure = ["${cfg.project}-notify-failure.service"];
+            };
+          })
+        sites);
+    in
+      {
+        ${cfg.project} = {
+          # Main Target
+          wantedBy = ["multi-user.target"];
+          after = [
+            "network.target"
+            "${cfg.project}-redis.target"
+            "${cfg.project}-setup.target"
+            "${cfg.project}-worker.target"
+            "${cfg.project}-web.service"
+            "${cfg.project}-socketio.service"
+            "${cfg.project}-schedule.service"
+            # workers register too
+          ];
+          requires = [
+            "${cfg.project}-redis.target"
+            "${cfg.project}-setup.target"
+            "${cfg.project}-worker.target"
+            "${cfg.project}-web.service"
+            "${cfg.project}-socketio.service"
+            "${cfg.project}-schedule.service"
+            # workers register too
+          ];
+          unitConfig = {
+            # TODO: add notification service
+            # OnFailure = ["${cfg.project}-notify-failure.service"];
+          };
         };
-      };
-      "${cfg.project}-setup" = {
-        # Setup Target
-        requires = [
-          "${cfg.project}-setup.service"
-        ];
-        after = [
-          "${cfg.project}-setup.service"
-        ];
-      };
-    };
+        "${cfg.project}-setup" = {};
+        "${cfg.project}-worker" = {};
+      }
+      // (makeSiteSetupTargets (attrNames cfg.sites));
   };
 }
