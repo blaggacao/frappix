@@ -59,201 +59,53 @@ in {
   # implementation
   config.systemd = mkIf (cfg.enable) {
     services = let
-      mkMaybeSiteMigrate = site: data: let
-        domain = head data.domains;
-        scheme =
-          if config.services.nginx.virtualHosts.${site}.forceSSL
-          then "https"
-          else "http";
-      in
-        nameValuePair "${cfg.project}-${site}-migrate" {
-          path = defaultPath;
-          environment =
-            cfg.environment
-            // {
-              FRAPPE_STREAM_LOGGING = null;
-            };
-          serviceConfig =
-            defaultServiceConfig
-            // {
-              Type = "oneshot";
-              RemainAfterExit = true;
-              LoadCredential = "adminPassword:${cfg.adminPassword}";
-              # need to set site config
-              ReadWritePaths = "${cfg.benchDirectory}/sites/${site}";
-            };
-          # site initiation against database
-          requiredBy = ["${cfg.project}-setup-${site}.target"];
-          before = ["${cfg.project}-setup-${site}.target"];
-          requires = ["mysql.service" "${cfg.project}-config-setup.service"];
-          after = ["mysql.service" "${cfg.project}-config-setup.service"];
-          unitConfig = {
-            ConditionPathIsDirectory = "${cfg.benchDirectory}/sites/${site}";
-            PartOf = ["${cfg.project}-setup-${site}.target"];
-          };
-          script = ''
-            set -euo pipefail
-
-            # inform workers about the domain associated with this site
-            bench frappe --site "${site}" set-config host_name "${scheme}://${domain}"
-
-            adminPassword="$(cat $CREDENTIALS_DIRECTORY/adminPassword)"
-
-            echo "Migrating ${site} with ..."
-            bench frappe --site "${site}" set-admin-password --logout-all-sessions "$adminPassword"
-            bench frappe --site "${site}" migrate
-          '';
-          description = "Frappe migrate site (${site}) for project: ${cfg.project}";
-        };
-      mkMaybeSiteInstall = site: data: let
-        domain = head data.domains;
-        scheme =
-          if config.services.nginx.virtualHosts.${site}.forceSSL
-          then "https"
-          else "http";
-        site_db = replaceStrings ["."] ["_"] site;
-      in
-        nameValuePair "${cfg.project}-${site}-install" {
-          path = defaultPath;
-          environment =
-            cfg.environment
-            // {
-              FRAPPE_STREAM_LOGGING = null;
-            };
-          serviceConfig =
-            defaultServiceConfig
-            // {
-              Type = "oneshot";
-              RemainAfterExit = true;
-              LoadCredential = "adminPassword:${cfg.adminPassword}";
-              # need to create new sites
-              ReadWritePaths = "${cfg.benchDirectory}/sites";
-            };
-          # site initiation against database
-          requires = ["mysql.service" "${cfg.project}-config-setup.service"];
-          after = ["mysql.service" "${cfg.project}-config-setup.service"];
-          requiredBy = ["${cfg.project}-setup-${site}.target"];
-          before = ["${cfg.project}-setup-${site}.target"];
-          unitConfig = {
-            ConditionPathIsDirectory = "!${cfg.benchDirectory}/sites/${site}";
-            PartOf = ["${cfg.project}-setup-${site}.target"];
-          };
-          script = ''
-            set -euo pipefail
-
-            echo "Setting up ${site} ..."
-            pwd="$(head -c 80 /dev/urandom | tr -cd 'a-zA-Z0-9' | head -c 16)"
-
-            echo "Changing nixos default mysql socket auth to password auth for user '${site_db}'..."
-            (
-              echo "ALTER USER '${site_db}'@'localhost' IDENTIFIED BY '$pwd';"
-              echo "FLUSH PRIVILEGES;"
-            ) | mysql -N -S "${cfg.mariadbSocket}"
-
-            echo "Creating new site ('${site}') with bench..."
-            adminPassword="$(cat $CREDENTIALS_DIRECTORY/adminPassword)"
-            bench frappe new-site "${site}" \
-              --db-name "${site_db}" \
-              --db-password "$pwd" \
-              --db-socket "${cfg.mariadbSocket}" \
-              --admin-password "$adminPassword" \
-              --verbose \
-              --no-setup-db
-
-            # inform workers about the domain associated with this site
-            bench frappe --site "${site}" set-config host_name "${scheme}://${domain}"
-          '';
-          description = "Frappe install site (${site}) for project: ${cfg.project}";
-        };
-      mkSiteInstallMissingApps = site: data: let
-        inherit (data) apps;
-      in
-        nameValuePair "${cfg.project}-${site}-install-apps" {
-          path = defaultPath;
-          environment =
-            cfg.environment
-            // {
-              FRAPPE_STREAM_LOGGING = null;
-            };
-          serviceConfig =
-            defaultServiceConfig
-            // {
-              Type = "oneshot";
-              RemainAfterExit = true;
-              LoadCredential = "adminPassword:${cfg.adminPassword}";
-            };
-          # site initiation against database
-          requiredBy = ["${cfg.project}-setup-${site}.target"];
-          before = ["${cfg.project}-setup-${site}.target"];
-          requires = [
-            "mysql.service"
-            "${cfg.project}-config-setup.service"
-            "${cfg.project}-${site}-migrate.service"
-            "${cfg.project}-${site}-install.service"
-          ];
-          after = [
-            "mysql.service"
-            "${cfg.project}-config-setup.service"
-            "${cfg.project}-${site}-migrate.service"
-            "${cfg.project}-${site}-install.service"
-          ];
-          unitConfig = {
-            PartOf = ["${cfg.project}-setup-${site}.target"];
-          };
-          script = ''
-            set -euo pipefail
-
-            echo "Check if installed on site: ${concatStringsSep ", " apps} ..."
-            readarray -t -d "" installed_apps < <(bench --site ${site} list-apps --format json | jq -r '.${site}[]')
-            apps_to_install=($(echo ${concatStringsSep " " apps} ''${installed_apps[@]} | tr ' ' '\n' | sort | uniq -u))
-            for iapp in ''${installed_apps[@]}; do
-              for i in ''${!apps_to_install[@]}; do
-                if [[ ''${apps_to_install[i]} = $iapp ]]; then
-                  unset 'apps_to_install[i]'
-                fi
-              done
-            done
-            if [[ ! ''${#apps_to_install[@]} -eq 0 ]]; then
-              echo "Installing ''${apps_to_install[@]} on ${site}..."
-              bench frappe --site "${site}" install-app ''${apps_to_install[@]}
-            else
-              echo "All apps already installed."
-            fi
-          '';
-          description = "Frappe install missing apps on site (${site}) for project: ${cfg.project}";
-        };
-      mkWorker = queue: _:
-        nameValuePair "${cfg.project}-worker-${queue}" {
+      # ------
+      # Site Config Service: ensuring common_site_config.json
+      # -----
+      siteConfig = {
+        "${cfg.project}-config-setup" = {
+          description = "${cfg.project}: ensuring frappe common_site_config.json";
           path = defaultPath;
           inherit (cfg) environment;
-          script = "bench frappe worker --queue ${queue}";
-          requiredBy = ["${cfg.project}-worker.target"];
-          before = ["${cfg.project}-worker.target"];
+          serviceConfig =
+            defaultServiceConfig
+            // {
+              Type = "oneshot";
+              # RemainAfterExit = true;
+            };
+          requiredBy = ["${cfg.project}-config.target"];
+          partOf = ["${cfg.project}-config.target"]; # ensures restart / stop
           unitConfig = {
-            PartOf = ["${cfg.project}-worker.target"];
-            Requires = ["${cfg.project}-setup.target"];
-            After = ["${cfg.project}-setup.target"];
+            AssertPathIsReadWrite = "!${cfg.benchDirectory}/sites/common_site_config.json";
           };
-          serviceConfig = defaultServiceConfig;
-          description = "Frappe worker ('${queue}' queue) for project: ${cfg.project}";
+          script = ''
+            set -euo pipefail
+
+            ln -sf ${commonSiteConfigFile} ./common_site_config.json
+          '';
         };
-    in
-      {
+      };
+
+      # ------
+      # Main Target: web, socketio, scheduler
+      # -----
+      mainTarget = let
+        path = defaultPath;
+        inherit (cfg) environment;
+        requiredBy = ["${cfg.project}.target"];
+        partOf = ["${cfg.project}.target"]; # ensures restart / stop
+        wants = ["${cfg.project}-config.target"];
+        after = ["${cfg.project}-config.target"];
+      in {
         "${cfg.project}-schedule" = {
-          path = defaultPath;
-          inherit (cfg) environment;
+          description = "${cfg.project}: frappe scheduler";
+          inherit path environment requiredBy partOf wants after;
           script = "bench frappe schedule";
-          unitConfig = {
-            PartOf = ["${cfg.project}.target"];
-            Requires = ["${cfg.project}-setup.target"];
-            After = ["${cfg.project}-setup.target"];
-          };
           serviceConfig = defaultServiceConfig;
-          description = "Frappe scheduler for project: ${cfg.project}";
         };
         "${cfg.project}-web" = {
-          path = defaultPath;
-          inherit (cfg) environment;
+          description = "${cfg.project}: frappe web server (${toString cfg.gunicorn_workers} workers)";
+          inherit path environment requiredBy partOf wants after;
           script = concatStringsSep " " [
             "python -m gunicorn"
             "--bind unix:${cfg.webSocket}"
@@ -265,11 +117,6 @@ in {
             "frappe.app:application"
             "--preload"
           ];
-          unitConfig = {
-            PartOf = ["${cfg.project}.target"];
-            Requires = ["${cfg.project}-setup.target"];
-            After = ["${cfg.project}-setup.target"];
-          };
           serviceConfig =
             defaultServiceConfig
             // {
@@ -278,27 +125,17 @@ in {
               RuntimeDirectoryMode = 0770;
               UMask = 002;
               PIDFile = "${dirOf cfg.webSocket}/gunicorn.pid";
-              ExecReload = "kill -s HUP $MAINPID";
-              ExecStop = "kill -s TERM $MAINPID";
+              ExecReload = "${pkgs.coreutils}/bin/kill -s  HUP $MAINPID";
+              ExecStop = "${pkgs.coreutils}/bin/kill   -s TERM $MAINPID";
               PrivateTmp = true; # gunicorn requires /tmp
             };
-          description = "Frappe web server (${toString cfg.gunicorn_workers} workers) for project: ${cfg.project}";
         };
         "${cfg.project}-socketio" = {
-          path = defaultPath;
-          inherit (cfg) environment;
+          description = "${cfg.project}: frappe websocket";
+          inherit path environment requiredBy partOf wants after;
           script = "node ${cfg.package.src}/socketio.js";
-          unitConfig = {
-            PartOf = ["${cfg.project}.target"];
-            Requires = [
-              "${cfg.project}-setup.target"
-              "${cfg.project}-web.service"
-            ];
-            After = [
-              "${cfg.project}-setup.target"
-              "${cfg.project}-web.service"
-            ];
-          };
+          # No usefulness of socket if fronted stops or failes abnormally
+          bindsTo = ["${cfg.project}-web.service"];
           serviceConfig =
             defaultServiceConfig
             // {
@@ -307,43 +144,204 @@ in {
               RuntimeDirectoryMode = 0770;
               UMask = 002;
             };
-          description = "Frappe websocket for project: ${cfg.project}";
         };
-        "${cfg.project}-config-setup" = {
+      };
+
+      # ------
+      # Worker Target: short, default, long & custom queues
+      # -----
+      workerTarget = let
+        args = {
           path = defaultPath;
           inherit (cfg) environment;
-          serviceConfig =
-            defaultServiceConfig
-            // {
-              Type = "oneshot";
-              RemainAfterExit = true;
-            };
-          wantedBy = ["${cfg.project}-setup.target"];
-          before = ["${cfg.project}-setup.target"];
+          wantedBy = ["${cfg.project}-worker.target"];
+          partOf = ["${cfg.project}-worker.target"]; # ensures restart / stop
+          wants = ["${cfg.project}-config.target"];
+          after = ["${cfg.project}-config.target"];
+          serviceConfig = defaultServiceConfig;
           unitConfig = {
-            AssertPathIsReadWrite = "!${cfg.benchDirectory}/sites/common_site_config.json";
-            PartOf = ["${cfg.project}-setup.target"];
+            # PartOf = ["${cfg.project}-worker.target"];
+            # Requires = ["${cfg.project}-setup.target"];
+            # After = ["${cfg.project}-setup.target"];
           };
-          script = ''
-            set -euo pipefail
-
-            ln -sf ${commonSiteConfigFile} ./common_site_config.json
-          '';
-          description = "Frappe common site config for project: ${cfg.project}";
         };
-      }
-      // (mapAttrs' mkWorker cfg.workerQueues)
-      // (mapAttrs' mkMaybeSiteMigrate cfg.sites)
-      // (mapAttrs' mkMaybeSiteInstall cfg.sites)
-      // (mapAttrs' mkSiteInstallMissingApps cfg.sites);
+      in
+        mapAttrs' (mkWorker args) cfg.workerQueues;
+
+      # Worker Service Constructor
+      mkWorker = args: queue: _:
+        nameValuePair "${cfg.project}-worker-${queue}" (args
+          // {
+            description = "${cfg.project}: frappe worker for '${queue}' queue";
+            script = "bench frappe worker --queue ${queue}";
+          });
+
+      # ------
+      # Setup Target (per site): maybe install | maybe migrate & install apps
+      # -----
+      setupTarget = let
+        args = site: {
+          path = defaultPath;
+          environment =
+            cfg.environment
+            // {
+              # this is a very uncleadn upstream implementation,
+              # but avoids logging SQL DDL statements
+              FRAPPE_STREAM_LOGGING = null;
+            };
+          # don't propagate restarts and stops
+          requiredBy = ["${cfg.project}-setup-${site}.target"];
+          wants = ["${cfg.project}-config.target"];
+          after = ["${cfg.project}-config.target"];
+        };
+      in
+        (mapAttrs' (mkMaybeSiteMigrate args) cfg.sites) # either, if site directory exists
+        // (mapAttrs' (mkMaybeSiteInstall args) cfg.sites) # or, if site directory doesn't exist
+        // (mapAttrs' (mkSiteInstallMissingApps args) cfg.sites); # finally
+
+      # Setup Services Constructors
+      mkMaybeSiteMigrate = args: site: data:
+        nameValuePair "${cfg.project}-setup-${site}-migrate" ((args site)
+          // {
+            description = "${cfg.project} (${site}): migrate";
+            serviceConfig =
+              defaultServiceConfig
+              // {
+                Type = "oneshot";
+                # RemainAfterExit = true;
+                LoadCredential = "adminPassword:${cfg.adminPassword}";
+                # need to set site config
+                ReadWritePaths = "${cfg.benchDirectory}/sites/${site}";
+              };
+            unitConfig = {
+              ConditionPathIsDirectory = "${cfg.benchDirectory}/sites/${site}";
+            };
+            script = let
+              domain = head data.domains;
+              scheme =
+                if config.services.nginx.virtualHosts.${site}.forceSSL
+                then "https"
+                else "http";
+            in
+              # bash
+              ''
+                set -euo pipefail
+
+                # inform workers about the domain associated with this site
+                bench frappe --site "${site}" set-config host_name "${scheme}://${domain}"
+
+                adminPassword="$(cat $CREDENTIALS_DIRECTORY/adminPassword)"
+
+                bench frappe --site "${site}" set-admin-password "$adminPassword"
+                bench frappe --site "${site}" migrate
+              '';
+          });
+      mkMaybeSiteInstall = args: site: data:
+        nameValuePair "${cfg.project}-setup-${site}-install" ((args site)
+          // {
+            description = "${cfg.project} (${site}): install new site";
+            serviceConfig =
+              defaultServiceConfig
+              // {
+                Type = "oneshot";
+                # RemainAfterExit = true;
+                LoadCredential = "adminPassword:${cfg.adminPassword}";
+                # need to create new sites
+                ReadWritePaths = "${cfg.benchDirectory}/sites";
+              };
+            unitConfig = {
+              ConditionPathIsDirectory = "!${cfg.benchDirectory}/sites/${site}";
+            };
+            script = let
+              domain = head data.domains;
+              scheme =
+                if config.services.nginx.virtualHosts.${site}.forceSSL
+                then "https"
+                else "http";
+              site_db = replaceStrings ["."] ["_"] site;
+            in
+              # bash
+              ''
+                set -euo pipefail
+
+                echo "Setting up ${site} ..."
+                pwd="$(head -c 80 /dev/urandom | tr -cd 'a-zA-Z0-9' | head -c 16)"
+
+                echo "Changing nixos default mysql socket auth to password auth for user '${site_db}'..."
+                (
+                  echo "ALTER USER '${site_db}'@'localhost' IDENTIFIED BY '$pwd';"
+                  echo "FLUSH PRIVILEGES;"
+                ) | mysql -N -S "${cfg.mariadbSocket}"
+
+                echo "Creating new site ('${site}') with bench..."
+                adminPassword="$(cat $CREDENTIALS_DIRECTORY/adminPassword)"
+                bench frappe new-site "${site}" \
+                  --db-name "${site_db}" \
+                  --db-password "$pwd" \
+                  --db-socket "${cfg.mariadbSocket}" \
+                  --admin-password "$adminPassword" \
+                  --verbose \
+                  --no-setup-db
+
+                # inform workers about the domain associated with this site
+                bench frappe --site "${site}" set-config host_name "${scheme}://${domain}"
+              '';
+          });
+      mkSiteInstallMissingApps = args: site: data:
+        nameValuePair "${cfg.project}-setup-${site}-apps" ((args site)
+          // {
+            description = "${cfg.project} (${site}): install missing apps";
+            serviceConfig =
+              defaultServiceConfig
+              // {
+                Type = "oneshot";
+                # RemainAfterExit = true;
+              };
+            requires = [
+              "${cfg.project}-setup-${site}-migrate.service"
+              "${cfg.project}-setup-${site}-install.service"
+            ];
+            after = [
+              "${cfg.project}-setup-${site}-migrate.service"
+              "${cfg.project}-setup-${site}-install.service"
+            ];
+            script = let
+              inherit (data) apps;
+            in
+              # bash
+              ''
+                set -euo pipefail
+
+                echo "Check if installed on site: ${concatStringsSep ", " apps} ..."
+                readarray -t -d "" installed_apps < <(bench --site ${site} list-apps --format json | jq -r '.${site}[]')
+                apps_to_install=($(echo ${concatStringsSep " " apps} ''${installed_apps[@]} | tr ' ' '\n' | sort | uniq -u))
+                for iapp in ''${installed_apps[@]}; do
+                  for i in ''${!apps_to_install[@]}; do
+                    if [[ ''${apps_to_install[i]} = $iapp ]]; then
+                      unset 'apps_to_install[i]'
+                    fi
+                  done
+                done
+                if [[ ! ''${#apps_to_install[@]} -eq 0 ]]; then
+                  echo "Installing ''${apps_to_install[@]} on ${site}..."
+                  bench frappe --site "${site}" install-app ''${apps_to_install[@]}
+                else
+                  echo "All apps already installed."
+                fi
+              '';
+          });
+    in
+      siteConfig
+      // mainTarget
+      // workerTarget
+      // setupTarget;
 
     targets = let
       makeSiteSetupTargets = siteNames:
         listToAttrs (map (site:
           nameValuePair "${cfg.project}-setup-${site}" {
             # Setup Target
-            requiredBy = ["${cfg.project}-setup.target"];
-            before = ["${cfg.project}-setup.target"];
+            wantedBy = ["${cfg.project}-setup.target"];
             unitConfig = {
               # TODO: add notification service
               # OnFailure = ["${cfg.project}-notify-failure.service"];
@@ -352,34 +350,30 @@ in {
         siteNames);
     in
       {
+        "${cfg.project}-config" = {};
+        "${cfg.project}-setup" = {
+          requires = [
+            "mysql.service"
+            "${cfg.project}-config.target"
+          ];
+        };
         ${cfg.project} = {
           # Main Target
           wantedBy = ["multi-user.target"];
-          after = [
-            "network.target"
-            "${cfg.project}-redis.target"
-            "${cfg.project}-setup.target"
-            "${cfg.project}-worker.target"
-            "${cfg.project}-web.service"
-            "${cfg.project}-socketio.service"
-            "${cfg.project}-schedule.service"
-            # workers register too
-          ];
           requires = [
+            "mysql.service"
             "${cfg.project}-redis.target"
+            "${cfg.project}-config.target"
+          ];
+          wants = [
             "${cfg.project}-setup.target"
             "${cfg.project}-worker.target"
-            "${cfg.project}-web.service"
-            "${cfg.project}-socketio.service"
-            "${cfg.project}-schedule.service"
-            # workers register too
           ];
           unitConfig = {
             # TODO: add notification service
             # OnFailure = ["${cfg.project}-notify-failure.service"];
           };
         };
-        "${cfg.project}-setup" = {};
         "${cfg.project}-worker" = {};
       }
       // (makeSiteSetupTargets (attrNames cfg.sites));
