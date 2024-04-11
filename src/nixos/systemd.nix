@@ -232,8 +232,21 @@ in {
 
                 adminPassword="$(cat $CREDENTIALS_DIRECTORY/adminPassword)"
 
+                count=10
+                echo "Migrating ${site} ..."
+                while ! bench frappe --site "${site}" ready-for-migration; do
+                  if ! (( count )); then
+                    echo "Waited for too long, failing ..."
+                    exit 1
+                  fi
+                  echo "Waiting 5 seconds ..."
+                  sleep 5
+                  (( count-- ))
+                done
+                bench frappe --site "${site}" set-maintenance-mode on
                 bench frappe --site "${site}" set-admin-password "$adminPassword"
                 bench frappe --site "${site}" migrate
+                bench frappe --site "${site}" set-maintenance-mode off
               '';
           });
       mkMaybeSiteInstall = args: site: data:
