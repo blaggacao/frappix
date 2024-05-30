@@ -1,16 +1,16 @@
 {
   pname = "gameplan";
-  version = "20240206.065338";
+  version = "20240513.150011";
   meta = {
-    url = "https://github.com/frappe/gameplan/commit/9f9332cf29496afe5e912e4f1734fbf1142cb18c";
-    description = "Sources for gameplan (20240206.065338)";
+    url = "https://github.com/frappe/gameplan/commit/89315d218ba91b8ccbc477930128e57595c8c07a";
+    description = "Sources for gameplan (20240513.150011)";
   };
   src = builtins.fetchTree {
     type = "git";
     url = "git@github.com:frappe/gameplan.git";
     submodules = true;
-    narHash = "sha256-F4GZTCSuPw2s5DIG+9p7oMfBDsS1gGn00eWkD03mvG4=";
-    rev = "9f9332cf29496afe5e912e4f1734fbf1142cb18c";
+    narHash = "sha256-rdU1wBvrp6w03jbyJExePSYjtrDCdC6oaCj8Q+BNhas=";
+    rev = "89315d218ba91b8ccbc477930128e57595c8c07a";
   };
   passthru = builtins.fromJSON ''{}'';
 }

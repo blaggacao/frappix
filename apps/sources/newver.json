@@ -20,9 +20,9 @@
       "version": "20240301.130826"
     },
     "gameplan": {
-      "version": "20240206.065338",
-      "revision": "9f9332cf29496afe5e912e4f1734fbf1142cb18c",
-      "url": "https://github.com/frappe/gameplan/commit/9f9332cf29496afe5e912e4f1734fbf1142cb18c"
+      "version": "20240513.150011",
+      "revision": "89315d218ba91b8ccbc477930128e57595c8c07a",
+      "url": "https://github.com/frappe/gameplan/commit/89315d218ba91b8ccbc477930128e57595c8c07a"
     },
     "hrms": {
       "version": "v15.14.2",
