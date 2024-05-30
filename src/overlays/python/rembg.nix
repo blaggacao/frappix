@@ -1,7 +1,6 @@
 {
   lib,
   buildPythonPackage,
-  callPackage,
   fetchPypi,
   setuptools,
   wheel,
@@ -10,7 +9,7 @@
   opencv4, # opencv-python-headless,
   pillow,
   pooch,
-  pymatting ? callPackage ./pymatting.nix {},
+  pymatting,
   scikit-image,
   scipy,
   tqdm,

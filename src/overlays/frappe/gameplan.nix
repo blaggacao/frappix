@@ -40,7 +40,7 @@ buildPythonPackage rec {
   ];
 
   propagatedBuildInputs = with python.pkgs; [
-    # rembg
+    rembg
   ];
 
   pythonRemoveDeps = [

@@ -20,6 +20,9 @@ pyFinal: pyPrev: {
   razorpay = pyFinal.callPackage ./razorpay.nix {};
   paytmchecksum = pyFinal.callPackage ./paytmchecksum.nix {};
 
+  # gameplan dependencies
+  rembg = pyFinal.callPackage ./rembg.nix {};
+
   # ecommerce-integrations dependencies
   shopify-python-api = pyFinal.callPackage ./shopify-python-api.nix {};
   pyactiveresource = pyFinal.callPackage ./pyactiveresource.nix {};
