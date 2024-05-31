@@ -24,6 +24,7 @@ with builtins; let
       "${cfg.project}/archived"
       "${cfg.project}/config" # for frappe global.lock
       "${cfg.project}/logs" # for monitor logs
+      "${cfg.project}/downloads" # for downloading eg ML models
     ];
     # Expands to /var/lib/${cfg.project}
     WorkingDirectory = "%S/${cfg.project}/sites";

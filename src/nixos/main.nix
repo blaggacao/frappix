@@ -259,6 +259,8 @@ in {
         FRAPPE_BENCH_ROOT = "${cfg.benchDirectory}";
         NODE_PATH = concatMapStringsSep ":" (app: "${cfg.combinedAssets}/share/apps/" + app.pname + "/node_modules") cfg.apps;
         PYTHON_PATH = "${cfg.penv}/${cfg.package.pythonModule.sitePackages}";
+        # rembg dep of gameplan needs writable path to download onnx ML model
+        U2NET_HOME = "/var/lib/${cfg.project}/downloads";
       };
 
       frappe.commonSiteConfig = {workers = cfg.workerQueues;};
