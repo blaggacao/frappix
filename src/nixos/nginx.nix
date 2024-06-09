@@ -35,6 +35,14 @@ in {
 
         statusPage = true;
 
+        proxyCachePath = {
+          ${cfg.project} = {
+            keysZoneName = cfg.project;
+            keysZoneSize = "5m"; # ca 40k keys
+            inactive = "1d";
+            enable = true;
+          };
+        };
         upstreams = {
           "${FrappeWebUpstream}".servers."unix:${cfg.webSocket} fail_timeout=0" = {};
           "${NodeSocketIOUpstream}".servers."unix:${cfg.socketIOSocket} fail_timeout=0" = {};
@@ -98,6 +106,40 @@ in {
                 ${addHeader}
               '';
             };
+
+            webserver = extra: {
+              proxyPass = "http://${FrappeWebUpstream}";
+              extraConfig = ''
+                proxy_set_header X-Frappe-Site-Name ${site-folder};
+                proxy_set_header X-Use-X-Accel-Redirect True;
+                proxy_read_timeout 120;
+                proxy_redirect off;
+
+                ${extra}
+              '';
+            };
+
+            cachedWebserver = {
+              validity,
+              extra,
+            }:
+              webserver ''
+                proxy_cache ${cfg.project};
+                proxy_cache_key $scheme$host$request_uri";
+                proxy_cache_valid 200 302 ${validity};
+                proxy_cache_valid 404 1m;
+                proxy_cache_lock on;
+
+                add_header X-Cache-Status $upstream_cache_status;
+
+                proxy_hide_header Set-Cookie;
+                proxy_ignore_headers Set-Cookie;
+                proxy_set_header Cookie "";
+
+                ${addHeader}
+
+                ${extra}
+              '';
           in {
             # Exact matchers
             "= /.well-known/openid-configuration" = {
@@ -106,6 +148,13 @@ in {
             "= /502.html" = {
               root = "${cfg.package}/share";
               extraConfig = "internal;";
+            };
+            # specific high-volume api requests
+            "= /website_script.js" = cachedWebserver {
+              validity = "1d";
+              extra = ''
+                add_header Cache-Control "public, max-age=${toString (60 * 60 * 3)}";
+              '';
             };
 
             # Preferential prefix matcher
@@ -152,19 +201,9 @@ in {
             };
 
             # Alias
-            "@webserver" = {
-              proxyPass = "http://${FrappeWebUpstream}";
-              extraConfig = ''
-                proxy_set_header X-Forwarded-For $REMOTE_ADDR;
-                proxy_set_header X-Forwarded-Proto $scheme;
-                proxy_set_header X-Frappe-Site-Name ${site-folder};
-                proxy_set_header Host $host;
-
-                proxy_set_header X-Use-X-Accel-Redirect True;
-                proxy_read_timeout 120;
-                proxy_redirect off;
-              '';
-            };
+            "@webserver" = webserver ''
+              internal;
+            '';
           };
         });
       };
