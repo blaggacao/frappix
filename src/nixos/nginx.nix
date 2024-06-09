@@ -42,21 +42,6 @@ in {
 
         virtualHosts = flip mapAttrs cfg.sites (site-folder: site: let
           # These directives are inherited from the previous configuration
-          # level if and only if there are no proxy_set_header directives
-          # defined on the current level.
-          # see: http://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_set_header
-          proxySetHeader = ''
-            # repetition, see:
-            #   http://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_set_header
-
-            # fixture used by erpnext as site instead of host header
-            proxy_set_header X-Frappe-Site-Name ${site-folder};
-
-            # used by erpnext to dispatch (to nginx) the serving of
-            # protected files under the /protected internal route
-            proxy_set_header X-Use-X-Accel-Redirect True;
-          '';
-          # These directives are inherited from the previous configuration
           # level if and only if there are no add_header directives
           # defined on the current level.
           # see: http://nginx.org/en/docs/http/ngx_http_headers_module.html#add_header
@@ -75,72 +60,110 @@ in {
           forceSSL = true;
           serverName = head site.domains;
           serverAliases = tail site.domains;
+          root = "${cfg.benchDirectory}/sites";
           extraConfig = ''
-            rewrite ^((?!/socket\.io/).+)/$ $1 permanent;
-            rewrite ^(.+)/index\.html$ $1 permanent;
-            rewrite ^(.+)\.html$ $1 permanent;
 
             proxy_buffer_size 128k;
             proxy_buffers 4 256k;
             proxy_busy_buffers_size 256k;
+
+            proxy_headers_hash_max_size 512;
 
             error_page 502 /502.html;
 
             ${addHeader}
           '';
 
-          locations = {
-            "= /.well-known/openid-configuration".extraConfig = ''
-              return 301 /api/method/frappe.integrations.oauth2.openid_configuration;
-            '';
+          # The order of evaluation is:
+          # 1. Exact matcher ( = )
+          # 2. Preferential prefix matcher ( ^~ )
+          # 3. Regular expression matcher ( ~* / ~ ) [first match]
+          # 4. Prefix matcher [longest match]
 
-            # '^~' means: stop here if matched
-            "^~ /assets" = {
+          # Inspired by https://github.com/frappe/press/blob/master/nginx.conf
+          locations = let
+            assets = cacheControl: {
               root = "${cfg.combinedAssets}/share/sites/";
               tryFiles = "$uri =404";
-            };
-
-            # '^~' means: stop here if matched
-            "^~ /socket.io/" = {
-              proxyWebsockets = true; # we have enable http2 server in socket IO
-              proxyPass = "http://${NodeSocketIOUpstream}";
-              # TODO: validate purpose, seems shady config
-              # proxy_set_header Origin $scheme://$http_host;
-              extraConfig = proxySetHeader;
-            };
-
-            # '~' means: case sensitive
-            "~ ^/protected/(.*)" = {
-              root = "${cfg.benchDirectory}/sites";
-              tryFiles = "/${site-folder}/$1 =404";
-              extraConfig = "internal;";
-            };
-
-            # '~*' means: case insensitive
-            "~* ^/files/.*.(htm|html|svg|xml)" = {
-              root = "${cfg.benchDirectory}/sites";
-              tryFiles = "/${site-folder}/public/$uri @webserver";
               extraConfig = ''
-                add_header Content-disposition "attachment";
-
+                ${cacheControl}
                 ${addHeader}
               '';
             };
 
-            "/" = {
-              root = "${cfg.benchDirectory}/sites";
+            files = extra: {
               tryFiles = "/${site-folder}/public/$uri @webserver";
+              extraConfig = ''
+                ${extra}
+                ${addHeader}
+              '';
             };
-
-            "@webserver" = {
-              proxyPass = "http://${FrappeWebUpstream}";
-              extraConfig = proxySetHeader;
+          in {
+            # Exact matchers
+            "= /.well-known/openid-configuration" = {
+              return = "301 /api/method/frappe.integrations.oauth2.openid_configuration";
             };
-
-            # error codes
             "= /502.html" = {
               root = "${cfg.package}/share";
               extraConfig = "internal;";
+            };
+
+            # Preferential prefix matcher
+            "^~ /socket.io" = {
+              proxyWebsockets = true; # we have enable http2 server in socket IO
+              proxyPass = "http://${NodeSocketIOUpstream}";
+              extraConfig = ''
+                proxy_set_header X-Frappe-Site-Name ${site-folder};
+                proxy_set_header Origin $scheme://$http_host;
+                proxy_set_header Host $host;
+              '';
+            };
+
+            # Regular expression matcher
+            "~ ^/protected/(.*)" = {
+              tryFiles = "/${site-folder}/$1 =404";
+              extraConfig = "internal;";
+            };
+            "~ ^/assets/.+\\.bundle\\.\\w\\w\\w\\w\\w\\w\\w\\w\\..+" = assets ''
+              add_header Cache-Control "public, max-age=${toString (365 * 30 * 24 * 60 * 60)}, immutable";
+            '';
+            "~ ^/assets/.+\\.(ttf|otf|woff|woff2)$" = assets ''
+              add_header Cache-Control "public, max-age=${toString (365 * 30 * 24 * 60 * 60)}, immutable";
+            '';
+            "~* ^/files/.+\\.(htm|html|svg|xml)$" = files ''
+              add_header Cache-Control "max-age=${toString (30 * 24 * 60 * 60)}";
+              add_header Content-disposition "attachment";
+            '';
+            "~ ^/files/.+\\.(png|jpe?g|gif|css|js|mp3|wav|ogg|flac|avi|mov|mp4|m4v|mkv|webm)$" = files ''
+              add_header Cache-Control "max-age=${toString (30 * 24 * 60 * 60)}";
+            '';
+
+            # Prefix matcher
+            "/assets" = assets ''
+              add_header Cache-Control "public, max-age=${toString (24 * 60 * 60)}";
+            '';
+            "/" = {
+              tryFiles = "/${site-folder}/public/$uri @webserver";
+              extraConfig = ''
+                rewrite ^(.+)/$ $1 permanent;
+                rewrite ^(.+)/index\.html$ $1 permanent;
+                rewrite ^(.+)\.html$ $1 permanent;
+              '';
+            };
+
+            # Alias
+            "@webserver" = {
+              proxyPass = "http://${FrappeWebUpstream}";
+              extraConfig = ''
+                proxy_set_header X-Forwarded-For $REMOTE_ADDR;
+                proxy_set_header X-Forwarded-Proto $scheme;
+                proxy_set_header X-Frappe-Site-Name ${site-folder};
+                proxy_set_header Host $host;
+
+                proxy_set_header X-Use-X-Accel-Redirect True;
+                proxy_read_timeout 120;
+                proxy_redirect off;
+              '';
             };
           };
         });
