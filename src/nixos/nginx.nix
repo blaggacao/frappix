@@ -43,6 +43,13 @@ in {
             enable = true;
           };
         };
+
+        commonHttpConfig = ''
+          map $cookie_preferred_language $selected_lang {
+              default        $cookie_user_lang;
+          }
+        '';
+
         upstreams = {
           "${FrappeWebUpstream}".servers."unix:${cfg.webSocket} fail_timeout=0" = {};
           "${NodeSocketIOUpstream}".servers."unix:${cfg.socketIOSocket} fail_timeout=0" = {};
@@ -125,16 +132,12 @@ in {
             }:
               webserver ''
                 proxy_cache ${cfg.project};
-                proxy_cache_key $scheme$host$request_uri";
                 proxy_cache_valid 200 302 ${validity};
                 proxy_cache_valid 404 1m;
                 proxy_cache_lock on;
 
                 add_header X-Cache-Status $upstream_cache_status;
-
-                proxy_hide_header Set-Cookie;
-                proxy_ignore_headers Set-Cookie;
-                proxy_set_header Cookie "";
+                proxy_cache_key $scheme$host$request_uri|$selected_lang;
 
                 ${addHeader}
 
@@ -148,13 +151,6 @@ in {
             "= /502.html" = {
               root = "${cfg.package}/share";
               extraConfig = "internal;";
-            };
-            # specific high-volume api requests
-            "= /website_script.js" = cachedWebserver {
-              validity = "1d";
-              extra = ''
-                add_header Cache-Control "public, max-age=${toString (60 * 60 * 3)}";
-              '';
             };
 
             # Preferential prefix matcher
@@ -201,9 +197,12 @@ in {
             };
 
             # Alias
-            "@webserver" = webserver ''
-              internal;
-            '';
+            "@webserver" = cachedWebserver {
+              validity = "1d";
+              extra = ''
+                internal;
+              '';
+            };
           };
         });
       };
