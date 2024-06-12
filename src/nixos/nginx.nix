@@ -33,8 +33,6 @@ in {
         #   limit_conn_zone $host zone=per_host_${builtins.hashString "sha256" cfg.project}:${cfg.limit_conn_shared_memory}m;
         # '';
 
-        statusPage = true;
-
         proxyCachePath = {
           ${cfg.project} = {
             keysZoneName = cfg.project;
@@ -69,8 +67,7 @@ in {
           '';
         in {
           kTLS = true;
-          http3 = true;
-          forceSSL = true;
+          forceSSL = mkDefault true;
           serverName = head site.domains;
           serverAliases = tail site.domains;
           root = "${cfg.benchDirectory}/sites";
