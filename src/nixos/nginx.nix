@@ -192,7 +192,7 @@ in {
               proxy_ignore_headers Cache-Control;
               proxy_ignore_headers Set-Cookie;
 
-              add_header Cache-Control "max-age=2880";
+              add_header Cache-Control "max-age=28800";
 
               proxy_cache ${cfg.project};
               proxy_cache_valid 200 302 8h;
@@ -200,6 +200,47 @@ in {
               proxy_cache_lock on;
               add_header X-Cache-Status $upstream_cache_status;
               proxy_cache_key $scheme$host$request_uri;
+              ${addHeader}
+            '';
+            "/api/method/frappe.desk.doctype.notification_log.notification_log.get_notification_logs" = webserver ''
+              proxy_hide_header Cache-Control;
+              proxy_hide_header Set-Cookie;
+              proxy_ignore_headers Cache-Control;
+              proxy_ignore_headers Set-Cookie;
+
+              add_header Cache-Control "private,max-age=60";
+
+              ${addHeader}
+            '';
+            "/api/method/frappe.desk.doctype.event.event.get_events" = webserver ''
+              proxy_hide_header Cache-Control;
+              proxy_hide_header Set-Cookie;
+              proxy_ignore_headers Cache-Control;
+              proxy_ignore_headers Set-Cookie;
+
+              add_header Cache-Control "private,max-age=300";
+
+              ${addHeader}
+            '';
+            # 8 h
+            "/api/method/frappe.desk.desktop.get_workspace_sidebar_items" = webserver ''
+              proxy_hide_header Cache-Control;
+              proxy_hide_header Set-Cookie;
+              proxy_ignore_headers Cache-Control;
+              proxy_ignore_headers Set-Cookie;
+
+              add_header Cache-Control "private,max-age=28800";
+
+              ${addHeader}
+            '';
+            "/api/method/frappe.desk.desktop.get_desktop_page" = webserver ''
+              proxy_hide_header Cache-Control;
+              proxy_hide_header Set-Cookie;
+              proxy_ignore_headers Cache-Control;
+              proxy_ignore_headers Set-Cookie;
+
+              add_header Cache-Control "private,max-age=60";
+
               ${addHeader}
             '';
             "/" = {
