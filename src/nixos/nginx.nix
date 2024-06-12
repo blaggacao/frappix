@@ -61,8 +61,6 @@ in {
           # defined on the current level.
           # see: http://nginx.org/en/docs/http/ngx_http_headers_module.html#add_header
           addHeader = ''
-            # repetition, see:
-            #   http://nginx.org/en/docs/http/ngx_http_headers_module.html#add_header
             add_header X-Frame-Options "SAMEORIGIN";
             add_header X-Content-Type-Options nosniff;
             add_header X-XSS-Protection "1; mode=block";
@@ -186,6 +184,15 @@ in {
             # Prefix matcher
             "/assets" = assets ''
               add_header Cache-Control "public, max-age=${toString (24 * 60 * 60)}";
+            '';
+            # only changes once a year, 8 hours should be a good validity to update overnight
+            "/api/method/api/method/erpnext.accounts.utils.get_fiscal_year" = webserver ''
+              add_header Cache-Control "private,max-age=2880";
+              ${addHeader}
+            '';
+            "/app/" = webserver ''
+              add_header Cache-Control "private,max-age=10,stale-while-revalidate=3600";
+              ${addHeader}
             '';
             "/" = {
               tryFiles = "/${site-folder}/public/$uri @webserver";
