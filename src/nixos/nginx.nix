@@ -186,12 +186,20 @@ in {
               add_header Cache-Control "public, max-age=${toString (24 * 60 * 60)}";
             '';
             # only changes once a year, 8 hours should be a good validity to update overnight
-            "/api/method/api/method/erpnext.accounts.utils.get_fiscal_year" = webserver ''
-              add_header Cache-Control "private,max-age=2880";
-              ${addHeader}
-            '';
-            "/app/" = webserver ''
-              add_header Cache-Control "private,max-age=10,stale-while-revalidate=3600";
+            "/api/method/erpnext.accounts.utils.get_fiscal_year" = webserver ''
+              proxy_hide_header Cache-Control;
+              proxy_hide_header Set-Cookie;
+              proxy_ignore_headers Cache-Control;
+              proxy_ignore_headers Set-Cookie;
+
+              add_header Cache-Control "max-age=2880";
+
+              proxy_cache ${cfg.project};
+              proxy_cache_valid 200 302 8h;
+              proxy_cache_valid 404 1m;
+              proxy_cache_lock on;
+              add_header X-Cache-Status $upstream_cache_status;
+              proxy_cache_key $scheme$host$request_uri;
               ${addHeader}
             '';
             "/" = {
