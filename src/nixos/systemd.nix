@@ -219,8 +219,10 @@ in {
             };
             script = let
               domain = head data.domains;
-              scheme =
-                if config.services.nginx.virtualHosts.${site}.forceSSL
+              scheme = let
+                inherit (config.services.nginx.virtualHosts.${site}) forceSSL addSSL;
+              in
+                if (forceSSL || addSSL)
                 then "https"
                 else "http";
             in
