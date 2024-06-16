@@ -5,10 +5,10 @@
       "version": "20240224.061718"
     },
     "builder": {
-      "version": "v1.7.2",
-      "gitref": "refs/tags/v1.7.2",
-      "revision": "896e36a90500e8ca5577cb77ad01ceea8522a1f6",
-      "url": "https://github.com/frappe/builder/releases/tag/v1.7.2"
+      "version": "v1.9.6",
+      "gitref": "refs/tags/v1.9.6",
+      "revision": "44746bf8ba3456ecfec40fc5f0821913354a419e",
+      "url": "https://github.com/frappe/builder/releases/tag/v1.9.6"
     },
     "crm": {
       "version": "v1.14.0",
@@ -23,7 +23,9 @@
       "version": "20240301.165654"
     },
     "frappe": {
-      "version": "20240301.130826"
+      "version": "20240614.160018",
+      "revision": "1a8248a6e6b542456926459f32548c5c6819875d",
+      "url": "https://github.com/frappe/frappe/commit/1a8248a6e6b542456926459f32548c5c6819875d"
     },
     "gameplan": {
       "version": "20240513.150011",
@@ -51,7 +53,9 @@
       "url": "https://github.com/frappe/print_designer/commit/f87b1aa2de3b5c720f24cc91fddc614a89d219a0"
     },
     "webshop": {
-      "version": "20240125.060731"
+      "version": "20240607.063925",
+      "revision": "2ba73816791724acb2e8c7cce35c28a56c537b31",
+      "url": "https://github.com/frappe/webshop/commit/2ba73816791724acb2e8c7cce35c28a56c537b31"
     },
     "wiki": {
       "version": "20240121.050421"

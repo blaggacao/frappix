@@ -12,17 +12,6 @@ let
 
   applyInputPatches = name: attrs:
     {
-      webshop =
-        attrs
-        // {
-          src = applyPatches {
-            name = "webshop-source";
-            inherit (attrs) src;
-            patches = [
-              ./sources/webshop-pr-99-flit-core.patch
-            ];
-          };
-        };
       frappe =
         attrs
         // {
@@ -33,8 +22,6 @@ let
               # this patch is needs to be present in all source trees,
               # such as the next one used for the assets below
               patches = [
-                # Add missing unix domain socket support
-                ./sources/frappe-uds.patch
                 # This mariadb has passwordless root access
                 # for the current user
                 ./sources/frappe-uds-current-user.patch
@@ -54,17 +41,6 @@ let
             };
           in
             stage_2;
-        };
-      builder =
-        attrs
-        // {
-          src = applyPatches {
-            name = "builder-source";
-            inherit (attrs) src;
-            patches = [
-              ./sources/0001-refactor-use-flit-build-and-align-with-upstream.patch
-            ];
-          };
         };
     }
     .${name}
