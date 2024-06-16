@@ -1,0 +1,39 @@
+From 73836b57879bfe84b23cf4d9802ed9d583d5c57e Mon Sep 17 00:00:00 2001
+From: David <dgx.arnold@gmail.com>
+Date: Sun, 16 Jun 2024 19:50:30 +0200
+Subject: [PATCH] build: socket port is reverse proxied
+
+---
+ frontend/src/socket.js | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/frontend/src/socket.js b/frontend/src/socket.js
+index 9a0c7d0..93b68be 100644
+--- a/frontend/src/socket.js
++++ b/frontend/src/socket.js
+@@ -1,14 +1,11 @@
+ import { io } from 'socket.io-client'
+-import { socketio_port } from '../../../../sites/common_site_config.json'
+ import { getCachedListResource } from 'frappe-ui/src/resources/listResource'
+ import { getCachedResource } from 'frappe-ui/src/resources/resources'
+ 
+ export function initSocket() {
+   let host = window.location.hostname
+   let siteName = window.site_name
+-  let port = window.location.port ? `:${socketio_port}` : ''
+-  let protocol = port ? 'http' : 'https'
+-  let url = `${protocol}://${host}${port}/${siteName}`
++  let url = `https://${host}/${siteName}`
+ 
+   let socket = io(url, {
+     withCredentials: true,
+@@ -25,4 +22,4 @@ export function initSocket() {
+     }
+   })
+   return socket
+-}
+\ No newline at end of file
++}
+-- 
+2.42.0
+

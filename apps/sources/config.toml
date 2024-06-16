@@ -49,6 +49,12 @@ branch = "main" # no release yet
 github = "frappe/gameplan"
 submodules = true
 
+[crm]
+source = "github"
+github = "frappe/crm"
+use_max_tag = true
+submodules = true
+
 [builder]
 source = "github"
 use_max_tag = true
