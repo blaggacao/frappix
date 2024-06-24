@@ -20,7 +20,7 @@ in {
       (
         if nginxOpts ? recommendedBrotliSettings
         then {recommendedBrotliSettings = true;} # > 22.11
-        else {recommendedGzipSettings = true;} # 22.11
+        else {}
       )
       // {
         package = pkgs.nginxQuic; # provides http3
@@ -28,6 +28,7 @@ in {
         recommendedTlsSettings = true;
         recommendedOptimisation = true;
         recommendedProxySettings = true;
+        recommendedGzipSettings = true;
         proxyTimeout = toString cfg.http_timeout;
         # appendHttpConfig = ''
         #   limit_conn_zone $host zone=per_host_${builtins.hashString "sha256" cfg.project}:${cfg.limit_conn_shared_memory}m;
