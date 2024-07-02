@@ -31,6 +31,8 @@ with builtins; let
 
     ProtectSystem = "strict";
 
+    PrivateTmp = true; # gunicorn requires /tmp
+
     BindReadOnlyPaths = [
       # static shared data
       "${apps}:${cfg.benchDirectory}/sites/apps.txt"
@@ -128,7 +130,6 @@ in {
               PIDFile = "${dirOf cfg.webSocket}/gunicorn.pid";
               ExecReload = "${pkgs.coreutils}/bin/kill -s  HUP $MAINPID";
               ExecStop = "${pkgs.coreutils}/bin/kill   -s TERM $MAINPID";
-              PrivateTmp = true; # gunicorn requires /tmp
             };
         };
         "${cfg.project}-socketio" = {
