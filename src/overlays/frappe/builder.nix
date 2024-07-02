@@ -25,8 +25,6 @@ buildPythonPackage rec {
   ];
 
   propagatedBuildInputs = with python.pkgs; [
-    playwright
-    install-playwright
   ];
 
   pythonRelaxDeps = [

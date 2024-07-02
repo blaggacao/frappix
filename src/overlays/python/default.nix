@@ -13,9 +13,6 @@ pyFinal: pyPrev: {
   gocardless-pro = pyFinal.callPackage ./gocardless-pro.nix {};
   plaid-python = pyFinal.callPackage ./plaid-python.nix {}; # old version
 
-  # builder dependencies
-  install-playwright = pyFinal.callPackage ./install-playwright.nix {};
-
   # payments dependencies
   razorpay = pyFinal.callPackage ./razorpay.nix {};
   paytmchecksum = pyFinal.callPackage ./paytmchecksum.nix {};

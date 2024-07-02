@@ -5,10 +5,10 @@
       "version": "20240224.061718"
     },
     "builder": {
-      "version": "v1.9.6",
-      "gitref": "refs/tags/v1.9.6",
-      "revision": "44746bf8ba3456ecfec40fc5f0821913354a419e",
-      "url": "https://github.com/frappe/builder/releases/tag/v1.9.6"
+      "version": "v1.10.0",
+      "gitref": "refs/tags/v1.10.0",
+      "revision": "51e117f38c39f4e3816e4f9ddcfa1641f6b2109a",
+      "url": "https://github.com/frappe/builder/releases/tag/v1.10.0"
     },
     "crm": {
       "version": "v1.14.0",
