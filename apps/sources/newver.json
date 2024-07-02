@@ -11,10 +11,10 @@
       "url": "https://github.com/frappe/builder/releases/tag/v1.10.0"
     },
     "crm": {
-      "version": "v1.14.0",
-      "gitref": "refs/tags/v1.14.0",
-      "revision": "a1ec478744e38ed7666e784a23613df460a12c56",
-      "url": "https://github.com/frappe/crm/releases/tag/v1.14.0"
+      "version": "v1.17.0",
+      "gitref": "refs/tags/v1.17.0",
+      "revision": "064106e76cab8917ba7f3b41fba88fa53444ba68",
+      "url": "https://github.com/frappe/crm/releases/tag/v1.17.0"
     },
     "ecommerce-integrations": {
       "version": "20240205.173955"
