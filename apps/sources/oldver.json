@@ -48,9 +48,10 @@
       "version": "20240123.122024"
     },
     "print-designer": {
-      "version": "20240317.225753",
-      "revision": "f87b1aa2de3b5c720f24cc91fddc614a89d219a0",
-      "url": "https://github.com/frappe/print_designer/commit/f87b1aa2de3b5c720f24cc91fddc614a89d219a0"
+      "version": "v1.3.3",
+      "gitref": "refs/tags/v1.3.3",
+      "revision": "59302de3c0a11558823c21e26b704e0a7e16cc3b",
+      "url": "https://github.com/frappe/print_designer/releases/tag/v1.3.3"
     },
     "webshop": {
       "version": "20240607.063925",

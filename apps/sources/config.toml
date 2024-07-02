@@ -63,7 +63,7 @@ submodules = true
 
 [print-designer]
 source = "github"
-branch = "main" # no release yet
+use_max_tag = true
 github = "frappe/print_designer"
 
 [ecommerce-integrations]
