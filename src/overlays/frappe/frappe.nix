@@ -88,7 +88,7 @@ buildPythonPackage rec {
       psutil
       psycopg2 # -binary
       pycryptodome
-      pydantic_2
+      pydantic
       pyjwt
       pymysql
       pyopenssl
@@ -125,33 +125,68 @@ buildPythonPackage rec {
   # NIX_DEBUG = 6;
 
   pythonRelaxDeps = [
-    "pycryptodome" #             ask: 3.18.0  is: 3.17.0
-    "boto3" #                    ask: 1.18.49 is: 1.26.79
-    "pypdf" #                    ask: 3.9.1   is: 3.5.2
-    "google-api-python-client" # ask: 2.2.0   is: 2.88.0
-    "google-auth" #              ask: 1.29.0  is: 2.19.1
-    "ipython" #                  ask: 8.10.0  is: 8.11.0
-    "pyOpenSSL" #                ask: 23.2.0  is: 23.1.1
-    "redis" #                    ask: 4.5.5   is: 4.5.4
-    "cryptography" #             ask: 41.0.1  is: 40.0.1
-    "Werkzeug" #                 ask: 2.3.4   is: 2.2.3
-    "bleach" #                   ask: 3.3.0   is: 6.0.0
-    "cairocffi" #                ask: 1.5.1   is: 1.4.0
-    "croniter" #                 ask: 1.3.15  is: 1.4.1
-    "pydantic" #                 ask: 2.0     is: 2.0.2   nixpkgs: 1.10.9
-    "filelock" #                 ask: 3.8.0   is: 3.12.0
-    "Pillow" #                   ask: 9.5.0   is: 9.4.0
-    "premailer" #                ask: 3.8.0   is: 3.10.0
-    "PyMySQL" #                  ask: 1.0.3   is: 1.0.2
-    "rauth" #                    ask: 0.7.3   is: 0.7.2
-    "phonenumbers" #             ask: 8.13.13 is: ?????
-    "PyYAML"
-    "GitPython"
-    "Click"
-    "Babel"
+    # - babel~=2.12.1 not satisfied by version 2.14.0
+    "babel"
+    # - filelock~=3.8.0 not satisfied by version 3.13.4
+    "filelock"
+    # - pillow~=10.2.0 not satisfied by version 10.3.0
+    "pillow"
+    # - pymysql==1.1.0 not satisfied by version 1.1.1
+    "pymysql"
+    # - pypdf~=3.17.0 not satisfied by version 4.1.0
+    "pypdf"
+    # - restrictedpython~=6.2 not satisfied by version 7.1
+    "restrictedpython"
+    # - weasyprint==59.0 not satisfied by version 61.2
+    "weasyprint"
+    # - bleach~=6.0.0 not satisfied by version 6.1.0
+    "bleach"
+    # - cairocffi==1.5.1 not satisfied by version 1.6.1
+    "cairocffi"
+    # - chardet~=5.1.0 not satisfied by version 5.2.0
+    "chardet"
+    # - croniter~=1.4.1 not satisfied by version 2.0.5
+    "croniter"
+    # - ipython~=8.15.0 not satisfied by version 8.24.0
+    "ipython"
+    # - phonenumbers==8.13.13 not satisfied by version 8.13.34
+    "phonenumbers"
+    # - pyopenssl~=24.0.0 not satisfied by version 24.1.0
+    "pyopenssl"
+    # - pydantic==2.3.0 not satisfied by version 2.6.3
+    "pydantic"
+    # - pyotp~=2.8.0 not satisfied by version 2.9.0
+    "pyotp"
+    # - python-dateutil~=2.8.2 not satisfied by version 2.9.0.post0
+    "python-dateutil"
+    # - pytz==2023.3 not satisfied by version 2024.1k
+    "pytz"
+    # - rauth~=0.7.3 not satisfied by version 0.7.2
+    "rauth"
+    # - redis~=4.5.5 not satisfied by version 5.0.3
+    "redis"
+    # - hiredis~=2.2.3 not satisfied by version 2.3.2
+    "hiredis"
+    # - rq~=1.15.1 not satisfied by version 1.16.2
+    "rq"
+    # - sentry-sdk~=1.37.1 not satisfied by version 1.45.0
     "sentry-sdk"
-    "setproctitle"
-    "RestrictedPython"
+    # - sqlparse~=0.4.4 not satisfied by version 0.5.0
+    "sqlparse"
+    # - markdownify~=0.11.6 not satisfied by version 0.12.1
+    "markdownify"
+    # - boto3~=1.28.10 not satisfied by version 1.34.58
+    "boto3"
+    # - dropbox~=11.36.2 not satisfied by version 12.0.0
+    "dropbox"
+    # - google-api-python-client~=2.2.0 not satisfied by version 2.126.0
+    "google-api-python-client"
+    # - google-auth-oauthlib~=0.4.4 not satisfied by version 1.2.0
+    "google-auth-oauthlib"
+    # - google-auth~=1.29.0 not satisfied by version 2.29.0
+    "google-auth"
+    # - posthog~=3.0.1 not satisfied by version 3.5.0
+    "posthog"
   ];
 
   pythonRemoveDeps = [

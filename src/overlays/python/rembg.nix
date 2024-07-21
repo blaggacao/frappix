@@ -45,6 +45,11 @@ buildPythonPackage rec {
     hash = "sha256-LXfIfZu1pQMjp4OJ12ClyyA20RaQaqpPLHQZ3MeAkjo=";
   };
 
+  postPatch = ''
+    substituteInPlace setup.py \
+      --replace "opencv-python-headless" ""
+  '';
+
   nativeBuildInputs = [
     setuptools
     wheel
