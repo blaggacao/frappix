@@ -50,8 +50,17 @@ in {
         '';
 
         upstreams = {
-          "${FrappeWebUpstream}".servers."unix:${cfg.webSocket} fail_timeout=0" = {};
-          "${NodeSocketIOUpstream}".servers."unix:${cfg.socketIOSocket} fail_timeout=0" = {};
+          "${FrappeWebUpstream}".servers."unix:${cfg.webSocket}" = {
+            fail_timeout = 0;
+          };
+          "${NodeSocketIOUpstream}" = {
+            servers."unix:${cfg.socketIOSocket}" = {
+              fail_timeout = 0;
+            };
+            extraConfig = ''
+              keepalive    32;
+            '';
+          };
         };
 
         virtualHosts = flip mapAttrs cfg.sites (site-folder: site: let
@@ -150,7 +159,7 @@ in {
             };
 
             # Preferential prefix matcher
-            "^~ /socket.io" = {
+            "^~ /socket.io/" = {
               proxyWebsockets = true; # we have enable http2 server in socket IO
               proxyPass = "http://${NodeSocketIOUpstream}";
               extraConfig = ''

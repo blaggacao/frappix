@@ -141,7 +141,8 @@ in {
           serviceConfig =
             defaultServiceConfig
             // {
-              RestrictAddressFamilies = ["AF_UNIX"];
+              # AF_INET used by server on local
+              RestrictAddressFamilies = ["AF_UNIX" "AF_INET"];
               RuntimeDirectory = removePrefix "/run/" (dirOf cfg.socketIOSocket);
               RuntimeDirectoryMode = 0770;
               UMask = 002;
