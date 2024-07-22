@@ -16,9 +16,13 @@ in {
   #
   # Interface
   #
+  imports = [
+    ./dragonflydb.nix # with unixsocket
+  ];
   options = {
     services.frappe = {
       enable = mkEnableOption (mdDoc "frappe");
+      useDragonfly = mkEnableOption (mdDoc "Used dragonfly db instead of redis (supporst redisearch-like api)");
 
       package = mkOption {
         type = types.package;
@@ -159,8 +163,8 @@ in {
       */
       webSocket = mkInternal;
       socketIOSocket = mkInternal;
-      redisCacheSocket = mkInternal;
-      redisQueueSocket = mkInternal;
+      cacheSocket = mkInternal;
+      queueSocket = mkInternal;
       mariadbSocket = mkInternal;
       benchDirectory = mkInternal;
       combinedAssets = mkInternal;
@@ -205,7 +209,7 @@ in {
         script = ''
           set -euo pipefail
 
-          redis-cli -s "${cfg.redisCacheSocket}" del assets_json
+          redis-cli -s "${cfg.cacheSocket}" del assets_json
         '';
         description = "Asset cache clearing on new deployments for project: ${cfg.project}";
       };
@@ -240,8 +244,11 @@ in {
       # backfill internal interface
       # - well-known (socket) paths
       frappe.mariadbSocket = "/run/mysqld/mysqld.sock";
-      frappe.redisQueueSocket = "/run/redis-${cfg.project}-queue/redis.sock";
-      frappe.redisCacheSocket = "/run/redis-${cfg.project}-cache/redis.sock";
+      frappe.queueSocket = "/run/redis-${cfg.project}-queue/redis.sock";
+      frappe.cacheSocket =
+        if (!cfg.useDragonfly)
+        then "/run/redis-${cfg.project}-cache/redis.sock"
+        else "/run/dragonflydb-${cfg.project}-cache/dragonfly.sock";
       frappe.webSocket = "/run/${cfg.project}/web/gunicorn.socket";
       frappe.socketIOSocket = "/run/${cfg.project}/ws/socketIO.socket";
       frappe.benchDirectory = "/var/lib/${cfg.project}";
@@ -251,8 +258,8 @@ in {
       frappe.packages = flatten (catAttrs "packages" cfg.apps);
       frappe.environment = {
         FRAPPE_STREAM_LOGGING = "1";
-        FRAPPE_REDIS_CACHE = "unix://${cfg.redisCacheSocket}";
-        FRAPPE_REDIS_QUEUE = "unix://${cfg.redisQueueSocket}";
+        FRAPPE_REDIS_CACHE = "unix://${cfg.cacheSocket}";
+        FRAPPE_REDIS_QUEUE = "unix://${cfg.queueSocket}";
         FRAPPE_SOCKETIO_UDS = cfg.socketIOSocket;
         FRAPPE_DB_SOCKET = cfg.mariadbSocket;
         FRAPPE_SITES_ROOT = "${cfg.benchDirectory}/sites";
@@ -266,24 +273,33 @@ in {
       frappe.commonSiteConfig = {workers = cfg.workerQueues;};
 
       # setup redis service
-      redis = {
-        vmOverCommit = true;
-        servers."${cfg.project}-cache" = {
-          bind = null; # only use unix socket
-          user = cfg.project;
-          enable = true;
-          appendOnly = true;
-          save = [];
-          settings = {
-            maxmemory = "794mb";
-            maxmemory-policy = "allkeys-lru";
+      redis.vmOverCommit = true;
+      redis.servers =
+        {
+          "${cfg.project}-queue" = {
+            bind = null; # only use unix socket
+            enable = true;
+            user = cfg.project;
+          };
+        }
+        // optionalAttrs (!cfg.useDragonfly) {
+          "${cfg.project}-cache" = {
+            bind = null; # only use unix socket
+            user = cfg.project;
+            enable = true;
+            appendOnly = true;
+            save = [];
+            settings = {
+              maxmemory = "794mb";
+              maxmemory-policy = "allkeys-lru";
+            };
           };
         };
-        servers."${cfg.project}-queue" = {
-          bind = null; # only use unix socket
-          enable = true;
-          user = cfg.project;
-        };
+      # setup dragonfly db service (redis alternative)
+      dragonflydb = mkIf (cfg.useDragonfly) {
+        enable = true;
+        unixSocket = cfg.cacheSocket;
+        user = cfg.project;
       };
 
       # setup mysql service + project user, site databases & site users

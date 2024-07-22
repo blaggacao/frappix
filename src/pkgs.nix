@@ -9,6 +9,7 @@ let
       cell.overlays.tools
       cell.overlays.python
       cell.overlays.frappe
+      cell.overlays.packages
     ];
   };
 in

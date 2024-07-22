@@ -30,6 +30,7 @@ let
       frappix.toolsOverlay
       frappix.pythonOverlay
       frappix.frappeOverlay
+      frappix.packagesOverlay
       inject
     ];
   };

@@ -37,6 +37,7 @@
       toolsOverlay = std.harvest self ["src" "overlays" "tools"];
       pythonOverlay = std.harvest self ["src" "overlays" "python"];
       frappeOverlay = std.harvest self ["src" "overlays" "frappe"];
+      packagesOverlay = std.harvest self ["src" "overlays" "packages"];
       nixosModules = std.harvest self ["src" "nixos"];
       frapper = import ./std/frapper.nix {inherit inputs;};
       nvchecker = import ./std/nvchecker.nix {inherit inputs;};

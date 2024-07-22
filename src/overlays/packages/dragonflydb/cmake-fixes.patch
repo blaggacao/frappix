@@ -1,0 +1,274 @@
+diff --git a/helio/cmake/third_party.cmake b/helio/cmake/third_party.cmake
+index 35ae9c5..8a23677 100644
+--- a/helio/cmake/third_party.cmake
++++ b/helio/cmake/third_party.cmake
+@@ -165,7 +165,7 @@ endfunction()
+ 
+ FetchContent_Declare(
+   gtest
+-  URL https://github.com/google/googletest/archive/v1.14.0.tar.gz
++  DOWNLOAD_COMMAND true
+ )
+ 
+ FetchContent_GetProperties(gtest)
+@@ -176,7 +176,7 @@ endif ()
+ 
+ FetchContent_Declare(
+   benchmark
+-  URL https://github.com/google/benchmark/archive/v1.8.4.tar.gz
++  DOWNLOAD_COMMAND true
+ )
+ 
+ FetchContent_GetProperties(benchmark)
+@@ -192,37 +192,14 @@ if (NOT benchmark_POPULATED)
+     add_subdirectory(${benchmark_SOURCE_DIR} ${benchmark_BINARY_DIR})
+ endif ()
+ 
+-
+-FetchContent_Declare(
+-  abseil_cpp
+-  URL https://github.com/abseil/abseil-cpp/archive/20240116.2.tar.gz
+-  PATCH_COMMAND patch -p1 < "${CMAKE_CURRENT_LIST_DIR}/../patches/abseil-20240116.2.patch"
+-)
+-
+-FetchContent_GetProperties(abseil_cpp)
+-if(NOT abseil_cpp_POPULATED)
+-  FetchContent_Populate(abseil_cpp)
+-  set(BUILD_TESTING OFF CACHE INTERNAL "")
+-  set(ABSL_PROPAGATE_CXX_STD ON CACHE INTERNAL "")
+-
+-  # If we want to override a variable in a subproject, we can temporary change the var
+-  # and then restore it if we use it ourselves.
+-  set(CMAKE_CXX_FLAGS_RELEASE_OLD ${CMAKE_CXX_FLAGS_RELEASE})
+-  set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
+-  add_subdirectory(${abseil_cpp_SOURCE_DIR} ${abseil_cpp_BINARY_DIR})
+-  set(CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE_OLD})
+-endif()
++find_package(absl REQUIRED)
+ 
+ if (LEGACY_GLOG)
+   set(FETCHCONTENT_UPDATES_DISCONNECTED_GLOG ON CACHE BOOL "")
+ 
+   FetchContent_Declare(
+     glog
+-    GIT_REPOSITORY https://github.com/romange/glog
+-    GIT_TAG Absl
+-
+-    GIT_PROGRESS    TRUE
+-    GIT_SHALLOW     TRUE
++    DOWNLOAD_COMMAND true
+   )
+ 
+   FetchContent_GetProperties(glog)
+@@ -276,7 +253,7 @@ endif()
+ 
+ add_third_party(
+   gperf
+-  URL https://github.com/gperftools/gperftools/archive/gperftools-2.15.tar.gz
++  DOWNLOAD_COMMAND true
+ 
+   # GIT_SHALLOW TRUE
+   # Remove building the unneeded programs (they fail on macos)
+@@ -307,9 +284,7 @@ set(MIMALLOC_INCLUDE_DIR ${THIRD_PARTY_LIB_DIR}/mimalloc/include)
+ set (MIMALLOC_PATCH_COMMAND patch -p1 -d ${THIRD_PARTY_DIR}/mimalloc/ -i ${CMAKE_CURRENT_LIST_DIR}/../patches/mimalloc-v2.1.6.patch)
+ 
+ add_third_party(mimalloc
+-   #GIT_REPOSITORY https://github.com/microsoft/mimalloc.git
+-   #GIT_TAG 0f6d8293c74796fa913e4b5eb4361f1e4734f7c6
+-   URL https://github.com/microsoft/mimalloc/archive/refs/tags/v2.1.6.tar.gz
++   DOWNLOAD_COMMAND true
+    PATCH_COMMAND "${MIMALLOC_PATCH_COMMAND}"
+    # -DCMAKE_BUILD_TYPE=Release
+    # Add -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_FLAGS=-O0 to debug
+@@ -323,7 +298,7 @@ add_third_party(mimalloc
+ )
+ 
+ add_third_party(jemalloc
+-  URL https://github.com/jemalloc/jemalloc/releases/download/5.2.1/jemalloc-5.2.1.tar.bz2
++  URL @jemallocUrl@
+   PATCH_COMMAND ./autogen.sh
+   CONFIGURE_COMMAND <SOURCE_DIR>/configure --prefix=${THIRD_PARTY_LIB_DIR}/jemalloc --with-jemalloc-prefix=je_ --disable-libdl
+ )
+@@ -331,7 +306,7 @@ add_third_party(jemalloc
+ 
+ add_third_party(
+   xxhash
+-  URL https://github.com/Cyan4973/xxHash/archive/v0.8.2.tar.gz
++  DOWNLOAD_COMMAND true
+ 
+   # A bug in xxhash 0.8.1 that searches for a file that doesn't exist
+   PATCH_COMMAND touch <SOURCE_DIR>/xxhsum.1
+@@ -342,7 +317,7 @@ add_third_party(
+ 
+ add_third_party(
+   uring
+-  URL https://github.com/axboe/liburing/archive/refs/tags/liburing-2.6.tar.gz
++  DOWLOAD_COMMAND true
+ 
+   CONFIGURE_COMMAND <SOURCE_DIR>/configure --prefix=${THIRD_PARTY_LIB_DIR}/uring
+   BUILD_COMMAND make -C src
+@@ -351,8 +326,7 @@ add_third_party(
+ 
+ add_third_party(
+   rapidjson
+-  GIT_REPOSITORY https://github.com/Tencent/rapidjson.git
+-  GIT_TAG 1a803826f1197b5e30703afe4b9c0e7dd48074f5
++  DOWNLOAD_COMMAND true
+   CMAKE_PASS_FLAGS "-DRAPIDJSON_BUILD_TESTS=OFF -DRAPIDJSON_BUILD_EXAMPLES=OFF \
+                     -DRAPIDJSON_BUILD_DOC=OFF"
+   LIB "none"
+@@ -360,7 +334,7 @@ add_third_party(
+ 
+ add_third_party(
+   pugixml
+-  URL https://github.com/zeux/pugixml/archive/refs/tags/v1.13.tar.gz
++  DOWNLOAD_COMMAND true
+ )
+ 
+ if (WITH_AWS)
+@@ -379,7 +353,7 @@ endif()
+ 
+ add_third_party(
+   cares
+-  URL https://codeload.github.com/c-ares/c-ares/tar.gz/refs/tags/v1.31.0
++  DOWNLOAD_COMMAND true
+   CMAKE_PASS_FLAGS "-DCARES_SHARED:BOOL=OFF -DCARES_STATIC:BOOL=ON -DCARES_STATIC_PIC:BOOL=ON \
+                     -DCMAKE_INSTALL_LIBDIR=lib"
+ )
+
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 3497c61b..3e18ebe1 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -7,8 +7,7 @@ endif()
+ 
+ add_third_party(
+   lua
+-  GIT_REPOSITORY https://github.com/dragonflydb/lua
+-  GIT_TAG Dragonfly-5.4.6a
++  URL @luaUrl@
+   CONFIGURE_COMMAND echo
+   BUILD_IN_SOURCE 1
+   BUILD_COMMAND ${DFLY_TOOLS_MAKE} all
+@@ -53,7 +52,8 @@ endif()
+ 
+ add_third_party(
+   dconv
+-  URL https://github.com/google/double-conversion/archive/refs/tags/v3.3.0.tar.gz
++  DOWNLOAD_COMMAND true
++  CMAKE_PASS_FLAGS "-DCMAKE_INSTALL_LIBDIR=${THIRD_PARTY_LIB_DIR}/dconv/lib"
+   PATCH_COMMAND ${SED_REPL} "/static const std::ctype/d"
+                 <SOURCE_DIR>/double-conversion/string-to-double.cc
+   COMMAND ${SED_REPL} "/std::use_facet</d" <SOURCE_DIR>/double-conversion/string-to-double.cc
+@@ -61,21 +61,11 @@ add_third_party(
+   LIB libdouble-conversion.a
+ )
+ 
+-add_third_party(
+-  reflex
+-  URL https://github.com/Genivia/RE-flex/archive/refs/tags/v3.5.1.tar.gz
+-  CONFIGURE_COMMAND <SOURCE_DIR>/configure --disable-avx --prefix=${THIRD_PARTY_LIB_DIR}/reflex
+-          CXX=${CMAKE_CXX_COMPILER} CC=${CMAKE_C_COMPILER}
+-)
+-
+-set(REFLEX "${THIRD_PARTY_LIB_DIR}/reflex/bin/reflex")
++find_program(REFLEX reflex REQUIRED)
+ 
+ add_third_party(
+   jsoncons
+-  GIT_REPOSITORY https://github.com/dragonflydb/jsoncons
+-  # URL https://github.com/danielaparker/jsoncons/archive/refs/tags/v0.171.1.tar.gz
+-  GIT_TAG Dragonfly
+-  GIT_SHALLOW 1
++  DOWNLOAD_COMMAND true
+   # PATCH_COMMAND patch -p1 -i "${CMAKE_SOURCE_DIR}/patches/jsoncons-v0.171.0.patch"
+   CMAKE_PASS_FLAGS "-DJSONCONS_BUILD_TESTS=OFF -DJSONCONS_HAS_POLYMORPHIC_ALLOCATOR=ON"
+   LIB "none"
+@@ -83,7 +73,7 @@ add_third_party(
+ 
+ add_third_party(
+   lz4
+-  URL https://github.com/lz4/lz4/archive/refs/tags/v1.9.4.tar.gz
++  DOWNLOAD_COMMAND true
+ 
+   BUILD_IN_SOURCE 1
+   CONFIGURE_COMMAND echo skip
+@@ -93,20 +83,20 @@ add_third_party(
+ 
+ add_third_party(
+   croncpp
+-  URL https://github.com/mariusbancila/croncpp/archive/refs/tags/v2023.03.30.tar.gz
++  DOWNLOAD_COMMAND true
+   LIB "none"
+ )
+ 
+ add_third_party(
+   uni-algo
+-  URL https://github.com/uni-algo/uni-algo/archive/refs/tags/v1.0.0.tar.gz
++  DOWNLOAD_COMMAND true
+ 
+   CMAKE_PASS_FLAGS "-DCMAKE_CXX_STANDARD:STRING=17"
+ )
+ 
+ add_third_party(
+   hnswlib
+-  URL https://github.com/nmslib/hnswlib/archive/refs/tags/v0.7.0.tar.gz
++  DOWNLOAD_COMMAND true
+ 
+   BUILD_COMMAND echo SKIP
+   INSTALL_COMMAND cp -R <SOURCE_DIR>/hnswlib ${THIRD_PARTY_LIB_DIR}/hnswlib/include/
+@@ -115,13 +105,13 @@ add_third_party(
+ 
+ add_third_party(
+   fast_float
+-  URL https://github.com/fastfloat/fast_float/archive/refs/tags/v5.2.0.tar.gz
++  DOWNLOAD_COMMAND true
+   LIB "none"
+ )
+ 
+ add_third_party(
+   flatbuffers
+-  URL https://github.com/google/flatbuffers/archive/refs/tags/v23.5.26.tar.gz
++  DOWNLOAD_COMMAND true
+   CMAKE_PASS_FLAGS "-DFLATBUFFERS_BUILD_TESTS=OFF -DFLATBUFFERS_LIBCXX_WITH_CLANG=OFF
+                     -DFLATBUFFERS_BUILD_FLATC=OFF"
+ )
+@@ -184,7 +174,7 @@ function(gen_flex name)
+ 
+            COMMAND ${REFLEX} -o ${gen_dir}/${name}.cc  --unicode --header-file=${gen_dir}/${name}.h
+                              --bison-complete  --bison-locations  ${_in}
+-           DEPENDS ${_in} reflex_project
++           DEPENDS ${_in}
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+            COMMENT "Generating lexer from ${name}.lex" VERBATIM)
+ 
+diff --git a/src/core/search/CMakeLists.txt b/src/core/search/CMakeLists.txt
+index 83a9af1a..04a734ad 100644
+--- a/src/core/search/CMakeLists.txt
++++ b/src/core/search/CMakeLists.txt
+@@ -7,7 +7,8 @@ add_library(query_parser base.cc ast_expr.cc query_driver.cc search.cc indices.c
+             sort_indices.cc vector_utils.cc compressed_sorted_set.cc block_list.cc
+             ${gen_dir}/parser.cc ${gen_dir}/lexer.cc)
+ 
+-target_link_libraries(query_parser base absl::strings TRDP::reflex TRDP::uni-algo TRDP::hnswlib)
++target_link_libraries(query_parser base absl::strings ${REFLEX_LIBRARY} TRDP::uni-algo TRDP::hnswlib)
++target_include_directories(query_parser PRIVATE ${REFLEX_INCLUDE})
+ 
+ cxx_test(compressed_sorted_set_test query_parser LABELS DFLY)
+ cxx_test(block_list_test query_parser LABELS DFLY)
+
+diff --git a/src/core/json/CMakeLists.txt b/src/core/json/CMakeLists.txt
+index 341c2c95..011cdb4d 100644
+--- a/src/core/json/CMakeLists.txt
++++ b/src/core/json/CMakeLists.txt
+@@ -6,7 +6,8 @@ cur_gen_dir(gen_dir)
+ add_library(jsonpath lexer_impl.cc driver.cc path.cc
+             ${gen_dir}/jsonpath_lexer.cc ${gen_dir}/jsonpath_grammar.cc json_object.cc
+             detail/jsoncons_dfs.cc detail/flat_dfs.cc)
+-target_link_libraries(jsonpath base absl::strings TRDP::reflex TRDP::jsoncons TRDP::flatbuffers)
++target_link_libraries(jsonpath base absl::strings ${REFLEX_LIBRARY} TRDP::jsoncons TRDP::flatbuffers)
++target_include_directories(query_parser PRIVATE ${REFLEX_INCLUDE})
+ 
+ cxx_test(jsonpath_test jsonpath LABELS DFLY)
+ cxx_test(json_test jsonpath TRDP::jsoncons LABELS DFLY)
+

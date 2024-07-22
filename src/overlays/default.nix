@@ -16,4 +16,9 @@
     __functor = _: (import ./tools inputs);
     meta.description = "Frappix tools overlays";
   };
+
+  packages = {
+    __functor = _: (import ./packages inputs);
+    meta.description = "Frappix extra packages";
+  };
 }
