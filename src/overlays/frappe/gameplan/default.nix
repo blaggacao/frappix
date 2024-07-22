@@ -24,9 +24,7 @@ buildPythonPackage rec {
         inherit (appSources.gameplan) src;
         name = "gameplan-prod";
         patches = [
-          ./gameplan-0001-build-socket-port-is-reverse-proxied.patch
-          # https://github.com/frappe/gameplan/pull/278
-          ./gameplan-0001-revert-re-enable-workspaces.patch
+          ./0000-build-socket-port-is-reverse-proxied.patch
         ];
       };
     });

@@ -9,7 +9,7 @@ github = "frappe/bench"
 
 [frappe]
 source = "github"
-branch = "develop" #-- 2024-02-17 - patch doesn't apply to latest release: https://github.com/frappe/frappe/pull/22548
+branch = "develop"       #-- 2024-02-17 - patch doesn't apply to latest release: https://github.com/frappe/frappe/pull/22548
 github = "frappe/frappe"
 
 [frappe.passthru]
@@ -24,7 +24,7 @@ Pull: +refs/tags/v15.*:refs/remotes/upstream/tags/v15.*
 
 [erpnext]
 source = "github"
-branch = "develop" #  -- 2024-02-17 - frappe patch doesn't apply and frappe 16 is not compatible with erpnext 15
+branch = "develop"        #  -- 2024-02-17 - frappe patch doesn't apply and frappe 16 is not compatible with erpnext 15
 github = "frappe/erpnext"
 
 [erpnext.passthru]
@@ -45,8 +45,9 @@ submodules = true
 
 [gameplan]
 source = "github"
-branch = "main" # no release yet
-github = "frappe/gameplan"
+branch = "patched"            # unmaintainde? / no release yet
+github = "blaggacao/gameplan"
+use_commit = true
 submodules = true
 
 [crm]
@@ -72,17 +73,17 @@ github = "frappe/ecommerce_integrations"
 
 [payments]
 source = "github"
-branch = "version-15" # no proper releases
+branch = "version-15"      # no proper releases
 github = "frappe/payments"
 
 [webshop]
 source = "github"
-branch = "version-15" # no proper releases
+branch = "version-15"     # no proper releases
 github = "frappe/webshop"
 
 [wiki]
 source = "github"
-branch = "master" # Latest release (Wiki v2.0.1) is for frappe 14
+branch = "master"      # Latest release (Wiki v2.0.1) is for frappe 14
 github = "frappe/wiki"
 
 [hrms]

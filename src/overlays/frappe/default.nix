@@ -13,7 +13,7 @@ in {
 
     builder = callPackage ./builder.nix {};
     ecommerce-integrations = callPackage ./ecommerce-integrations.nix {};
-    gameplan = callPackage ./gameplan.nix {};
+    gameplan = callPackage ./gameplan {};
     crm = callPackage ./crm.nix {};
     hrms = callPackage ./hrms.nix {};
     insights = callPackage ./insights.nix {};
