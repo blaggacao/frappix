@@ -272,3 +272,20 @@ index 341c2c95..011cdb4d 100644
  cxx_test(jsonpath_test jsonpath LABELS DFLY)
  cxx_test(json_test jsonpath TRDP::jsoncons LABELS DFLY)
 
+diff --git a/src/server/search/search_family.cc b/src/server/search/search_family.cc
+index 95331ce3..fe5bf00e 100644
+--- a/src/server/search/search_family.cc
++++ b/src/server/search/search_family.cc
+@@ -175,6 +175,11 @@ optional<search::Schema> ParseSchemaOrReply(DocIndex::DataType type, CmdArgParse
+     // Flags: check for SORTABLE and NOINDEX
+     uint8_t flags = 0;
+     while (parser.HasNext()) {
++      if (parser.Check("WEIGHT").IgnoreCase().ExpectTail(1)) {
++        parser.Skip(1);
++        continue;
++      }
++
+       if (parser.Check("NOINDEX").IgnoreCase()) {
+         flags |= search::SchemaField::NOINDEX;
+         continue;
+
