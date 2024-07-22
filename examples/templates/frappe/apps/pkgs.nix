@@ -27,6 +27,7 @@ let
     system = nixpkgs.system;
 
     overlays = [
+      frappix.libsOverlay
       frappix.toolsOverlay
       frappix.pythonOverlay
       frappix.frappeOverlay

@@ -277,6 +277,7 @@ in {
           settings = {
             maxmemory = "794mb";
             maxmemory-policy = "allkeys-lru";
+            loadmodule = ["${pkgs.redi-search}/lib/redisearch.so"];
           };
         };
         servers."${cfg.project}-queue" = {

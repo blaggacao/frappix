@@ -69,7 +69,7 @@ in {
     ];
   };
 
-  redis_queue = {
+  redis_queue = pkgs: {
     output = "$PRJ_CONFIG_HOME/redis_queue.conf";
     hook.mode = "copy";
     data = {
@@ -78,11 +78,12 @@ in {
       pidfile = "$PRJ_RUNTIME_DIR/redis_queue.pid";
       bind = "127.0.0.1";
       port = "11311";
+      loadmodule = "${pkgs.redi-search}/lib/redisearch.so";
     };
     engine = redisEngine;
   };
 
-  redis_cache = {
+  redis_cache = pkgs: {
     output = "$PRJ_CONFIG_HOME/redis_cache.conf";
     hook.mode = "copy";
     data = {
@@ -95,6 +96,7 @@ in {
       maxmemory = "794mb";
       maxmemory-policy = "allkeys-lru";
       appendonly = "no";
+      loadmodule = "${pkgs.redi-search}/lib/redisearch.so";
 
       save = "";
     };
