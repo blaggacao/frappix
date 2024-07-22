@@ -30,6 +30,7 @@ buildPythonPackage rec {
     pycryptodome
     razorpay
     stripe
+    gocardless-pro
   ];
 
   pythonRelaxDeps = [
@@ -38,6 +39,7 @@ buildPythonPackage rec {
     "stripe"
     "razorpay"
     "paytmchecksum"
+    "gocardless-pro"
   ];
 
   # would require frappe, but since frappe is almost certainly customized,

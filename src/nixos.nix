@@ -18,6 +18,19 @@
       ];
     };
   };
+  dragonflyUds = {
+    meta.description = "Dragonfly db module implementing unix domain socket";
+    __functor = _: {
+      pkgs,
+      lib,
+      ...
+    }: {
+      _file = ./nixos.nix;
+      imports = map (m: lib.modules.setDefaultModuleLocation m m) [
+        ./nixos/dragonflydb.nix
+      ];
+    };
+  };
   testrig = {
     meta.description = "The frappix nixos testrig mixin module";
     __functor = _: {
