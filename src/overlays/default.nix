@@ -16,4 +16,9 @@
     __functor = _: (import ./tools inputs);
     meta.description = "Frappix tools overlays";
   };
+
+  libs = {
+    __functor = _: (import ./libs inputs);
+    meta.description = "Frappix additional libs and native binaries";
+  };
 }

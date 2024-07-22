@@ -37,14 +37,14 @@
       toolsOverlay = std.harvest self ["src" "overlays" "tools"];
       pythonOverlay = std.harvest self ["src" "overlays" "python"];
       frappeOverlay = std.harvest self ["src" "overlays" "frappe"];
+      libsOverlay = std.harvest self ["src" "overlays" "libs"];
       nixosModules = std.harvest self ["src" "nixos"];
       frapper = import ./std/frapper.nix {inherit inputs;};
       nvchecker = import ./std/nvchecker.nix {inherit inputs;};
       templates = std.pick self ["examples" "templates"];
     };
 
-  # stick with master for a while until more dependencies are stabilized
-  inputs.nixpkgs.url = "github:nixos/nixpkgs/release-23.11";
+  inputs.nixpkgs.url = "github:nixos/nixpkgs/release-24.05";
 
   inputs = {
     std.url = "github:divnix/std/v0.33.0";

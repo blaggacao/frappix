@@ -66,8 +66,8 @@ in {
         nixago =
           [
             (dev.mkNixago cell.config.process-compose)
-            (dev.mkNixago cell.config.redis_queue)
-            (dev.mkNixago cell.config.redis_cache)
+            (dev.mkNixago (cell.config.redis_queue pkgs))
+            (dev.mkNixago (cell.config.redis_cache pkgs))
           ]
           ++ lib.optionals cfg.enableExtraProjectTools [
             (dev.mkNixago configs.cog)

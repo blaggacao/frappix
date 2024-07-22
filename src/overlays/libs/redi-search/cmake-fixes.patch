@@ -1,0 +1,89 @@
+diff --git a/cpu_features.cmake b/cpu_features.cmake1
+index 1760b47..720d118 100644
+--- a/deps/VectorSimilarity/cmake/cpu_features.cmake
++++ b/deps/VectorSimilarity/cmake/cpu_features.cmake
+@@ -3,7 +3,6 @@ option(BUILD_TESTING "" OFF)
+ option(CMAKE_POSITION_INDEPENDENT_CODE "" ON)
+ FetchContent_Declare(
+ 	cpu_features
+-	GIT_REPOSITORY  https://github.com/google/cpu_features.git
+-	GIT_TAG  438a66e41807cd73e0c403966041b358f5eafc68
++	SOURCE_DIR   @cpu_features@
+ )
+ FetchContent_MakeAvailable(cpu_features)
+
+diff --git a/deps/readies/cmake/cc b/deps/readies/cmake/cc
+index c931922..4301991 100644
+--- a/deps/readies/cmake/cc
++++ b/deps/readies/cmake/cc
+@@ -26,10 +26,6 @@ endif()
+ #----------------------------------------------------------------------------------------------
+ 
+ function(extract_debug_symbols TARGET)
+-    if (NOT DEBUG AND NOT APPLE)
+-        add_custom_command(TARGET ${TARGET} POST_BUILD
+-            COMMAND "$ENV{MK}/extract-obj-symbols" "$<TARGET_FILE:${TARGET}>")
+-    endif()
+ endfunction()
+ 
+ #----------------------------------------------------------------------------------------------
+
+diff --git a/deps/readies/shibumi/functions b/deps/readies/shibumi/functions
+index 683c526..5993158 100755
+--- a/deps/readies/shibumi/functions
++++ b/deps/readies/shibumi/functions
+@@ -137,14 +137,7 @@ is_command() {
+ 
+ get_profile_d() {
+ 	local d
+-	if [[ `uname -s` == Darwin ]]; then
+-		d="$HOME/.profile.d"
+-	else
+-		d="/etc/profile.d"
+-	fi
+-	if [[ ! -d $d ]]; then
+-		mkdir -p "$d"
+-	fi
++	d="$NIX_BUILD_TOP/.profile.d"
+ 	echo "$d"
+ }
+ 
+@@ -152,16 +145,9 @@ setup_profile_d() {
+ 	local d
+ 	local profile
+ 	local sudo
+-	if [[ `uname -s` == Darwin ]]; then
+-		d="$HOME/.profile.d"
+-		profile="$HOME/.bash_profile"
+-		[[ ! -f $profile ]] && touch $profile
+-		sudo=
+-	else
+-		d="/etc/profile.d"
+-		profile="/etc/profile"
+-		sudo="$SUDO"
+-	fi
++	d="$NIX_BUILD_TOP/.profile.d"
++	profile="$NIX_BUILD_TOP/.bash_profile"
++	sudo=
+ 	if [[ ! -d $d ]]; then
+ 		$sudo mkdir -p "$d"
+ 	fi
+@@ -189,16 +175,8 @@ add_to_profile_d() {
+ 	local files="$@"
+ 	local d
+ 	local sudo
+-	if [[ `uname -s` == Darwin ]]; then
+-		d="$HOME/.profile.d"
+-		sudo=
+-	else
+-		d="/etc/profile.d"
+-		sudo="$SUDO"
+-	fi
+-	if [[ ! -d $d ]]; then
+-		$sudo mkdir -p $d
+-	fi
++	d="$NIX_BUILD_TOP/.profile.d"
++	sudo=
+ 	local f
+ 	for f in $files; do
+ 		$sudo cp $f $d/
