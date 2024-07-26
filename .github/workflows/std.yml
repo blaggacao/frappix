@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: std-${{ github.workflow }}-${{ github.ref }}-${{ inputs.runs-on }}
+  cancel-in-progress: true
+
+inputs:
+  runs-on:
+    description: 'Runner to use'
+    default: 'ubuntu-latest'
+
+jobs:
+  discover:
+    outputs:
+      hits: ${{ steps.discovery.outputs.hits }}
+
+    runs-on: ${{ inputs.runs-on }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: nixbuild/nix-quick-install-action@v25
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - uses: divnix/std-action/discover@main
+        id: discovery
+
+  oci:
+    needs: [discover, tests]
+    if: fromJSON(needs.discover.outputs.hits).oci.build != '{}'
+    strategy:
+      matrix:
+        target: ${{ fromJSON(needs.discover.outputs.hits).cli.build }}
+    name: ${{ matrix.target.jobName }}
+    runs-on: ${{ inputs.runs-on }}
+    steps:
+      - uses: nixbuild/nix-quick-install-action@v25
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - uses: divnix/std-action/run@main
