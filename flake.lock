@@ -336,16 +336,14 @@
     "n2c": {
       "inputs": {
         "flake-utils": "flake-utils_3",
-        "nixpkgs": [
-          "nixpkgs"
-        ]
+        "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1712990762,
-        "narHash": "sha256-hO9W3w7NcnYeX8u8cleHiSpK2YJo7ecarFTUlbybl7k=",
+        "lastModified": 1720642556,
+        "narHash": "sha256-qsnqk13UmREKmRT7c8hEnz26X3GFFyIQrqx4EaRc1Is=",
         "owner": "nlewo",
         "repo": "nix2container",
-        "rev": "20aad300c925639d5d6cbe30013c8357ce9f2a2e",
+        "rev": "3853e5caf9ad24103b13aa6e0e8bcebb47649fe4",
         "type": "github"
       },
       "original": {
@@ -377,6 +375,21 @@
       }
     },
     "nixpkgs": {
+      "locked": {
+        "lastModified": 1712920918,
+        "narHash": "sha256-1yxFvUcJfUphK9V91KufIQom7gCsztza0H4Rz2VCWUU=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "92323443a56f4e9fc4e4b712e3119f66d0969297",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_2": {
       "locked": {
         "lastModified": 1721560568,
         "narHash": "sha256-L61BXz7n/yNzOeZ3FqlnUmxj4145JOVeq9fvQTQzbNM=",
@@ -459,7 +472,7 @@
         "microvm": "microvm",
         "n2c": "n2c",
         "nixago": "nixago",
-        "nixpkgs": "nixpkgs",
+        "nixpkgs": "nixpkgs_2",
         "std": "std"
       }
     },
@@ -517,16 +530,16 @@
         "yants": "yants"
       },
       "locked": {
-        "lastModified": 1721998912,
-        "narHash": "sha256-i2WicbOlzCBKpgFpdMQZ23mt52VZSemBnlAPhMI+W7o=",
+        "lastModified": 1722019908,
+        "narHash": "sha256-/8iFMwgFlM2SP/Z2C/zsfo2Rg65L4R4ehmaMXN7dalM=",
         "owner": "divnix",
         "repo": "std",
-        "rev": "b3b7b59f3a6c17120cc20410e55a253ebc37d68e",
+        "rev": "78a313e149e67a60fa6836bcbfc6c5870874e1a8",
         "type": "github"
       },
       "original": {
         "owner": "divnix",
-        "ref": "v0.33.2",
+        "ref": "v0.33.3",
         "repo": "std",
         "type": "github"
       }
