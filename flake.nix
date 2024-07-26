@@ -26,6 +26,11 @@
         (microvms "vms")
         (runnables "jobs" // {cli = false;}) # for downstream use
 
+        # containers
+        (anything "oci") # really: oci modules
+        (containers "oci-images")
+        (arion "arion-compose")
+
         # local
         (anything "config" // {cli = false;})
         (devshells "shells")
@@ -47,7 +52,8 @@
   inputs.nixpkgs.url = "github:nixos/nixpkgs/release-24.05";
 
   inputs = {
-    std.url = "github:divnix/std/v0.33.0";
+    std.url = "github:divnix/std/v0.33.2";
+    # std.url = "/home/blaggacao/src/github.com/divnix/std";
     devshell.url = "github:numtide/devshell";
     devshell.inputs.nixpkgs.follows = "nixpkgs";
     nixago.url = "github:nix-community/nixago";
@@ -55,11 +61,18 @@
     nixago.inputs.nixago-exts.follows = "";
     microvm.url = "github:astro/microvm.nix";
     microvm.inputs.nixpkgs.follows = "nixpkgs";
+    arion.url = "github:hercules-ci/arion";
+    arion.inputs.nixpkgs.follows = "nixpkgs";
+    # arion.inputs.hercules-ci-effects.follows = "";
+    n2c.url = "github:nlewo/nix2container";
+    n2c.inputs.nixpkgs.follows = "nixpkgs";
     std.inputs = {
+      n2c.follows = "n2c";
       nixpkgs.follows = "nixpkgs";
       devshell.follows = "devshell";
       nixago.follows = "nixago";
       microvm.follows = "microvm";
+      arion.follows = "arion";
     };
   };
 }
