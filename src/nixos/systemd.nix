@@ -33,6 +33,7 @@ with builtins; let
 
     PrivateTmp = true; # gunicorn requires /tmp
 
+    # on change: also update oci
     BindReadOnlyPaths = [
       # static shared data
       "${apps}:${cfg.benchDirectory}/sites/apps.txt"

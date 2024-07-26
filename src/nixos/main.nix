@@ -2,7 +2,6 @@
   lib,
   pkgs,
   config,
-  frappix,
   ...
 }:
 with lib; let

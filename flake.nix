@@ -52,7 +52,7 @@
   inputs.nixpkgs.url = "github:nixos/nixpkgs/release-24.05";
 
   inputs = {
-    std.url = "github:divnix/std/v0.33.2";
+    std.url = "github:divnix/std/v0.33.3";
     # std.url = "/home/blaggacao/src/github.com/divnix/std";
     devshell.url = "github:numtide/devshell";
     devshell.inputs.nixpkgs.follows = "nixpkgs";
@@ -65,7 +65,7 @@
     arion.inputs.nixpkgs.follows = "nixpkgs";
     # arion.inputs.hercules-ci-effects.follows = "";
     n2c.url = "github:nlewo/nix2container";
-    n2c.inputs.nixpkgs.follows = "nixpkgs";
+    # n2c.inputs.nixpkgs.follows = "nixpkgs";
     std.inputs = {
       n2c.follows = "n2c";
       nixpkgs.follows = "nixpkgs";
