@@ -3,6 +3,8 @@ pyFinal: pyPrev: {
   barcodenumber = pyFinal.callPackage ./barcodenumber.nix {};
   email-reply-parser = pyFinal.callPackage ./email-reply-parser.nix {};
   traceback-with-variables = pyFinal.callPackage ./traceback-with-variables {};
+  uuid-utils = pyFinal.callPackage ./uuid-utils.nix {};
+  sql_metadata = pyFinal.callPackage ./sql_metadata.nix {};
 
   # erpnext dependencies
   plaid-python = pyFinal.callPackage ./plaid-python.nix {}; # old version

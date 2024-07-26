@@ -119,6 +119,10 @@ buildPythonPackage rec {
       gitpython
       sentry-sdk
       setproctitle
+      tomli
+      uuid-utils
+      vobject
+      sql_metadata
     ]
     ++ passthru.packages;
 
@@ -187,6 +191,18 @@ buildPythonPackage rec {
     "google-auth"
     # - posthog~=3.0.1 not satisfied by version 3.5.0
     "posthog"
+    # - pydyf==0.10.0 not satisfied by version 0.9.0
+    "pydyf"
+    # - cssutils~=2.9.0 not satisfied by version 2.10.2
+    "cssutils"
+    # - gunicorn~=22.0.0 not satisfied by version 21.2.0
+    "gunicorn"
+    # - requests~=2.32.0 not satisfied by version 2.31.0
+    "requests"
+    # - sql_metadata~=2.11.0 not satisfied by version 2.12.0
+    "sql_metadata"
+    # - uuid-utils~=0.6.1 not satisfied by version 0.9.0
+    "uuid-utils"
   ];
 
   pythonRemoveDeps = [

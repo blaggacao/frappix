@@ -20,12 +20,14 @@
       "version": "20240205.173955"
     },
     "erpnext": {
-      "version": "20240301.165654"
+      "version": "20240726.105447",
+      "revision": "096ec2db6ad8bf326db3b6774592f18491c64337",
+      "url": "https://github.com/frappe/erpnext/commit/096ec2db6ad8bf326db3b6774592f18491c64337"
     },
     "frappe": {
-      "version": "20240614.160018",
-      "revision": "1a8248a6e6b542456926459f32548c5c6819875d",
-      "url": "https://github.com/frappe/frappe/commit/1a8248a6e6b542456926459f32548c5c6819875d"
+      "version": "20240725.135904",
+      "revision": "9978d61a32a30440ed4e92d0956fcb4e041983cb",
+      "url": "https://github.com/frappe/frappe/commit/9978d61a32a30440ed4e92d0956fcb4e041983cb"
     },
     "gameplan": {
       "version": "20240723.002701",

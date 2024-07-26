@@ -45,7 +45,7 @@ submodules = true
 
 [gameplan]
 source = "github"
-branch = "patched"            # unmaintainde? / no release yet
+branch = "patched"            # unmaintained? / no release yet
 github = "blaggacao/gameplan"
 use_commit = true
 submodules = true
