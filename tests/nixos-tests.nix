@@ -1,39 +1,46 @@
 let
   inherit (inputs) nixpkgs;
-  inherit (cell) pkgs nixos;
+  inherit (inputs.cells.src) pkgs nixos;
+  inherit (inputs.nixpkgs) lib;
+
   site = "testproject.local";
   project = "TestProject";
   nixos-lib = import (nixpkgs + /nixos/lib) {inherit (nixpkgs) system;};
+
+  defaults = {
+    nixpkgs = {inherit pkgs;};
+    virtualisation = {
+      # we don't do any nix build inside the test vm
+      writableStore = false;
+      cores = 2;
+      # diskSize = 8000; # MB
+      memorySize = 4096; # MB
+      forwardPorts = [
+        {
+          guest.port = 80;
+          host.port = 8080;
+        }
+        {
+          guest.port = 443;
+          host.port = 4433;
+        }
+      ];
+    };
+  };
 in {
-  tests =
+  nixos-tests =
     (nixos-lib.runTest {
-      name = "frappe-test";
+      name = "frappe-test-nixos";
       _file = ./tests.nix;
       skipLint = true;
-      defaults = {
-        nixpkgs = {inherit pkgs;};
-        imports = [
-          nixos.testrig
-          nixos.frappix
-        ];
-        virtualisation = {
-          # we don't do any nix build inside the test vm
-          writableStore = false;
-          cores = 2;
-          # diskSize = 8000; # MB
-          memorySize = 4096; # MB
-          forwardPorts = [
-            {
-              guest.port = 80;
-              host.port = 8080;
-            }
-            {
-              guest.port = 443;
-              host.port = 4433;
-            }
+      defaults =
+        defaults
+        // {
+          imports = [
+            nixos.testrig
+            nixos.frappix
           ];
         };
-      };
       hostPkgs = nixpkgs;
       nodes = {
         runnerA = {};
@@ -53,7 +60,10 @@ in {
           start_all()
           total_builds = len(machines)
 
-          runnerA.wait_for_unit("${project}.target")
+          with subtest("Wait for machines to reach target"):
+              for idx, m in enumerate(machines):
+                  print("Check ", m)
+                  m.wait_for_unit("${project}.target")
 
           with subtest("Wait for site to become reachable"):
               for idx, m in enumerate(machines):
@@ -72,6 +82,6 @@ in {
         '';
     })
     // {
-      meta.description = "The test frappix vm-based test suite";
+      meta.description = "The frappix vm-based test suite using nixos modules";
     };
 }

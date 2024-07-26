@@ -7,7 +7,7 @@ std //src/tests/tests:run
 # Spin up Test VM (long running & preserving state)
 
 ```console
-std //src/tests/tests:run-vm+
+std //tests/nixos-tests/nixos-tests:run-vm+
 >>> start_all()
 ```
 
