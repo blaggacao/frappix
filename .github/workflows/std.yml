@@ -28,12 +28,12 @@ jobs:
       - uses: divnix/std-action/discover@main
         id: discovery
 
-  oci:
-    needs: [discover, tests]
-    if: fromJSON(needs.discover.outputs.hits).oci.build != '{}'
+  oci-images:
+    needs: [discover]
+    if: fromJSON(needs.discover.outputs.hits).oci-images.build != '{}'
     strategy:
       matrix:
-        target: ${{ fromJSON(needs.discover.outputs.hits).cli.build }}
+        target: ${{ fromJSON(needs.discover.outputs.hits).oci-images.build }}
     name: ${{ matrix.target.jobName }}
     runs-on: ubuntu-latest
     steps:
