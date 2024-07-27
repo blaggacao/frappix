@@ -28,7 +28,7 @@
 
         # containers
         (anything "oci") # really: oci modules
-        (containers "oci-images")
+        (containers "oci-images" {ci.build = true;})
         (arion "arion-compose")
 
         # local
