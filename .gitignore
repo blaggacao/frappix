@@ -19,3 +19,4 @@ docs/build/**
 
 # template development
 /workbench
+.aider*
