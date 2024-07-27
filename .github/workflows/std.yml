@@ -12,20 +12,15 @@ permissions:
   id-token: write
 
 concurrency:
-  group: std-${{ github.workflow }}-${{ github.ref }}-${{ inputs.runs-on }}
+  group: std-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
-
-inputs:
-  runs-on:
-    description: 'Runner to use'
-    default: 'ubuntu-latest'
 
 jobs:
   discover:
     outputs:
       hits: ${{ steps.discovery.outputs.hits }}
 
-    runs-on: ${{ inputs.runs-on }}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: nixbuild/nix-quick-install-action@v25
@@ -40,7 +35,7 @@ jobs:
       matrix:
         target: ${{ fromJSON(needs.discover.outputs.hits).cli.build }}
     name: ${{ matrix.target.jobName }}
-    runs-on: ${{ inputs.runs-on }}
+    runs-on: ubuntu-latest
     steps:
       - uses: nixbuild/nix-quick-install-action@v25
       - uses: DeterminateSystems/magic-nix-cache-action@main
