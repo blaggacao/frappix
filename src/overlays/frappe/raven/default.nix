@@ -7,8 +7,6 @@
   python,
   extractFrappeMeta,
   mkAssets,
-  applyPatches,
-  fetchpatch,
 }:
 buildPythonPackage rec {
   inherit
@@ -18,23 +16,7 @@ buildPythonPackage rec {
     format
     ;
 
-  src = mkAssets (appSources.raven
-    // {
-      src = applyPatches {
-        inherit (appSources.raven) src;
-        name = "raven-prod";
-        patches = [
-          (fetchpatch {
-            url = "https://patch-diff.githubusercontent.com/raw/The-Commit-Company/Raven/pull/989.patch";
-            hash = "sha256-nst92Mr8wQQG4WdRPoGYLLFTJ/cRHarkGHNuYB3O8xE=";
-          })
-          (fetchpatch {
-            url = "https://patch-diff.githubusercontent.com/raw/The-Commit-Company/Raven/pull/990.patch";
-            hash = "sha256-DLambvibZQoKcuQuP3wlI0sNfrMa0zojhmiXuhBAkiE=";
-          })
-        ];
-      };
-    });
+  src = mkAssets appSources.raven;
   inherit (appSources.raven) passthru;
 
   nativeBuildInputs = [
