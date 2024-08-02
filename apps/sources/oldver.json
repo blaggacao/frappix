@@ -16,6 +16,12 @@
       "revision": "064106e76cab8917ba7f3b41fba88fa53444ba68",
       "url": "https://github.com/frappe/crm/releases/tag/v1.17.0"
     },
+    "drive": {
+      "version": "v0.0.4",
+      "gitref": "refs/tags/v0.0.4",
+      "revision": "777a9cc76b1c5a54597c68b42f74eeb1abab798a",
+      "url": "https://github.com/frappe/drive/releases/tag/v0.0.4"
+    },
     "ecommerce-integrations": {
       "version": "20240205.173955"
     },

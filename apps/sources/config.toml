@@ -104,3 +104,8 @@ URL: https://github.com/The-Commit-Company/Raven
 Pull: +refs/heads/develop:refs/remotes/upstream/develop
 Pull: +refs/heads/main:refs/remotes/upstream/main
 """
+
+[drive]
+source = "github"
+use_max_tag = true
+github = "frappe/drive"

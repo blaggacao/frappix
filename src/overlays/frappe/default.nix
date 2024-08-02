@@ -22,5 +22,6 @@ in {
     webshop = callPackage ./webshop.nix {};
     wiki = callPackage ./wiki.nix {};
     raven = callPackage ./raven {};
+    drive = callPackage ./drive {};
   });
 }
