@@ -20,6 +20,9 @@ pyFinal: pyPrev: {
   shopify-python-api = pyFinal.callPackage ./shopify-python-api.nix {};
   pyactiveresource = pyFinal.callPackage ./pyactiveresource.nix {};
 
+  # raven dependencies
+  linkpreview = pyFinal.callPackage ./linkpreview.nix {};
+
   # fjsd dependency
   json-source-map = pyFinal.callPackage ./json-source-map.nix {};
 }

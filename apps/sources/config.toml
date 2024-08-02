@@ -91,3 +91,16 @@ source = "github"
 use_max_tag = true
 github = "frappe/hrms"
 submodules = true
+
+[raven]
+source = "github"
+use_max_tag = true
+github = "The-Commit-Company/Raven"
+
+[raven.passthru]
+since = "v1.0.0"
+upstream = """
+URL: https://github.com/The-Commit-Company/Raven
+Pull: +refs/heads/develop:refs/remotes/upstream/develop
+Pull: +refs/heads/main:refs/remotes/upstream/main
+"""
