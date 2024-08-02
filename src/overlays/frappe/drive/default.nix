@@ -7,8 +7,6 @@
   python,
   extractFrappeMeta,
   mkAssets,
-  applyPatches,
-  fetchpatch,
 }:
 buildPythonPackage rec {
   inherit
@@ -18,23 +16,7 @@ buildPythonPackage rec {
     format
     ;
 
-  src = mkAssets (appSources.drive
-    // {
-      src = applyPatches {
-        inherit (appSources.drive) src;
-        name = "drive"; # this is a constant consumed by frontend/package.json's copy-html-entry
-        patches = [
-          (fetchpatch {
-            url = "https://patch-diff.githubusercontent.com/raw/frappe/drive/pull/231.patch";
-            hash = "sha256-hgiVnxqUOFE796hnv6dinPbaUKkB9MgRhj4IqMV6vhI=";
-          })
-          (fetchpatch {
-            url = "https://patch-diff.githubusercontent.com/raw/frappe/drive/pull/232.patch";
-            hash = "sha256-WQQNey0Nos3q7pjy0cr2abpo00gDQ9baPGnVXT9h5qU=";
-          })
-        ];
-      };
-    });
+  src = mkAssets appSources.drive;
   inherit (appSources.drive) passthru;
 
   nativeBuildInputs = [
