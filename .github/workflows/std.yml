@@ -29,14 +29,28 @@ jobs:
         id: discovery
 
   oci-images:
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: ${{ github.repository }}
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
     needs: [discover]
-    if: fromJSON(needs.discover.outputs.hits).oci-images.build != '{}'
+    if: fromJSON(needs.discover.outputs.hits).oci-images.publish != '{}'
     strategy:
       matrix:
-        target: ${{ fromJSON(needs.discover.outputs.hits).oci-images.build }}
+        target: ${{ fromJSON(needs.discover.outputs.hits).oci-images.publish }}
     name: ${{ matrix.target.jobName }}
     runs-on: ubuntu-latest
     steps:
       - uses: nixbuild/nix-quick-install-action@v25
       - uses: DeterminateSystems/magic-nix-cache-action@main
+      - name: Log in to the Container registry
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - uses: divnix/std-action/run@main
