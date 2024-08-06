@@ -283,11 +283,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1669263024,
-        "narHash": "sha256-E/+23NKtxAqYG/0ydYgxlgarKnxmDbg6rCMWnOBqn9Q=",
+        "lastModified": 1693483555,
+        "narHash": "sha256-Beq4WhSeH3jRTZgC1XopTSU10yLpK1nmMcnGoXO0XYo=",
         "owner": "divnix",
         "repo": "incl",
-        "rev": "ce7bebaee048e4cd7ebdb4cee7885e00c4e2abca",
+        "rev": "526751ad3d1e23b07944b14e3f6b7a5948d3007b",
         "type": "github"
       },
       "original": {
@@ -298,11 +298,11 @@
     },
     "lib": {
       "locked": {
-        "lastModified": 1694306727,
-        "narHash": "sha256-26fkTOJOI65NOTNKFvtcJF9mzzf/kK9swHzfYt1Dl6Q=",
+        "lastModified": 1722128034,
+        "narHash": "sha256-L8rwzYPsLo/TYtydPJoQyYOfetuiyQYnTWYcyB8UE/s=",
         "owner": "nix-community",
         "repo": "nixpkgs.lib",
-        "rev": "c30b6a84c0b84ec7aecbe74466033facc9ed103f",
+        "rev": "d15f6f6021693898fcd2c6a9bb13707383da9bbc",
         "type": "github"
       },
       "original": {
@@ -530,16 +530,16 @@
         "yants": "yants"
       },
       "locked": {
-        "lastModified": 1722019908,
-        "narHash": "sha256-/8iFMwgFlM2SP/Z2C/zsfo2Rg65L4R4ehmaMXN7dalM=",
+        "lastModified": 1722940208,
+        "narHash": "sha256-X1h0xwH8WeT3dPIxHkMBTWBdwjPbzeEjicUW3i0ZBdc=",
         "owner": "divnix",
         "repo": "std",
-        "rev": "78a313e149e67a60fa6836bcbfc6c5870874e1a8",
+        "rev": "646670e19ad5e9dfd60644f412ffbd5ebfd0118a",
         "type": "github"
       },
       "original": {
         "owner": "divnix",
-        "ref": "v0.33.3",
+        "ref": "feat/add-oci-digest-for-prov-attestaion",
         "repo": "std",
         "type": "github"
       }
