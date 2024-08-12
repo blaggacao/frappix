@@ -31,6 +31,9 @@
         (containers "oci-images" {ci.publish = true;})
         (arion "arion-compose")
 
+        # deployment manifests
+        (kubectl "k8s")
+
         # local
         (anything "config" // {cli = false;})
         (devshells "shells")
