@@ -20,7 +20,7 @@ in {
     payments = callPackage ./payments.nix {};
     print-designer = callPackage ./print-designer.nix {};
     webshop = callPackage ./webshop.nix {};
-    wiki = callPackage ./wiki.nix {};
+    wiki = callPackage ./wiki {};
     raven = callPackage ./raven {};
     drive = callPackage ./drive {};
   });
