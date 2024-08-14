@@ -6,8 +6,6 @@
   flit-core,
   extractFrappeMeta,
   mkAssets,
-  applyPatches,
-  fetchpatch,
 }:
 buildPythonPackage rec {
   inherit
@@ -18,19 +16,7 @@ buildPythonPackage rec {
   pname = "wiki";
   version = "3.x-dev";
 
-  src = mkAssets (appSources.wiki
-    // {
-      src = applyPatches {
-        inherit (appSources.wiki) src;
-        name = "wiki";
-        patches = [
-          (fetchpatch {
-            url = "https://patch-diff.githubusercontent.com/raw/frappe/wiki/pull/261.patch";
-            hash = "sha256-xVXpvrvEjzSnqcRzDldMII2W7yQBxaj86T3ptK6lFnc=";
-          })
-        ];
-      };
-    });
+  src = mkAssets appSources.wiki;
   inherit (appSources.wiki) passthru;
 
   nativeBuildInputs = [
