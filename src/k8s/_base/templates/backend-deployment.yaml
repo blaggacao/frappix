@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: backend
+    network: mainnet
+    release: live-mainnet-cardanojs
+  name: live-mainnet-cardanojs-backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend
+      network: mainnet
+      release: live-mainnet-cardanojs
+  template:
+    metadata:
+      labels:
+        app: backend
+        network: mainnet
+        release: live-mainnet-cardanojs
+    spec:
+      containers:
+        - env:
+            - name: DISABLE_STAKE_POOL_METRIC_APY
+              value: "true"
+            - name: LOGGER_MIN_SEVERITY
+              value: debug
+            - name: NETWORK
+              value: mainnet
+            - name: OGMIOS_SRV_SERVICE_NAME
+              value: live-mainnet-cardano-stack.live-mainnet.svc.cluster.local
+            - name: PAGINATION_PAGE_SIZE_LIMIT
+              value: "5500"
+            - name: POSTGRES_DB
+              value: cardano
+            - name: POSTGRES_HOST
+              value: live-mainnet-dbsync-db
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: cardano-owner-user.live-mainnet-dbsync-db.credentials.postgresql.acid.zalan.do
+            - name: POSTGRES_POOL_MAX
+              value: "50"
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_SSL
+              value: "true"
+            - name: POSTGRES_SSL_CA_FILE
+              value: /tls/ca.crt
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: cardano-owner-user.live-mainnet-dbsync-db.credentials.postgresql.acid.zalan.do
+            - name: USE_BLOCKFROST
+              value: "true"
+          image: 926093910549.dkr.ecr.us-east-1.amazonaws.com/cardano-services-server:0x9klz4ggn178asw7v0wc2dxvy3gmw5f
+          name: backend
+          ports:
+            - containerPort: 3000
+              name: http
+          resources:
+            limits:
+              memory: 4Gi
+          volumeMounts:
+            - mountPath: /tls
+              name: tls
+      imagePullSecrets:
+        - name: dockerconfigjson
+      volumes:
+        - csi:
+            driver: csi.cert-manager.io
+            readOnly: true
+            volumeAttributes:
+              csi.cert-manager.io/issuer-kind: ClusterIssuer
+              csi.cert-manager.io/issuer-name: root-ca
+              csi.cert-manager.io/key-usages: client auth
+          name: tls

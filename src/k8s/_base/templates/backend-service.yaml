@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: backend
+    network: mainnet
+    release: live-mainnet-cardanojs
+  name: live-mainnet-cardanojs-backend
+spec:
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 3000
+  selector:
+    app: backend
+    network: mainnet
+    release: live-mainnet-cardanojs

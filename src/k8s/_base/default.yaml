@@ -1,0 +1,5 @@
+chart: /nix/store/59fshgxkj638gya398sbws3hj7ddv9cz-source/helm/cardanojs
+context: arn:aws:eks:eu-central-1:926093910549:cluster/lace-prod-eu-central-1
+kubeconfig: $PRJ_ROOT/tf/kubeconfig-lace-prod-eu-central-1
+name: live-mainnet-cardanojs
+namespace: live-mainnet

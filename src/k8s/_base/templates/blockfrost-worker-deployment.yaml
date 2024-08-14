@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: blockfrost-worker
+    network: mainnet
+    release: live-mainnet-cardanojs
+  name: live-mainnet-cardanojs-blockfrost-worker
+spec:
+  selector:
+    matchLabels:
+      app: blockfrost-worker
+      network: mainnet
+      release: live-mainnet-cardanojs
+  template:
+    metadata:
+      labels:
+        app: blockfrost-worker
+        network: mainnet
+        release: live-mainnet-cardanojs
+    spec:
+      containers:
+        - env:
+            - name: BLOCKFROST_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: api-key
+                  name: blockfrost
+            - name: LOGGER_MIN_SEVERITY
+              value: debug
+            - name: NETWORK
+              value: mainnet
+            - name: POSTGRES_DB
+              value: cardano
+            - name: POSTGRES_HOST
+              value: live-mainnet-dbsync-db
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: cardano-owner-user.live-mainnet-dbsync-db.credentials.postgresql.acid.zalan.do
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_SSL
+              value: "true"
+            - name: POSTGRES_SSL_CA_FILE
+              value: /tls/ca.crt
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: cardano-owner-user.live-mainnet-dbsync-db.credentials.postgresql.acid.zalan.do
+          image: 926093910549.dkr.ecr.us-east-1.amazonaws.com/cardano-services-blockfrost-worker:cflzfpp1cp4k8bj1x2kddhpbk7w1h2n0
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            timeoutSeconds: 5
+          name: blockfrost-worker
+          ports:
+            - containerPort: 3000
+              name: http
+          resources:
+            limits:
+              memory: 1Gi
+          volumeMounts:
+            - mountPath: /tls
+              name: tls
+      imagePullSecrets:
+        - name: dockerconfigjson
+      volumes:
+        - csi:
+            driver: csi.cert-manager.io
+            readOnly: true
+            volumeAttributes:
+              csi.cert-manager.io/issuer-kind: ClusterIssuer
+              csi.cert-manager.io/issuer-name: root-ca
+              csi.cert-manager.io/key-usages: client auth
+          name: tls

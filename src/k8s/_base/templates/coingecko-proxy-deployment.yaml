@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: proxy
+    network: mainnet
+    release: live-mainnet-proxy
+  name: live-mainnet-coingecko-proxy
+spec:
+  selector:
+    matchLabels:
+      app: proxy
+      network: mainnet
+      release: live-mainnet-proxy
+  template:
+    metadata:
+      labels:
+        app: proxy
+        network: mainnet
+        release: live-mainnet-proxy
+    spec:
+      containers:
+        image: 926093910549.dkr.ecr.us-east-1.amazonaws.com/coingecko-proxy:some-hash
+        name: backend
+        ports:
+          - containerPort: 8080
+            name: http
+        resources:
+          limits:
+            memory: 100Mi
+            cpu: 100m
+          requests:
+            memory: 100Mi
+            cpu: 100m
+      imagePullSecrets:
+        - name: dockerconfigjson
