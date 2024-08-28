@@ -117,6 +117,18 @@ in {
         max_line_length = "off";
         trim_trailing_whitespace = false;
       };
+      # python, js indentation settings
+      "{*.py,*.js,*.vue,*.css,*.scss,*.html}" = {
+        indent_style = "tab";
+        indent_size = 4;
+        max_line_length = 110;
+      };
+      # JSON files - mostly doctype schema files
+      "{*.json}" = {
+        insert_final_newline = "false";
+        indent_style = "space";
+        indent_size = 1;
+      };
     };
   };
   mdbook = {
