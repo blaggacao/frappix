@@ -122,6 +122,9 @@ in {
           (setEnv "FRAPPE_BENCH_ROOT" "$PRJ_ROOT")
           (setEnv "FRAPPE_SITES_ROOT" "$PRJ_DATA_HOME/sites")
           (setEnv "FRAPPE_APPS_ROOT" "$PRJ_ROOT/apps")
+          (setEnv "FRAPPE_BENCH_PATH" "$PRJ_ROOT")
+          (setEnv "FRAPPE_SITES_PATH" "$PRJ_DATA_HOME/sites")
+          (setEnv "FRAPPE_APPS_PATH" "$PRJ_ROOT/apps")
           {
             name = "FRAPPE_DISABLED_COMMANDS";
             value = toJSON [

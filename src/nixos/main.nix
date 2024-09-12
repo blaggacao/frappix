@@ -256,6 +256,8 @@ in {
         FRAPPE_DB_SOCKET = cfg.mariadbSocket;
         FRAPPE_SITES_ROOT = "${cfg.benchDirectory}/sites";
         FRAPPE_BENCH_ROOT = "${cfg.benchDirectory}";
+        FRAPPE_SITES_PATH = "${cfg.benchDirectory}/sites";
+        FRAPPE_BENCH_PATH = "${cfg.benchDirectory}";
         NODE_PATH = concatMapStringsSep ":" (app: "${cfg.combinedAssets}/share/apps/" + app.pname + "/node_modules") cfg.apps;
         PYTHON_PATH = "${cfg.penv}/${cfg.package.pythonModule.sitePackages}";
         # rembg dep of gameplan needs writable path to download onnx ML model

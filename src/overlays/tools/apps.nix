@@ -4,7 +4,7 @@
 }:
 lib.lazyDerivation {
   derivation = writers.writeBashBin "apps" ''
-    longest_appname="$(ls "$FRAPPE_APPS_ROOT" | awk '{ print length }' | sort -nk1 | tail -n1)"
+    longest_appname="$(ls "$FRAPPE_APPS_PATH" | awk '{ print length }' | sort -nk1 | tail -n1)"
     bold=$(tput bold)
     blue=$(tput setaf 4)
     green=$(tput setaf 185)
@@ -34,13 +34,13 @@ lib.lazyDerivation {
       esac
     done
 
-    for app in $(ls "$FRAPPE_APPS_ROOT"); do
-      if [[ ! -e "$FRAPPE_APPS_ROOT/$app/.git" ]]; then
+    for app in $(ls "$FRAPPE_APPS_PATH"); do
+      if [[ ! -e "$FRAPPE_APPS_PATH/$app/.git" ]]; then
         continue
       fi
       GIT_ARGS=(
-        "--git-dir" "$FRAPPE_APPS_ROOT/$app/.git"
-        "--work-tree" "$FRAPPE_APPS_ROOT/$app"
+        "--git-dir" "$FRAPPE_APPS_PATH/$app/.git"
+        "--work-tree" "$FRAPPE_APPS_PATH/$app"
       )
 
       current_branch="$(git ''${GIT_ARGS[@]} branch --show-current)"
