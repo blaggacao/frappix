@@ -85,6 +85,8 @@ in {
       FRAPPE_STREAM_LOGGING = "1";
       FRAPPE_SITES_ROOT = "${cfg.benchDirectory}/sites";
       FRAPPE_BENCH_ROOT = "${cfg.benchDirectory}";
+      FRAPPE_SITES_PATH = "${cfg.benchDirectory}/sites";
+      FRAPPE_BENCH_PATH = "${cfg.benchDirectory}";
       NODE_PATH = concatMapStringsSep ":" (app: "${cfg.combinedAssets}/share/apps/" + app.pname + "/node_modules") cfg.apps;
       PYTHON_PATH = "${cfg.penv}/${cfg.package.pythonModule.sitePackages}";
     };

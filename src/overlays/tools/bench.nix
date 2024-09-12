@@ -23,11 +23,11 @@ lib.lazyDerivation {
       import frappe
       import frappe.utils.bench_helper
 
-      site_root = os.getenv('FRAPPE_SITES_ROOT')
+      site_root = os.getenv('FRAPPE_SITES_PATH')
       skipped_commands = json.loads(os.getenv('FRAPPE_DISABLED_COMMANDS', "[]"))
 
       if not site_root:
-        raise Exception('FRAPPE_SITES_ROOT env variable must be set!')
+        raise Exception('FRAPPE_SITES_PATH env variable must be set!')
 
       os.chdir(site_root)
 
