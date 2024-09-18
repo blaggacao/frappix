@@ -285,7 +285,8 @@ in {
           (devPackage pkgs.bench)
           (devPackage pkgs.apps)
           (devPackage pkgs.analyze-prs)
-          (devPackage pkgs.yarn)
+          (devPackage pkgs.nodejs_18)
+          (devPackage (pkgs.yarn.overrideAttrs {withNode = false;}))
         ];
       };
     };

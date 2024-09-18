@@ -28,7 +28,7 @@ buildPythonPackage rec {
         which # pdfkit detects wkhtmltopdf this way
         gzip # for manual backups from the frappe ui
         bash
-        nodejs-18_x
+        nodejs_18
         redis
       ];
       test-dependencies = with python.pkgs; [

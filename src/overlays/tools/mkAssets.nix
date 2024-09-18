@@ -2,7 +2,7 @@
 {
   runCommand,
   path,
-  nodejs,
+  nodejs_18,
   yarn,
   nodePackages,
   emptyFile,
@@ -36,8 +36,8 @@ in
       pname = pname + "_";
       inherit src version;
       nativeBuildInputs = [
-        nodejs
-        yarn
+        nodejs_18
+        (yarn.overrideAttrs {withNode = false;})
         yarn2nix-moretea.fixup_yarn_lock
       ];
       configurePhase = ''
