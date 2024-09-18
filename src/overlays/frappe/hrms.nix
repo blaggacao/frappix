@@ -6,6 +6,7 @@
   flit-core,
   extractFrappeMeta,
   mkAssets,
+  applyPatches,
 }:
 buildPythonPackage rec {
   inherit
@@ -15,7 +16,16 @@ buildPythonPackage rec {
     format
     ;
 
-  src = mkAssets appSources.hrms;
+  src = mkAssets (appSources.hrms
+    // {
+      src = applyPatches {
+        inherit (appSources.hrms) src;
+        name = "hrms-prod";
+        patches = [
+          ./hrms-0001-build-socket-port-is-reverse-proxied.patch
+        ];
+      };
+    });
   inherit (appSources.hrms) passthru;
 
   nativeBuildInputs = [
