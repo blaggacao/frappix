@@ -21,7 +21,7 @@ buildPythonPackage rec {
     // {
       src = applyPatches {
         inherit (appSources.insights) src;
-        name = "gameplan-prod";
+        name = "insights-prod";
         patches = [
           ./insights-0001-build-socket-port-is-reverse-proxied.patch
         ];
