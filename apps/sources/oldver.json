@@ -62,10 +62,10 @@
       "url": "https://github.com/frappe/print_designer/releases/tag/v1.3.3"
     },
     "raven": {
-      "version": "v1.7.0",
-      "gitref": "refs/tags/v1.7.0",
-      "revision": "08e80357eb16353b349e71ab2971b68cc4f67cab",
-      "url": "https://github.com/The-Commit-Company/Raven/releases/tag/v1.7.0"
+      "version": "v1.7.1",
+      "gitref": "refs/tags/v1.7.1",
+      "revision": "02f2c73b9b540bcafdcb415d71cecabfbdc67c0d",
+      "url": "https://github.com/The-Commit-Company/Raven/releases/tag/v1.7.1"
     },
     "webshop": {
       "version": "20240607.063925",
