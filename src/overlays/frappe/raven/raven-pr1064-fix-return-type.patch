@@ -1,0 +1,22 @@
+From ca3b8e939572dc5639dfb53a9ad104c6cfba55a3 Mon Sep 17 00:00:00 2001
+From: David <dgx.arnold@gmail.com>
+Date: Wed, 18 Sep 2024 14:43:25 +0200
+Subject: [PATCH] fix: return type can be None
+
+---
+ raven/raven_integrations/controllers/employee.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/raven/raven_integrations/controllers/employee.py b/raven/raven_integrations/controllers/employee.py
+index 549111d5..a2ed838c 100644
+--- a/raven/raven_integrations/controllers/employee.py
++++ b/raven/raven_integrations/controllers/employee.py
+@@ -49,7 +49,7 @@ def on_update(doc, method):
+ 
+ 		old_doc = doc.get_doc_before_save()
+ 
+-		if old_doc.department:
++		if old_doc and old_doc.department:
+ 			# Remove the employee as a member from the channel
+ 			old_channel = get_channel_for_department(old_doc.department)
+ 
