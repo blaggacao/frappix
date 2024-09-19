@@ -203,6 +203,8 @@ buildPythonPackage rec {
     "sql_metadata"
     # - uuid-utils~=0.6.1 not satisfied by version 0.9.0
     "uuid-utils"
+    # - cryptography~=43.0.1 not satisfied by version 42.0.5
+    "cryptography"
   ];
 
   pythonRemoveDeps = [
