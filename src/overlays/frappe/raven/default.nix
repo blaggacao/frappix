@@ -7,7 +7,6 @@
   python,
   extractFrappeMeta,
   mkAssets,
-  applyPatches,
 }:
 buildPythonPackage rec {
   inherit
@@ -17,16 +16,7 @@ buildPythonPackage rec {
     format
     ;
 
-  src = mkAssets (appSources.raven
-    // {
-      src = applyPatches {
-        inherit (appSources.raven) src;
-        name = "raven-prod";
-        patches = [
-          ./raven-pr1064-fix-return-type.patch
-        ];
-      };
-    });
+  src = mkAssets appSources.raven;
   inherit (appSources.raven) passthru;
 
   nativeBuildInputs = [
