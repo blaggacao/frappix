@@ -10,4 +10,4 @@ let
 
   sanitizeKey = name: attrs: lib.nameValuePair (lib.removeSuffix ".nix" name) attrs;
 in
-  lib.mapAttrs' sanitizeKey (sourceDirectoryEntries ./_pins.nix)
+  lib.mapAttrs' sanitizeKey (sourceDirectoryEntries ./_pins)
