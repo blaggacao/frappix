@@ -23,6 +23,7 @@ let
   pkgs = import nixpkgs.path {
     # wkhtmltopdf
     config.permittedInsecurePackages = ["openssl-1.1.1w"];
+    config.allowUnfree = true;
 
     system = nixpkgs.system;
 
