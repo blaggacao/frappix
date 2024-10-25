@@ -288,7 +288,7 @@ in {
           (devPackage pkgs.bench)
           (devPackage pkgs.apps)
           (devPackage pkgs.analyze-prs)
-          (devPackage pkgs.nodejs_18)
+          (devPackage pkgs.nodejs_20)
           (devPackage (pkgs.yarn.overrideAttrs {withNode = false;}))
         ];
       };
