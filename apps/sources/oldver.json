@@ -52,10 +52,10 @@
       "url": "https://github.com/frappe/hrms/releases/tag/v15.33.0"
     },
     "insights": {
-      "version": "v3.0.1-beta",
-      "gitref": "refs/tags/v3.0.1-beta",
-      "revision": "bf0dd5648f0c20d0760917e9eba1d8662f79392d",
-      "url": "https://github.com/frappe/insights/releases/tag/v3.0.1-beta"
+      "version": "v2.2.6",
+      "gitref": "refs/tags/v2.2.6",
+      "revision": "9e8acedb5cdbb75a5f446911519ba777633eac5c",
+      "url": "https://github.com/frappe/insights/releases/tag/v2.2.6"
     },
     "payments": {
       "version": "20240801.123129",
@@ -75,9 +75,9 @@
       "url": "https://github.com/The-Commit-Company/Raven/releases/tag/v1.7.1"
     },
     "webshop": {
-      "version": "20241007.103637",
-      "revision": "5d35bcf50e19b2c4a54ed58a072de9836e5bfac9",
-      "url": "https://github.com/frappe/webshop/commit/5d35bcf50e19b2c4a54ed58a072de9836e5bfac9"
+      "version": "20241025.155637",
+      "revision": "a1151d0ea6469add0b30b4f540e1adb5ee8b830d",
+      "url": "https://github.com/frappe/webshop/commit/a1151d0ea6469add0b30b4f540e1adb5ee8b830d"
     },
     "wiki": {
       "version": "20241021.075720",

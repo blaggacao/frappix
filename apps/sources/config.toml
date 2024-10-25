@@ -43,6 +43,7 @@ source = "github"
 github = "frappe/insights"
 use_max_tag = true
 submodules = true
+exclude_regex = '.*-beta$'
 
 [gameplan]
 source = "github"
