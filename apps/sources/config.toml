@@ -9,7 +9,8 @@ github = "frappe/bench"
 
 [frappe]
 source = "github"
-branch = "develop"       #-- 2024-02-17 - patch doesn't apply to latest release: https://github.com/frappe/frappe/pull/22548
+branch = "version-15-hotfix"
+# use_max_tag = true
 github = "frappe/frappe"
 
 [frappe.passthru]
@@ -24,7 +25,7 @@ Pull: +refs/tags/v15.*:refs/remotes/upstream/tags/v15.*
 
 [erpnext]
 source = "github"
-branch = "develop"        #  -- 2024-02-17 - frappe patch doesn't apply and frappe 16 is not compatible with erpnext 15
+use_max_tag = true
 github = "frappe/erpnext"
 
 [erpnext.passthru]
