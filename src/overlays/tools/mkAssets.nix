@@ -2,7 +2,7 @@
 {
   runCommand,
   path,
-  nodejs_18,
+  nodejs_20,
   yarn,
   nodePackages,
   emptyFile,
@@ -36,7 +36,7 @@ in
       pname = pname + "_";
       inherit src version;
       nativeBuildInputs = [
-        nodejs_18
+        nodejs_20
         (yarn.overrideAttrs {withNode = false;})
         yarn2nix-moretea.fixup_yarn_lock
       ];

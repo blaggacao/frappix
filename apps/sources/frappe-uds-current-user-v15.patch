@@ -1,0 +1,35 @@
+commit 35e8d5ee433a839852f5183c1186ae128e9fa860
+Author: David <dgx.arnold@gmail.com>
+Date:   Fri Oct 25 14:24:57 2024 +0200
+
+    use current user as db root
+
+diff --git a/frappe/database/mariadb/setup_db.py b/frappe/database/mariadb/setup_db.py
+index 84380216b2..78cbb0801b 100644
+--- a/frappe/database/mariadb/setup_db.py
++++ b/frappe/database/mariadb/setup_db.py
+@@ -123,7 +123,7 @@ def get_root_connection(root_login, root_password):
+ 
+ 	if not frappe.local.flags.root_connection:
+ 		if not root_login:
+-			root_login = "root"
++			root_login = getpass.getuser() or "root"
+ 
+ 		if not root_password:
+ 			root_password = frappe.conf.get("root_password") or None
+diff --git a/frappe/installer.py b/frappe/installer.py
+index 9a64747cd1..3d76c01d8f 100644
+--- a/frappe/installer.py
++++ b/frappe/installer.py
+@@ -147,11 +147,6 @@ def install_db(
+ 	if not db_type:
+ 		db_type = frappe.conf.db_type
+ 
+-	if not root_login and db_type == "mariadb":
+-		root_login = "root"
+-	elif not root_login and db_type == "postgres":
+-		root_login = "postgres"
+-
+ 	make_conf(
+ 		db_name,
+ 		site_config=site_config,

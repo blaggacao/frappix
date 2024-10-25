@@ -1,16 +1,16 @@
 {
   pname = "ecommerce-integrations";
-  version = "20240205.173955";
+  version = "20241008.043734";
   meta = {
-    url = "https://github.com/frappe/ecommerce_integrations/commit/9d2a41907d56ef65281e3dc7d61d0d2b64819513";
-    description = "Sources for ecommerce-integrations (20240205.173955)";
+    url = "https://github.com/frappe/ecommerce_integrations/commit/160b119a61555f1c5d62877e796e743a26e7ede8";
+    description = "Sources for ecommerce-integrations (20241008.043734)";
   };
   src = builtins.fetchTree {
     type = "github";
     owner = "frappe";
     repo = "ecommerce_integrations";
-    narHash = "sha256-DUL1nDwiPSLaUEc1lKA/mtpbudOsnRPkZXlVVN34Uso=";
-    rev = "9d2a41907d56ef65281e3dc7d61d0d2b64819513";
+    narHash = "sha256-nXxt5mku05OLHdy+Sn6WJCN8tl54GBRj+ZI3ZhrGtFI=";
+    rev = "160b119a61555f1c5d62877e796e743a26e7ede8";
   };
   passthru = builtins.fromJSON ''{}'';
 }
