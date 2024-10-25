@@ -8,6 +8,7 @@ let
 in {
   process-compose = {
     output = "process-compose.yaml";
+    hook.mode = "copy";
     data = {
       "processes" = {
         "MySQL" = {
