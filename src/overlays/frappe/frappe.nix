@@ -22,7 +22,7 @@ buildPythonPackage rec {
     appSources.frappe.passthru
     // {
       packages = with pkgs; [
-        mysql
+        mariadb
         restic
         wkhtmltopdf-bin
         which # pdfkit detects wkhtmltopdf this way

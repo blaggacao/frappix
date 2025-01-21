@@ -49,7 +49,7 @@
       templates = std.pick self ["examples" "templates"];
     };
 
-  inputs.nixpkgs.url = "github:nixos/nixpkgs/release-24.05";
+  inputs.nixpkgs.url = "github:nixos/nixpkgs/release-24.11";
 
   inputs = {
     std.url = "github:divnix/std/v0.33.3";

@@ -1,11 +1,11 @@
 {
   lib,
   writers,
-  mysql,
+  mariadb,
 }: let
-  mariadbd = "${mysql}/bin/mariadbd";
-  mariadb-admin = "${mysql}/bin/mariadb-admin";
-  mariadb-install-db = "${mysql}/bin/mariadb-install-db";
+  mariadbd = "${mariadb}/bin/mariadbd";
+  mariadb-admin = "${mariadb}/bin/mariadb-admin";
+  mariadb-install-db = "${mariadb}/bin/mariadb-install-db";
 in
   lib.lazyDerivation {
     derivation = writers.writeBashBin "start-mariadb-for-frappe" ''
