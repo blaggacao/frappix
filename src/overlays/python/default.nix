@@ -5,6 +5,7 @@ pyFinal: pyPrev: {
   traceback-with-variables = pyFinal.callPackage ./traceback-with-variables {};
   uuid-utils = pyFinal.callPackage ./uuid-utils.nix {};
   sql_metadata = pyFinal.callPackage ./sql_metadata.nix {};
+  premailer = pyFinal.callPackage ./premailer.nix {}; # not anymore in nixpkgs, see: https://github.com/NixOS/nixpkgs/pull/348580
 
   # erpnext dependencies
   plaid-python = pyFinal.callPackage ./plaid-python.nix {}; # old version
