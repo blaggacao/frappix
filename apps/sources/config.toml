@@ -13,15 +13,17 @@ use_max_tag = true
 github = "frappe/frappe"
 
 [frappe.passthru]
+[frappe.passthru.clone]
 since = "version-14"
-upstream = """
-URL: https://github.com/frappe/frappe
-Pull: +refs/heads/develop:refs/remotes/upstream/develop
-Pull: +refs/heads/version-15:refs/remotes/upstream/version-15
-Pull: +refs/heads/version-15-hotfix:refs/remotes/upstream/version-15-hotfix
-Pull: +refs/tags/v15.*:refs/remotes/upstream/tags/v15.*
-"""
+[frappe.passthru.clone.upstream]
+fetch = [
+  "+refs/heads/develop:refs/remotes/upstream/develop",
+  "+refs/heads/version-15:refs/remotes/upstream/version-15",
+  "+refs/heads/version-15-hotfix:refs/remotes/upstream/version-15-hotfix",
+  "+refs/tags/v15.*:refs/remotes/upstream/tags/v15.*",
+]
 
+url = "https://github.com/frappe/frappe"
 [erpnext]
 source = "github"
 use_max_tag = true

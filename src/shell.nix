@@ -205,30 +205,33 @@ in {
             };
             emplace-apps = {
               text = let
-                clone = app:
-                # bash
-                ''
-                  if [[ ! -d "$PRJ_ROOT/apps/${app.pname}" ]]; then
-                    git clone --config "diff.fsjd.command=fsjd --git" \
-                      --origin upstream ${
-                    lib.optionalString (app ? since) ''--shallow-exclude="'' + app.since + ''"''
-                  } "${app.pin.src.gitRepoUrl}" \
-                      "$PRJ_ROOT/apps/${app.pname}"
-                    (
-                      cd "$PRJ_ROOT/apps/${app.pname}";
-                      mkdir .git/remotes;
-                      ${
-                    lib.optionalString (app ? upstream) ''echo "${app.upstream}" > .git/remotes/upstream;''
-                  }
-                      git switch -c custom;
-                      (diff -ura $PRJ_ROOT/apps/${app.pname} ${app.src} | patch --strip 4) || true;
-                      git add . && git commit -m 'FRAPPIX START' --no-verify --allow-empty --no-gpg-sign
-                      yarn --silent || true
-                    )
-                  fi
-                '';
+                doClone = app: let
+                  inherit (app) clone;
+                  maybeShallow = lib.optionalString (clone ? since) "--shallow-exclude=${clone.since}";
+                in
+                  # bash
+                  ''
+                    if [[ ! -d "$PRJ_ROOT/apps/${app.pname}" ]]; then
+                      git clone --config "diff.fsjd.command=fsjd --git" \
+                        --origin upstream \
+                        --branch ${app.src.version} ${maybeShallow} \
+                        "${clone.upstream.url}" \
+                        "$PRJ_ROOT/apps/${app.pname}"
+                      pushd "$PRJ_ROOT/apps/${app.pname}"
+                        git config set --local --comment 'frappix setup' remote.upstream.url '${clone.upstream.url}'
+                        ${lib.concatStringsSep "\n" (map (
+                        i: "git config --add --local --comment 'frappix setup' remote.upstream.fetch '${i}'"
+                      )
+                      clone.upstream.fetch)}
+                        git switch -c fork;
+                        (diff -ura $PRJ_ROOT/apps/${app.pname} ${app.workdirsrc} | patch --strip 4) || true;
+                        git add . && git commit -m 'FRAPPIX START' --no-verify --allow-empty --no-gpg-sign
+                        yarn --silent || true
+                      popd
+                    fi
+                  '';
               in ''
-                ${lib.concatMapStrings clone (lib.filter (a: a ? pin) cfg.apps)}
+                ${lib.concatMapStrings doClone (lib.filter (a: a ? clone) cfg.apps)}
               '';
               deps = ["emplace-pyenv" "ensure-env-vars"];
             };
