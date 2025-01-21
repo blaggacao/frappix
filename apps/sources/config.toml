@@ -9,8 +9,7 @@ github = "frappe/bench"
 
 [frappe]
 source = "github"
-branch = "version-15-hotfix"
-# use_max_tag = true
+use_max_tag = true
 github = "frappe/frappe"
 
 [frappe.passthru]

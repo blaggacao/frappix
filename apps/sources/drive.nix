@@ -1,16 +1,16 @@
 {
   pname = "drive";
-  version = "v0.0.10";
+  version = "v0.0.12";
   meta = {
-    url = "https://github.com/frappe/drive/releases/tag/v0.0.10";
-    description = "Sources for drive (v0.0.10)";
+    url = "https://github.com/frappe/drive/releases/tag/v0.0.12";
+    description = "Sources for drive (v0.0.12)";
   };
   src = builtins.fetchTree {
     type = "github";
     owner = "frappe";
     repo = "drive";
-    narHash = "sha256-QiEOpmS1kdooc9mV3afHA9P+b6l1bIjccUO33VNzaCU=";
-    rev = "1f7dd4bb340133c7b1283663c585213e76df391c";
+    narHash = "sha256-wwBX4qf/GjzBg6OuvHUGtlNnPvPKg4+rNN3b1U9IaWA=";
+    rev = "a89c205a4bd45a050093f11844d0263383b60f54";
   };
   passthru = builtins.fromJSON ''{}'';
 }
