@@ -187,7 +187,7 @@ in {
                 ''
                   cat > "$PRJ_DATA_HOME/sites/apps.txt" <<<"${lib.concatStringsSep "\n" appNames}"
                   [[ ! -f "$PRJ_ROOT/patches.txt" ]] && cp -f ${cfg.frappe}/share/patches.txt "$PRJ_ROOT"
-                  [[ ! -f "$PRJ_DATA_HOME/sites/common_site_config.json" ]] &&  echo "{}" > "$PRJ_DATA_HOME/sites/common_site_config.json"
+                  [[ ! -f "$PRJ_DATA_HOME/sites/common_site_config.json" ]] &&  echo "{\"redis_cache\": \"redis://127.0.0.1:13311\", \"redis_queue\": \"redis://127.0.0.1:11311\"}" > "$PRJ_DATA_HOME/sites/common_site_config.json"
                 '';
               deps = ["emplace-folders" "ensure-env-vars"];
             };
