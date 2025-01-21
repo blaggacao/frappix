@@ -205,6 +205,14 @@ buildPythonPackage rec {
     "uuid-utils"
     # - cryptography~=43.0.1 not satisfied by version 42.0.5
     "cryptography"
+    # - pyjwt~=2.8.0 not satisfied by version 2.9.0
+    "pyjwt"
+    # - markupsafe<3,>=2.1.0 not satisfied by version 3.0.2
+    "markupsafe"
+    # - psutil~=5.9.5 not satisfied by version 6.0.0
+    "psutil"
+    # - tenacity~=8.2.2 not satisfied by version 9.0.0
+    "tenacity"
   ];
 
   pythonRemoveDeps = [
