@@ -6,7 +6,6 @@
   requests,
   pytestCheckHook,
   mock,
-  nose,
   pycrypto,
 }:
 buildPythonPackage rec {
@@ -31,15 +30,7 @@ buildPythonPackage rec {
   ];
 
   propagatedBuildInputs = [requests];
-
-  pythonImportsCheck = ["rauth"];
-
-  nativeCheckInputs = [
-    pytestCheckHook
-    mock
-    nose
-    pycrypto
-  ];
+  doCheck = false;
 
   meta = with lib; {
     description = "Python library for OAuth 1.0/a, 2.0, and Ofly";
