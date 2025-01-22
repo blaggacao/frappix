@@ -7,7 +7,6 @@ title = "Frappix Documentation"
 [build]
 build-dir = "docs/build"
 
-[output]
 [output.html]
 
 [output.linkcheck]
