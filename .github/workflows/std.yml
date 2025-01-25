@@ -30,7 +30,6 @@ jobs:
   oci-images:
     env:
       REGISTRY: ghcr.io
-      IMAGE_NAME: ${{ github.repository }}
     permissions:
       contents: read
       packages: write
@@ -52,4 +51,11 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - uses: divnix/std-action/run@main
+      - uses: divnix/std-action/run@add-action-output-json
+        id: publish
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-name:   ${{ fromJSON(steps.publish.outputs.out).name   }}
+          subject-digest: ${{ fromJSON(steps.publish.outputs.out).digest }}
+          push-to-registry: true

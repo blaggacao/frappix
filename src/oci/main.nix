@@ -141,7 +141,7 @@ in {
                   exec bench frappe worker --queue "$QUEUE"
                   ;;
               --scheduler)
-                  echo "Starting scheduler (no further output)."
+                  echo "Starting scheduler (no further output). ------"
                   exec bench frappe schedule
                   ;;
               --websocket)

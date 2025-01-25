@@ -52,7 +52,7 @@
   inputs.nixpkgs.url = "github:nixos/nixpkgs/release-24.11";
 
   inputs = {
-    std.url = "github:divnix/std/v0.33.3";
+    std.url = "github:divnix/std?ref=feat/add-oci-digest-for-prov-attestaion";
     # std.url = "/home/blaggacao/src/github.com/divnix/std";
     devshell.url = "github:numtide/devshell";
     devshell.inputs.nixpkgs.follows = "nixpkgs";
