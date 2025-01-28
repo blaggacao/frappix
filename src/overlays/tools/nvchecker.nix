@@ -18,7 +18,7 @@
 }:
 buildPythonPackage rec {
   pname = "nvchecker";
-  version = "2.17dev-nix1";
+  version = "2.17dev-nix2";
   pyproject = true;
 
   disabled = pythonOlder "3.8";
@@ -27,7 +27,7 @@ buildPythonPackage rec {
     owner = "blaggacao";
     repo = pname;
     rev = "v${version}";
-    hash = "sha256-VlfRGOTkl2lWolHtNNj+i7n2JshR1sE5iqIEGvyfOfQ=";
+    hash = "sha256-EOOUS9k/YPe+Y6eaTLxwCuI0MDR/z4WvQ7ARAuU3Q+w=";
   };
 
   nativeBuildInputs = [

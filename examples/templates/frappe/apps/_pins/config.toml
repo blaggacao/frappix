@@ -1,5 +1,5 @@
 # run nvchecker -c config.toml
 [__config__]
-oldver = "oldver.json"
-newver = "newver.json"
+oldver = "versions.json"
+newver = "versions.json"
 nix-expr-folder = "."
