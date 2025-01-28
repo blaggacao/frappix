@@ -26,7 +26,7 @@
     }: {
       _file = ./oci.nix;
       imports = map (m: lib.modules.setDefaultModuleLocation m m) [
-        ./oci/testrig.nix
+        (import ./oci/testrig.nix inputs)
       ];
     };
   };
