@@ -17,7 +17,7 @@
         (pkgs "pkgs")
 
         # App Sources
-        (anything "sources")
+        (self.nvchecker "sources")
 
         # Modules
         (anything "nixos")
