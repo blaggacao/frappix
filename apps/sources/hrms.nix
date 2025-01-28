@@ -9,6 +9,7 @@
     type = "git";
     url = "https://github.com/frappe/hrms.git";
     submodules = true;
+    allRefs = true;
     narHash = "sha256-rr5FRvROqPAIZUDjSVlM98qA4Mt8oleCm2eYoA5o6q4=";
     rev = "fcf42f2e38af364ab98361d4baf5eef7ba50c775";
   };

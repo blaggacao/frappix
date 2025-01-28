@@ -9,6 +9,7 @@
     type = "git";
     url = "https://github.com/frappe/builder.git";
     submodules = true;
+    allRefs = true;
     narHash = "sha256-NrTnEUpkpHglkY6U1jdouh5VaC/OlK//Fkx2LCnlgpk=";
     rev = "8fa40c66de683aacc1abda1e2eaeada6fe4b9af5";
   };

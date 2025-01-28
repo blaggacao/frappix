@@ -9,6 +9,7 @@
     type = "git";
     url = "https://github.com/frappe/crm.git";
     submodules = true;
+    allRefs = true;
     narHash = "sha256-gmHzYOLinezUHHMsvZjSw6sosWTw/tylv2r8pECSl+g=";
     rev = "b7d0cf73257bcb400aa56f0ed0d48bca638049b7";
   };

@@ -7,7 +7,9 @@
   };
   src = builtins.fetchTree {
     type = "git";
-    url = "https://github.com/frappe/gameplan.git"; submodules = true;
+    url = "https://github.com/frappe/gameplan.git";
+    submodules = true;
+    allRefs = true;
     narHash = "sha256-boH6LJP4dNBcxzRN9ArVLaTOfkv9RLNkDn3iN3f5uyQ=";
     rev = "605e73d1db4908554f3e4bd60a96787d6c8dc081";
   };
