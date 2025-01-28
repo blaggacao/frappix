@@ -1,6 +1,6 @@
 [__config__]
-oldver = "oldver.json"
-newver = "newver.json"
+oldver = "versions.json"
+newver = "versions.json"
 nix-expr-folder = "."
 
 [bench] # only used for some static outputs
