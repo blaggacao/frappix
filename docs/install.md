@@ -1,16 +1,56 @@
 # Installation
 
-To use frappix, you can install all its decpencencies with:
+To initialize a Frappix project (a more reproducible "bench"), you may use the guided install script with:
 
 ```console
-$SHELL <(curl -L https://blaggacao.github.io/frappix/install)
+$SHELL <(curl -L https://blaggacao.github.io/frappix/install) frappe myproject
 ```
 
-You can inspect the bill of material of this install script in [its source](https://github.com/paisano-nix/onboarding/blob/main/install).
+> [!TIP]
+>
+> `frappe`, the first argument to the script represents the template to use.
+> For an overview over the available templates, run:
+>
+> ```shell
+> nix flake show gitub:blaggacao/frappix
+> ```
+>
+> <sub>You'll already need to have <code>nix</code> installed to run this command.</sub>
 
-This will install, the following components on which Frappix is built:
+This script does two things:
+
+- ensure system dependencies are in place
+- guide you through the project setup
+
+## System dependencies
+
+If not already present on your system, this script will ensure the minimal dependencies are installed:
 
 - Nix: _global package manager & language interpreter_
 - Direnv: _tool to manage environments per folder_
-- Nom: _nix output monitfor for better display_
+- Nom: _nix output monitor for for better display_
 - Frappix Tool: _runs repository tasks_
+
+You can inspect the bill of material of this install script in [its source](https://github.com/paisano-nix/onboarding/blob/main/install).
+
+## Guided Install
+
+It will guide you through the setup process for a Frappix project.
+
+## Enable Extra Repository Tooling
+
+The extra tooling provides:
+
+- Formatter support
+- Commit lint support
+- Documentation support
+- Editorconfig template
+
+To enable it, change the following value in `tools/shells.nix`:
+
+```diff
+{
+-   bench.enableExtraProjectTools = false;
++   bench.enableExtraProjectTools = true;
+}
+```

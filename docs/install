@@ -1,8 +1,132 @@
-#! /usr/bin/env bash
+#!/usr/bin/env sh
 
-# optional, if you have a branded package
-export OWNER=blaggacao
-export REPO=frappix
-export PACKAGE=frx
+set -e
 
-bash <(curl -L https://raw.githubusercontent.com/paisano-nix/onboarding/main/install)
+GREEN='\033[1;32m'
+NC='\033[0m'
+
+confirm() {
+    if [ "$auto_yes" = "true" ]; then
+        return 0
+    fi
+    echo
+    printf "${GREEN}%s${NC} [n/Y] " "$1"
+    read -r response
+    case "$response" in
+        [nN][oO]|[nN]) return 1 ;;
+        *) return 0 ;;
+    esac
+}
+
+
+dependencies_ok() {
+    if ! command -v nix >/dev/null 2>&1; then
+        return 1
+    fi
+    if ! command -v direnv >/dev/null 2>&1; then
+        return 1
+    fi
+    return 0
+}
+
+show_help() {
+    echo "Usage: $0 [-y] <template> <project-name>"
+    echo "  -y    Automatically answer yes to all prompts"
+    echo "  --help    Show this help message"
+    exit 1
+}
+
+auto_yes=false
+
+while [ "$#" -gt 0 ]; do
+    case "$1" in
+        -y) auto_yes=true; shift ;;
+        --help) show_help ;;
+        -*) echo "Unknown option: $1" >&2; show_help ;;
+        *) break ;;
+    esac
+done
+
+if [ "$#" -ne 2 ]; then
+    show_help
+fi
+
+template="$1"
+project_name="$2"
+
+if ! dependencies_ok && confirm "Install missing system level dependencies?"; then
+    export OWNER=blaggacao
+    export REPO=frappix
+    export PACKAGE=frx
+
+    tmp_file=$(mktemp)
+    curl -L https://raw.githubusercontent.com/paisano-nix/onboarding/main/install -o "$tmp_file"
+    bash "$tmp_file"
+    rm "$tmp_file"
+
+    unset OWNER REPO PACKAGE
+fi
+
+if confirm "Create a new project '$project_name' using template '$template'?"; then
+    export PROJECT_NAME="$project_name"
+    if nix flake new --template "github:blaggacao/frappix#$template" "$project_name"; then
+        echo "Project created successfully."
+    else
+        echo "Error: Failed to create project."
+        exit 1
+    fi
+else
+    echo "Aborted."
+    exit 1
+fi
+
+if confirm "Initialize git repository, add files, and create initial commit?"; then
+    (
+        cd "$project_name" && 
+        git init && 
+        git add . && 
+        git commit -m "Initial commit"
+    ) || { echo "Error: Failed to initialize git repository."; exit 1; }
+else
+    echo "Skipping git initialization."
+fi
+
+if confirm "Lock the nix flake?"; then
+    (
+        cd "$project_name" && 
+        nix flake lock
+    ) || { echo "Error: Failed to lock nix flake."; exit 1; }
+else
+    echo "Skipping nix flake lock."
+fi
+
+if confirm "Grant direnv permission to load the isolated project environment?"; then
+    (
+        cd "$project_name" &&
+        direnv grant && direnv exec . echo "project environment initialized"
+    ) || { echo "Error: Failed to initialize isolated project environment."; exit 1; }
+else
+    echo "Skipping direnv grant."
+fi
+
+if confirm "Create a new site?"; then
+    (
+        cd "$project_name" && 
+        direnv exec . frx //tools/tasks/new-site:run
+    ) || { echo "Error: Failed to create new site."; exit 1; }
+    site_created=y
+else
+    echo "Skipping site creation."
+fi
+
+if [ -n "$site_created" ] && confirm "Start the server?"; then
+    (
+        cd "$project_name" && 
+        direnv exec . frx //tools/tasks/run-env:run
+    ) || { echo "Error: Failed to start the server."; exit 1; }
+else
+    echo "Skipping server startup."
+fi
+
+echo "Setup complete. Your new project is ready in the '$project_name' directory."
+
