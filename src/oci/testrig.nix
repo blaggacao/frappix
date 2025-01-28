@@ -11,6 +11,7 @@ inputs: {pkgs, ...}: {
         "drive" # waiting on https://github.com/blaggacao/frappix/pull/11
         "hrms" # brakes via https://github.com/frappe/hrms/issues/2342
         "gameplan" # brakes via https://github.com/blaggacao/frappix/issues/18#issuecomment-2619829870
+        "insights" # brakes via https://github.com/blaggacao/frappix/issues/18#issuecomment-2619860284
       ]);
     in
       map (name: pkgs.frappix.${name}) appList;
