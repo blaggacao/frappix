@@ -52,8 +52,7 @@
   inputs.nixpkgs.url = "github:nixos/nixpkgs/release-24.11";
 
   inputs = {
-    std.url = "github:divnix/std/v0.33.3";
-    # std.url = "/home/blaggacao/src/github.com/divnix/std";
+    std.url = "github:divnix/std/v0.33.4";
     devshell.url = "github:numtide/devshell";
     devshell.inputs.nixpkgs.follows = "nixpkgs";
     nixago.url = "github:nix-community/nixago";
