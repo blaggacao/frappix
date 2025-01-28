@@ -3,7 +3,7 @@
 To initialize a Frappix project (a more reproducible "bench"), you may use the guided install script with:
 
 ```console
-$SHELL <(curl -L https://blaggacao.github.io/frappix/install) frappe myproject
+bash <(curl -L https://blaggacao.github.io/frappix/install) frappe myproject
 ```
 
 > [!TIP]
