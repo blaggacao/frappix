@@ -48,8 +48,7 @@ exclude_regex = '.*-beta$'
 
 [gameplan]
 source = "github"
-branch = "patched"            # unmaintained? / no release yet
-github = "blaggacao/gameplan"
+github = "frappe/gameplan"
 use_commit = true
 submodules = true
 

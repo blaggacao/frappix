@@ -42,9 +42,9 @@
       "url": "https://github.com/frappe/frappe/releases/tag/v15.52.0"
     },
     "gameplan": {
-      "version": "20240723.013902",
-      "revision": "0e8a57023cffbde174b4668c19328bd8c74b4d32",
-      "url": "https://github.com/blaggacao/gameplan/commit/0e8a57023cffbde174b4668c19328bd8c74b4d32"
+      "version": "20241218.115224",
+      "revision": "605e73d1db4908554f3e4bd60a96787d6c8dc081",
+      "url": "https://github.com/frappe/gameplan/commit/605e73d1db4908554f3e4bd60a96787d6c8dc081"
     },
     "hrms": {
       "version": "v15.38.3",
