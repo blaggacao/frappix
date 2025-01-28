@@ -10,6 +10,7 @@ inputs: {pkgs, ...}: {
         "crm" # brakes via https://github.com/frappe/crm/commit/a439433977321188266ff38cdef09642e4166080#commitcomment-148363342
         "drive" # waiting on https://github.com/blaggacao/frappix/pull/11
         "hrms" # brakes via https://github.com/frappe/hrms/issues/2342
+        "gameplan" # brakes via https://github.com/blaggacao/frappix/issues/18#issuecomment-2619829870
       ]);
     in
       map (name: pkgs.frappix.${name}) appList;
