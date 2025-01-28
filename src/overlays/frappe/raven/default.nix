@@ -26,6 +26,7 @@ buildPythonPackage rec {
 
   propagatedBuildInputs = with python.pkgs; [
     linkpreview
+    openai
   ];
 
   # pythonRemoveDeps = [
