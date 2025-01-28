@@ -9,6 +9,7 @@
     type = "git";
     url = "git@github.com:frappe/insights.git";
     submodules = true;
+    allRefs = true;
     narHash = "sha256-ihSI55/2h31GqzhM6E4KvfI3kSJwhpHVOBGar+W8iGY=";
     rev = "9e8acedb5cdbb75a5f446911519ba777633eac5c";
   };
