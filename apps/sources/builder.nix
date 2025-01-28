@@ -1,16 +1,16 @@
 {
   pname = "builder";
-  version = "v1.13.0";
+  version = "v1.13.1";
   meta = {
-    url = "https://github.com/frappe/builder/releases/tag/v1.13.0";
-    description = "Sources for builder (v1.13.0)";
+    url = "https://github.com/frappe/builder/releases/tag/v1.13.1";
+    description = "Sources for builder (v1.13.1)";
   };
   src = builtins.fetchTree {
     type = "git";
-    url = "git@github.com:frappe/builder.git";
+    url = "https://github.com/frappe/builder.git";
     submodules = true;
-    narHash = "sha256-pM23K/9rC9RmFf9VI5vDZsw4E1tAOJaCtnobh7bLOJI=";
-    rev = "8c6a098fc4aae572e5af9cff132617137fbc1f01";
+    narHash = "sha256-NrTnEUpkpHglkY6U1jdouh5VaC/OlK//Fkx2LCnlgpk=";
+    rev = "8fa40c66de683aacc1abda1e2eaeada6fe4b9af5";
   };
   passthru = builtins.fromJSON ''{}'';
 }

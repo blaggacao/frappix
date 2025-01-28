@@ -7,7 +7,7 @@
   };
   src = builtins.fetchTree {
     type = "git";
-    url = "git@github.com:blaggacao/gameplan.git";
+    url = "https://github.com/blaggacao/gameplan.git";
     submodules = true;
     narHash = "sha256-HPzqeytml+oOreXAL1nDYDNFE+X9gTkPNey1pVtPcTE=";
     rev = "0e8a57023cffbde174b4668c19328bd8c74b4d32";

@@ -7,16 +7,16 @@
       "url": "https://github.com/frappe/bench/commit/431cc783d19d1ea7bd637edc9a617f6c4e3ac319"
     },
     "builder": {
-      "version": "v1.13.0",
-      "gitref": "refs/tags/v1.13.0",
-      "revision": "8c6a098fc4aae572e5af9cff132617137fbc1f01",
-      "url": "https://github.com/frappe/builder/releases/tag/v1.13.0"
+      "version": "v1.13.1",
+      "gitref": "refs/tags/v1.13.1",
+      "revision": "8fa40c66de683aacc1abda1e2eaeada6fe4b9af5",
+      "url": "https://github.com/frappe/builder/releases/tag/v1.13.1"
     },
     "crm": {
-      "version": "v1.33.0",
-      "gitref": "refs/tags/v1.33.0",
-      "revision": "7e81a16f098d164ae0eeebfe5f1ef1784348b741",
-      "url": "https://github.com/frappe/crm/releases/tag/v1.33.0"
+      "version": "v1.34.6",
+      "gitref": "refs/tags/v1.34.6",
+      "revision": "b7d0cf73257bcb400aa56f0ed0d48bca638049b7",
+      "url": "https://github.com/frappe/crm/releases/tag/v1.34.6"
     },
     "drive": {
       "version": "v0.0.12",
@@ -47,10 +47,10 @@
       "url": "https://github.com/blaggacao/gameplan/commit/0e8a57023cffbde174b4668c19328bd8c74b4d32"
     },
     "hrms": {
-      "version": "v15.38.0",
-      "gitref": "refs/tags/v15.38.0",
-      "revision": "dd8541e9a609bb613c0022fd35665c9e84c34e48",
-      "url": "https://github.com/frappe/hrms/releases/tag/v15.38.0"
+      "version": "v15.38.3",
+      "gitref": "refs/tags/v15.38.3",
+      "revision": "fcf42f2e38af364ab98361d4baf5eef7ba50c775",
+      "url": "https://github.com/frappe/hrms/releases/tag/v15.38.3"
     },
     "insights": {
       "version": "v3.0.14",
