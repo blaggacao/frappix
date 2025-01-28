@@ -30,7 +30,7 @@ buildPythonPackage rec {
   ];
 
   pythonRelaxDeps = [
-    # "shopify-python-api"
+    "shopifyapi"
     "boto3"
   ];
 
