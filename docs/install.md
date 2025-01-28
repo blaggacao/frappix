@@ -6,6 +6,11 @@ To initialize a Frappix project (a more reproducible "bench"), you may use the g
 bash <(curl -L https://blaggacao.github.io/frappix/install) frappe myproject
 ```
 
+This script does two things:
+
+- ensure system dependencies are in place
+- guide you through the project setup
+
 > [!TIP]
 >
 > `frappe`, the first argument to the script represents the template to use.
@@ -16,11 +21,6 @@ bash <(curl -L https://blaggacao.github.io/frappix/install) frappe myproject
 > ```
 >
 > <sub>You'll already need to have <code>nix</code> installed to run this command.</sub>
-
-This script does two things:
-
-- ensure system dependencies are in place
-- guide you through the project setup
 
 ## System dependencies
 
