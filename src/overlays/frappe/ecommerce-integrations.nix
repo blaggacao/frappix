@@ -26,12 +26,12 @@ buildPythonPackage rec {
 
   propagatedBuildInputs = with python.pkgs; [
     shopify-python-api
-    boto
+    boto3
   ];
 
   pythonRelaxDeps = [
     # "shopify-python-api"
-    "boto"
+    "boto3"
   ];
 
   # would require frappe, but since frappe is almost certainly customized,
