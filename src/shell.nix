@@ -211,8 +211,10 @@ in {
                 in
                   # bash
                   ''
+                    relpath="$(realpath --relative-to=`pwd` $PRJ_ROOT/apps/${app.pname})"
                     if [[ ! -d "$PRJ_ROOT/apps/${app.pname}" ]]; then
-                      git clone --config "diff.fsjd.command=fsjd --git" \
+                      echo -e "\033[0;32mCloning ${app.pname} into $relpath ...\033[0m" && \
+                      git clone --config "diff.fsjd.command=fsjd --git" --config advice.detachedHead=false \
                         --origin upstream \
                         --branch ${app.src.version} ${maybeShallow} \
                         "${clone.upstream.url}" \
@@ -224,8 +226,11 @@ in {
                       )
                       clone.upstream.fetch)}
                         git switch -c fork;
-                        (diff -ura $PRJ_ROOT/apps/${app.pname} ${app.workdirsrc} | patch --strip 4) || true;
+                        echo -e "\033[0;32mPatching $relpath with Frappix patches ...\033[0m"
+                        diff -ura $PRJ_ROOT/apps/${app.pname} ${app.workdirsrc} | (read -r; if [ -n "$REPLY" ]; then patch --strip 4 --verbose --posix; else echo "No patch required"; fi) || true
+                        echo "ho"
                         git add . && git commit -m 'FRAPPIX START' --no-verify --allow-empty --no-gpg-sign
+                        echo -e "\033[0;32mResolve JS dependencies inside $relpath ...\033[0m"; echo
                         yarn --silent || true
                       popd
                     fi
@@ -278,17 +283,21 @@ in {
           };
         };
         commands = let
+          mainPackage = package: {
+            category = "main commands";
+            inherit package;
+          };
           devPackage = package: {
-            category = "development";
+            category = "dev utils";
             inherit package;
           };
         in [
-          (devPackage pkgs.frx)
+          (mainPackage pkgs.frx)
+          (mainPackage pkgs.bench)
           (devPackage pkgs.pre-commit)
           (devPackage pkgs.nvfetcher)
           (devPackage pkgs.nvchecker-nix)
           (devPackage pkgs.nodePackages.localtunnel)
-          (devPackage pkgs.bench)
           (devPackage pkgs.apps)
           (devPackage pkgs.analyze-prs)
           (devPackage pkgs.nodejs_20)

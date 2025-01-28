@@ -6,6 +6,14 @@
 
 ---
 
+> [!NOTE]
+>
+> **Guided install**
+>
+> ```shell
+> bash <(curl https://blaggacao.github.io/frappix/install) frappe myproject
+> ```
+
 [![Chat on Matrix](https://img.shields.io/matrix/frappix:matrix.org?server_fqdn=matrix.org&style=for-the-badge)](https://matrix.to/#/#frappix:matrix.org)
 
 <sub>It is best for now, to join the community in the chat until the docs are more elaborate!</sub>
