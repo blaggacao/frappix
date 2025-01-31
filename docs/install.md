@@ -2,6 +2,10 @@
 
 To initialize a Frappix project (a more reproducible "bench"), you may use the guided install script with:
 
+> [!IMPORTANT]
+>
+> `git` must be configured in your system (email / name).
+
 ```console
 bash <(curl -L https://blaggacao.github.io/frappix/install) frappe myproject
 ```
