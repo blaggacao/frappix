@@ -1,4 +1,4 @@
-<div align="center">
+<div align="center" style="margin-top: 10px;">
   <img src="artwork/logo.svg" width="250" style="border-radius:20%"/>
   <h1>Frappix</h1>
   <p>A Frappe Development & Deployment Environment</span>
