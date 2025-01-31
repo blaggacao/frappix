@@ -6,7 +6,7 @@ on:
   workflow_dispatch:  # Allows manual triggering
 
 jobs:
-  run-commands:
+  update-apps:
     runs-on: ubuntu-latest
     permissions:
       contents: write           # 'write' access to repository contents
