@@ -65,6 +65,7 @@ if ! dependencies_ok && confirm "Install missing system level dependencies?"; th
     rm "$tmp_file"
 
     unset OWNER REPO PACKAGE
+    exit 0
 fi
 
 if confirm "Create a new project '$project_name' using template '$template'?"; then
