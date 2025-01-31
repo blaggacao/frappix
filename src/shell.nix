@@ -220,9 +220,9 @@ in {
                         "${clone.upstream.url}" \
                         "$PRJ_ROOT/apps/${app.pname}"
                       pushd "$PRJ_ROOT/apps/${app.pname}"
-                        git config set --local --comment 'frappix setup' remote.upstream.url '${clone.upstream.url}'
+                        git config --local remote.upstream.url '${clone.upstream.url}'
                         ${lib.concatStringsSep "\n" (map (
-                        i: "git config --add --local --comment 'frappix setup' remote.upstream.fetch '${i}'"
+                        i: "git config --add --local remote.upstream.fetch '${i}'"
                       )
                       clone.upstream.fetch)}
                         git switch -c fork;
