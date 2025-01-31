@@ -1,17 +1,15 @@
 {
   pname = "hrms";
-  version = "v15.38.3";
+  version = "v15.39.0";
   meta = {
-    url = "https://github.com/frappe/hrms/releases/tag/v15.38.3";
-    description = "Sources for hrms (v15.38.3)";
+    url = "https://github.com/frappe/hrms/releases/tag/v15.39.0";
+    description = "Sources for hrms (v15.39.0)";
   };
   src = builtins.fetchTree {
     type = "git";
-    url = "https://github.com/frappe/hrms.git";
-    submodules = true;
-    allRefs = true;
-    narHash = "sha256-rr5FRvROqPAIZUDjSVlM98qA4Mt8oleCm2eYoA5o6q4=";
-    rev = "fcf42f2e38af364ab98361d4baf5eef7ba50c775";
+    url = "https://github.com/frappe/hrms.git"; submodules = true; allRefs = true;
+    narHash = "sha256-xaIUoC6fwsra84Qhay00rDeeyIS5vZtmobqMDotKqK4=";
+    rev = "d5a30b93caa7923ba04895afc4aae9f647e021d4";
   };
   passthru = builtins.fromJSON ''{}'';
 }
