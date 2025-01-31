@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 set -e
 
@@ -61,7 +61,7 @@ if ! dependencies_ok && confirm "Install missing system level dependencies?"; th
 
     tmp_file=$(mktemp)
     curl -L https://raw.githubusercontent.com/paisano-nix/onboarding/main/install -o "$tmp_file"
-    sh "$tmp_file" "sh <(curl -L https://blaggacao.github.io/frappix/install) $*"
+    bash "$tmp_file" "bash <(curl -L https://blaggacao.github.io/frappix/install) $*"
     rm "$tmp_file"
 
     unset OWNER REPO PACKAGE
