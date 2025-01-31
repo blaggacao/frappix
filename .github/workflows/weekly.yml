@@ -2,7 +2,7 @@ name: Weekly Command Check
 
 on:
   schedule:
-    - cron: '0 0 * * 1'  # Runs at 00:00 UTC every Monday
+    - cron: '0 9 * * 1'  # Runs at 10:00 MEZ (9:00 UTC) every Monday
   workflow_dispatch:  # Allows manual triggering
 
 jobs:
