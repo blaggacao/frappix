@@ -10,8 +10,8 @@ confirm() {
         return 0
     fi
     echo
-    printf "${GREEN}%s${NC} [n/Y] " "$1"
-    read -r response
+    printf "${GREEN}%s${NC} [Y/n] " "$1"
+    read -r -n 1 response
     case "$response" in
         [nN][oO]|[nN]) return 1 ;;
         *) return 0 ;;
