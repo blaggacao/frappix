@@ -1,0 +1,65 @@
+name: Weekly Command Check
+
+on:
+  schedule:
+    - cron: '0 0 * * 1'  # Runs at 00:00 UTC every Monday
+  workflow_dispatch:  # Allows manual triggering
+
+jobs:
+  run-commands:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write           # 'write' access to repository contents
+      pull-requests: write      # 'write' access to pull requests
+    steps:
+      - uses: actions/checkout@v3
+      - uses: nixbuild/nix-quick-install-action@v29
+
+      - name: Run commands
+        id: run_commands
+        run: |
+          # Your commands here
+          nix run .#x86_64-linux.src.pkgs.nvchecker-nix -- -c ./apps/sources/config.toml
+          nix build '.#__std.actions.x86_64-linux."src"."oci-images"."frappix-base"."build"' 
+
+      - name: Commit changes
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
+          git add .
+          git commit -m "Weekly update from automated check" || echo "No changes to commit"
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: "build: automatic weekly apps update"
+          title: Weekly Apps Update
+          body: |
+            This is an automated pull request created after successful execution of the weekly update and command check.
+            
+            Changes made:
+            
+            - `nix run .#x86_64-linux.src.pkgs.nvchecker-nix -- -c ./apps/sources/config.toml`
+            - `nix build '.#__std.actions.x86_64-linux."src"."oci-images"."frappix-base"."build"'`
+
+          branch: weekly-update
+          base: main
+
+      - name: Send Telegram notification on failure
+        if: failure() || steps.run_commands.outcome == 'failure'
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          message: |
+            Weekly command check failed!
+            Repository: ${{ github.repository }}
+            See workflow run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+
