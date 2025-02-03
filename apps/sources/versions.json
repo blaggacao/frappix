@@ -13,10 +13,10 @@
       "url": "https://github.com/frappe/builder/releases/tag/v1.14.1"
     },
     "crm": {
-      "version": "v1.34.7",
-      "gitref": "refs/tags/v1.34.7",
-      "revision": "ba75ceb07ccc93b1f214f8721a4071d9d378f9c3",
-      "url": "https://github.com/frappe/crm/releases/tag/v1.34.7"
+      "version": "v1.34.10",
+      "gitref": "refs/tags/v1.34.10",
+      "revision": "1825f05c243c277244295a2b9c889aeb8e547dea",
+      "url": "https://github.com/frappe/crm/releases/tag/v1.34.10"
     },
     "drive": {
       "version": "v0.0.12",
@@ -76,14 +76,14 @@
       "url": "https://github.com/The-Commit-Company/Raven/releases/tag/v2.0.1"
     },
     "webshop": {
-      "version": "20250122.173714",
-      "revision": "22d0d5c930d0656672a2a75608d3a36d96ba375d",
-      "url": "https://github.com/frappe/webshop/commit/22d0d5c930d0656672a2a75608d3a36d96ba375d"
+      "version": "20250131.175352",
+      "revision": "bfc2613efd369d4f8b8680d4a03b674693ccbcad",
+      "url": "https://github.com/frappe/webshop/commit/bfc2613efd369d4f8b8680d4a03b674693ccbcad"
     },
     "wiki": {
-      "version": "20250128.065019",
-      "revision": "024fda864bdfab1248384fd4eca1e4710b4e24dc",
-      "url": "https://github.com/frappe/wiki/commit/024fda864bdfab1248384fd4eca1e4710b4e24dc"
+      "version": "20250203.091217",
+      "revision": "2d9f88ee7bbcb31af6c69eb142e0d95c74f54e9d",
+      "url": "https://github.com/frappe/wiki/commit/2d9f88ee7bbcb31af6c69eb142e0d95c74f54e9d"
     }
   }
 }
