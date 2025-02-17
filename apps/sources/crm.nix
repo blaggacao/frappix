@@ -1,15 +1,15 @@
 {
   pname = "crm";
-  version = "v1.34.14";
+  version = "v1.34.15";
   meta = {
-    url = "https://github.com/frappe/crm/releases/tag/v1.34.14";
-    description = "Sources for crm (v1.34.14)";
+    url = "https://github.com/frappe/crm/releases/tag/v1.34.15";
+    description = "Sources for crm (v1.34.15)";
   };
   src = builtins.fetchTree {
     type = "git";
     url = "https://github.com/frappe/crm.git"; submodules = true; allRefs = true;
-    narHash = "sha256-2dp++F76VOwc4H+FJG3GpdCVL8cvox52LFeSSTzdUH4=";
-    rev = "f1aec6c68ec5bfe0978b95c4a86a638d24207e49";
+    narHash = "sha256-btSn6ow8f6hU4X8A50WTL5Sy6rSoL1Z5ybrHBeZIdoM=";
+    rev = "1e48cb97420a00500e85e2bdf5c280848774dcef";
   };
   passthru = builtins.fromJSON ''{}'';
 }
