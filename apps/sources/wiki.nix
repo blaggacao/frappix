@@ -1,15 +1,15 @@
 {
   pname = "wiki";
-  version = "20250217.073401";
+  version = "20250221.105302";
   meta = {
-    url = "https://github.com/frappe/wiki/commit/d0561fb7f662fe9edb78774188023dda9549e6ac";
-    description = "Sources for wiki (20250217.073401)";
+    url = "https://github.com/frappe/wiki/commit/26caeb22cd3ab26431f91b548b9cf0d9455addcf";
+    description = "Sources for wiki (20250221.105302)";
   };
   src = builtins.fetchTree {
     type = "github";
     owner = "frappe"; repo = "wiki";
-    narHash = "sha256-bALdqzFsBrZgjjc+pSmzpeCC036KcqEWoVxiQFppymM=";
-    rev = "d0561fb7f662fe9edb78774188023dda9549e6ac";
+    narHash = "sha256-w5kTCpH4uk0FblHFtkxr7RTFvZhQCEnkBnbTqT7JfvI=";
+    rev = "26caeb22cd3ab26431f91b548b9cf0d9455addcf";
   };
   passthru = builtins.fromJSON ''{}'';
 }
