@@ -1,15 +1,15 @@
 {
   pname = "webshop";
-  version = "20250219.075949";
+  version = "20250306.140837";
   meta = {
-    url = "https://github.com/frappe/webshop/commit/6fc2573eb8a0487b746490f404b98c2bc8e1147b";
-    description = "Sources for webshop (20250219.075949)";
+    url = "https://github.com/frappe/webshop/commit/7508d9e6fffbfe12b6efa4715587afb6862d8b4f";
+    description = "Sources for webshop (20250306.140837)";
   };
   src = builtins.fetchTree {
     type = "github";
     owner = "frappe"; repo = "webshop";
-    narHash = "sha256-a8IfqQb0KBvPltNRZuShu1ZfkPBekG4ReIxPGIQIodI=";
-    rev = "6fc2573eb8a0487b746490f404b98c2bc8e1147b";
+    narHash = "sha256-C6G4Pkzr1bSFqeQK9gAAv69oIuSS9XAUIShgR7m/QKk=";
+    rev = "7508d9e6fffbfe12b6efa4715587afb6862d8b4f";
   };
   passthru = builtins.fromJSON ''{}'';
 }
