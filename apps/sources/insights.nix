@@ -1,17 +1,15 @@
 {
   pname = "insights";
-  version = "v2.2.6";
+  version = "v3.0.21";
   meta = {
-    url = "https://github.com/frappe/insights/releases/tag/v2.2.6";
-    description = "Sources for insights (v2.2.6)";
+    url = "https://github.com/frappe/insights/releases/tag/v3.0.21";
+    description = "Sources for insights (v3.0.21)";
   };
   src = builtins.fetchTree {
     type = "git";
-    url = "git@github.com:frappe/insights.git";
-    submodules = true;
-    allRefs = true;
-    narHash = "sha256-ihSI55/2h31GqzhM6E4KvfI3kSJwhpHVOBGar+W8iGY=";
-    rev = "9e8acedb5cdbb75a5f446911519ba777633eac5c";
+    url = "https://github.com/frappe/insights.git"; submodules = true; allRefs = true;
+    narHash = "sha256-eOe+S2y6f2vvzFm2B8SEr9od6Se7rZQ89M7oF/Q6cxc=";
+    rev = "6f4945cbcd307d66f1f0f13750fbe31b277d016f";
   };
   passthru = builtins.fromJSON ''{}'';
 }

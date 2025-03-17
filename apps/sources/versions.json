@@ -13,10 +13,10 @@
       "url": "https://github.com/frappe/builder/releases/tag/v1.15.0"
     },
     "crm": {
-      "version": "v1.38.6",
-      "gitref": "refs/tags/v1.38.6",
-      "revision": "dc361d7d39bc21f3e84d1751666094667d751fc6",
-      "url": "https://github.com/frappe/crm/releases/tag/v1.38.6"
+      "version": "v1.38.8",
+      "gitref": "refs/tags/v1.38.8",
+      "revision": "7ca0987080d3a6b656a6f398623761905472040e",
+      "url": "https://github.com/frappe/crm/releases/tag/v1.38.8"
     },
     "drive": {
       "version": "v0.1.0-alpha",
@@ -30,16 +30,16 @@
       "url": "https://github.com/frappe/ecommerce_integrations/commit/160b119a61555f1c5d62877e796e743a26e7ede8"
     },
     "erpnext": {
-      "version": "v15.54.3",
-      "gitref": "refs/tags/v15.54.3",
-      "revision": "47429095a2bc48dc66e5fe091f804ca0dd78010c",
-      "url": "https://github.com/frappe/erpnext/releases/tag/v15.54.3"
+      "version": "v15.54.4",
+      "gitref": "refs/tags/v15.54.4",
+      "revision": "08f47b626cfe8fb34bd51b5d32e8fd7892bfdeca",
+      "url": "https://github.com/frappe/erpnext/releases/tag/v15.54.4"
     },
     "frappe": {
-      "version": "v15.57.2",
-      "gitref": "refs/tags/v15.57.2",
-      "revision": "7d580cf4f189858b51f9108bced8de2a724cff8a",
-      "url": "https://github.com/frappe/frappe/releases/tag/v15.57.2"
+      "version": "v15.58.1",
+      "gitref": "refs/tags/v15.58.1",
+      "revision": "d34d8e48641dfb46b204293a8abf53c678394efa",
+      "url": "https://github.com/frappe/frappe/releases/tag/v15.58.1"
     },
     "gameplan": {
       "version": "20250303.100259",
@@ -53,10 +53,10 @@
       "url": "https://github.com/frappe/hrms/releases/tag/v15.41.0"
     },
     "insights": {
-      "version": "v3.0.19",
-      "gitref": "refs/tags/v3.0.19",
-      "revision": "c3a317b49a6bf1b7e3acd28b25cb1f3774d9dcb9",
-      "url": "https://github.com/frappe/insights/releases/tag/v3.0.19"
+      "version": "v3.0.21",
+      "gitref": "refs/tags/v3.0.21",
+      "revision": "6f4945cbcd307d66f1f0f13750fbe31b277d016f",
+      "url": "https://github.com/frappe/insights/releases/tag/v3.0.21"
     },
     "payments": {
       "version": "20241122.100234",
@@ -70,15 +70,15 @@
       "url": "https://github.com/frappe/print_designer/releases/tag/v1.4.3"
     },
     "raven": {
-      "version": "v2.1.6",
-      "gitref": "refs/tags/v2.1.6",
-      "revision": "aac28994b83878e811213a44e985e94ec2d502be",
-      "url": "https://github.com/The-Commit-Company/Raven/releases/tag/v2.1.6"
+      "version": "v2.1.8",
+      "gitref": "refs/tags/v2.1.8",
+      "revision": "e293444275055181c9f0611238937b366acbcc42",
+      "url": "https://github.com/The-Commit-Company/Raven/releases/tag/v2.1.8"
     },
     "webshop": {
-      "version": "20250306.140837",
-      "revision": "7508d9e6fffbfe12b6efa4715587afb6862d8b4f",
-      "url": "https://github.com/frappe/webshop/commit/7508d9e6fffbfe12b6efa4715587afb6862d8b4f"
+      "version": "20250315.060124",
+      "revision": "d87565d939c5eb8c0a14626dc28b782aab3f4c80",
+      "url": "https://github.com/frappe/webshop/commit/d87565d939c5eb8c0a14626dc28b782aab3f4c80"
     },
     "wiki": {
       "version": "20250307.111438",
