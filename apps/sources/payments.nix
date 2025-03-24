@@ -1,16 +1,15 @@
 {
   pname = "payments";
-  version = "20241122.100234";
+  version = "20250318.104949";
   meta = {
-    url = "https://github.com/frappe/payments/commit/fb7c2a93cce16f19d41dfc9bdfd93a779c2e6a9a";
-    description = "Sources for payments (20241122.100234)";
+    url = "https://github.com/frappe/payments/commit/a2ed721365d45f3e70d2233f547382cf2443ab00";
+    description = "Sources for payments (20250318.104949)";
   };
   src = builtins.fetchTree {
     type = "github";
-    owner = "frappe";
-    repo = "payments";
-    narHash = "sha256-NDmQNqIgnTSDrNuMi2Vj5YSvQKy5RfuxTNIln64Q1Xk=";
-    rev = "fb7c2a93cce16f19d41dfc9bdfd93a779c2e6a9a";
+    owner = "frappe"; repo = "payments";
+    narHash = "sha256-xSXBvMvlsPD+wr19H7kGyDDVEDjC8x4loqzWHJ6p36U=";
+    rev = "a2ed721365d45f3e70d2233f547382cf2443ab00";
   };
   passthru = builtins.fromJSON ''{}'';
 }
