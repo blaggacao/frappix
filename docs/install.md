@@ -21,7 +21,7 @@ This script does two things:
 > For an overview over the available templates, run:
 >
 > ```shell
-> nix flake show gitub:blaggacao/frappix
+> nix flake show github:blaggacao/frappix
 > ```
 >
 > <sub>You'll already need to have <code>nix</code> installed to run this command.</sub>

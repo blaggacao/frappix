@@ -109,7 +109,7 @@ Chose the right name from the previous step and uncomment where it reads:
       ];
 ```
 
-# Finally `devenv reload`
+# Finally `direnv reload`
 
 This ensures that `apps.txt` will be updated.
 
