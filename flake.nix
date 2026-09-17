@@ -22,7 +22,7 @@
         # Modules
         (anything "nixos")
         (anything "shell")
-        (nixostests "nixos-tests")
+        (installables "nixos-tests" {ci.build = true;})
         (runnables "runnables")
         (microvms "vms")
         (runnables "jobs" // {cli = false;}) # for downstream use
@@ -48,6 +48,7 @@
       frapper = import ./std/frapper.nix {inherit inputs;};
       nvchecker = import ./std/nvchecker.nix {inherit inputs;};
       templates = std.pick self ["examples" "templates"];
+      checks = std.winnow (n: _: n == "with-01-containers") self ["tests" "nixos-tests"];
     };
 
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
