@@ -1,5 +1,5 @@
 let
-version = "v15.120.1";
+version = "v15.121.3";
 in
 {
   pname = "frappe";
@@ -11,8 +11,8 @@ in
   src = builtins.fetchTree {
     type = "github";
     owner = "frappe"; repo = "frappe";
-    narHash = "sha256-dI4BQN2m5G1lPR1Ausmfpkut6SFPP+MONoEBPI5cMFU=";
-    rev = "9f8ae9cd25b6735be345da6cc12e9f5a96050c68";
+    narHash = "sha256-1uzlx9j4iMVFEMTJ03PLpKnmVgKSc1VMPNjgMLs+pSM=";
+    rev = "0b282e81ef30a7f6b8ff376ca8eacf9fb9f28f05";
   };
   passthru = builtins.fromJSON ''{"clone": {"since": "version-14", "upstream": {"fetch": ["+refs/heads/develop:refs/remotes/upstream/develop", "+refs/heads/version-15:refs/remotes/upstream/version-15", "+refs/heads/version-15-hotfix:refs/remotes/upstream/version-15-hotfix", "+refs/tags/v15.*:refs/remotes/upstream/tags/v15.*"], "url": "https://github.com/frappe/frappe"}}}'';
 }
