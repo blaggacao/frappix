@@ -1,0 +1,21 @@
+on:
+  pull_request:
+  workflow_call:
+
+jobs:
+  flake-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: cachix/install-nix-action@master
+        with:
+          extra_nix_config: |
+            keep-env-derivations = true
+            keep-outputs = true
+            auto-allocate-uids = true
+            experimental-features = nix-command flakes auto-allocate-uids cgroups
+            extra-system-features = uid-range
+      - uses: nix-community/cache-nix-action@main
+        with:
+          primary-key: a-single-key
+      - run: nix flake check --accept-flake-config --print-build-logs
