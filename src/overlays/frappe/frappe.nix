@@ -17,10 +17,10 @@ buildPythonPackage rec {
     format
     ;
 
-  src = (mkAssets {
+  src = mkAssets {
     inherit (appSources.frappe) pname src version;
-    yarnHash = "sha256-wjG8j8g+FpTdmJpzkAuQDGARs+JQc/yG/thmtChHp8M=";
-  });
+    yarnHash = "sha256-hpJXk8R2FTiECJQb/gxNwe3KMX3W1xkHdD0hSFJvzsU=";
+  };
 
   passthru =
     appSources.frappe.passthru

@@ -1,7 +1,6 @@
 let
-version = "v15.121.6";
-in
-{
+  version = "v15.124.1";
+in {
   pname = "erpnext";
   inherit version;
   meta = {
@@ -10,9 +9,10 @@ in
   };
   src = builtins.fetchTree {
     type = "github";
-    owner = "frappe"; repo = "erpnext";
-    narHash = "sha256-BXxNR2fJFtbT/KqMuND8vluUKJpO3zHZef3D49NeaDo=";
-    rev = "4cea6a7f839286b69dd30b38b0991e6ae234dac5";
+    owner = "frappe";
+    repo = "erpnext";
+    narHash = "sha256-QRyx4xq7+lyH4esqhx+Gdys8y6uGs8lTX/IHPYf9Exg=";
+    rev = "4e0dce9ea8d351cd7023ad5ed66faf3cdec0680e";
   };
   passthru = builtins.fromJSON ''{"since": "version-14", "upstream": "URL: https://github.com/frappe/erpnext\nPull: +refs/heads/develop:refs/remotes/upstream/develop\nPull: +refs/heads/version-15:refs/remotes/upstream/version-15\nPull: +refs/heads/version-15-hotfix:refs/remotes/upstream/version-15-hotfix\nPull: +refs/tags/v15.*:refs/remotes/upstream/tags/v15.*\n"}'';
 }
