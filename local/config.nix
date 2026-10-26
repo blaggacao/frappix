@@ -31,6 +31,7 @@ A: (1) dotfile proliferation
   treefmt = {
     packages = [
       inputs.nixpkgs.alejandra
+      inputs.nixpkgs.prettier
       inputs.nixpkgs.shfmt
     ];
     data = {
