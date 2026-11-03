@@ -164,6 +164,7 @@ in {
       benchDirectory = mkInternal;
       combinedAssets = mkInternal;
       penv = mkInternal;
+      includeTestDeps = mkInternal // {type = types.bool;};
       packages = mkInternal;
       environment = mkInternal // {type = types.attrs;};
     };
@@ -246,7 +247,17 @@ in {
       frappe.benchDirectory = "/var/lib/${cfg.project}";
       # - preprocessed inputs
       frappe.combinedAssets = pkgs.mkSiteAssets cfg.apps;
-      frappe.penv = cfg.package.pythonModule.buildEnv.override {extraLibs = cfg.apps;};
+      frappe.penv = cfg.package.pythonModule.buildEnv.override {
+        extraLibs =
+          if cfg.includeTestDeps
+          then
+            lib.pipe cfg.apps [
+              (lib.catAttrs "test-dependencies")
+              lib.flatten
+              (lib.concat cfg.apps)
+            ]
+          else cfg.apps;
+      };
       frappe.packages = flatten (catAttrs "packages" cfg.apps);
       frappe.environment = {
         FRAPPE_STREAM_LOGGING = "1";

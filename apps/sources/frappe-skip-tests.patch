@@ -1,0 +1,25 @@
+diff --git a/frappe/tests/utils.py b/frappe/tests/utils.py
+index 85312363c4..bf4c39ea91 100644
+--- a/frappe/tests/utils.py
++++ b/frappe/tests/utils.py
+@@ -45,6 +45,20 @@ class FrappeTestCase(unittest.TestCase):
+ 		cls.addClassCleanup(_restore_thread_locals, copy.deepcopy(frappe.local.flags))
+ 		cls.addClassCleanup(_rollback_db)
+
++		original = cls.setUp
++		var = "SKIP_TESTS"
++		skip_ids = [ item for item in os.environ.get(var, "").split(",") ]
++
++		def wrapped(self):
++			test_id = self.id()
++
++			if any(test_id == skip_id for skip_id in skip_ids):
++				self.skipTest(f"present in {var} environment variable")
++
++			original(self)
++
++		cls.setUp = wrapped
++
+ 		return super().setUpClass()
+
+ 	def assertSequenceSubset(self, larger: Sequence, smaller: Sequence, msg=None):

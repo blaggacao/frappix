@@ -63,16 +63,7 @@ let
           project = "ManualTestDeployment";
           gunicorn_workers = 1;
           adminPassword = pkgs.writeText "admin-password.txt" "admin";
-          penv = lib.pipe nixosArgs.config.services.frappe.apps [
-            (lib.catAttrs "test-dependencies")
-            lib.flatten
-            (lib.concat nixosArgs.config.services.frappe.apps)
-            (extraLibs:
-              nixosArgs.config.services.frappe.package.pythonModule.buildEnv.override {
-                inherit extraLibs;
-              })
-            lib.mkForce
-          ];
+          includeTestDeps = true;
           commonSiteConfig = {
             default_site = "frappix.localhost";
             allow_tests = true;
