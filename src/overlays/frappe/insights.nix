@@ -128,6 +128,9 @@ buildPythonPackage {
   dependencies = with python.pkgs; [
     duckdb
     ibis-framework
+    # ibis >= 10 mysql backend imports MySQLdb; needed by the after_migrate
+    # hook, which connects to the "Site DB" data source via ibis.mysql
+    mysqlclient
     pandas
     psycopg
     python-telegram-bot
@@ -135,7 +138,10 @@ buildPythonPackage {
     sqlglot
   ];
 
-  pythonImportsCheck = ["insights"];
+  pythonImportsCheck = [
+    "insights"
+    "ibis.backends.mysql"
+  ];
 
   pythonRelaxDeps = [
     "duckdb"
